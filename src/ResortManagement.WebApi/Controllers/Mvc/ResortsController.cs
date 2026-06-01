@@ -44,14 +44,17 @@ public class ResortsController : Controller
         List<dynamic> units = new();
         try
         {
-            var dbUnits = await _context.Units.Include(u => u.UnitType).ToListAsync();
+            var dbUnits = await _context.Units.ToListAsync();
+            var dbUnitTypes = await _context.UnitTypes.ToDictionaryAsync(ut => ut.Id);
+            
             foreach (var u in dbUnits)
             {
+                dbUnitTypes.TryGetValue(u.UnitTypeId, out var ut);
                 units.Add(new { 
                     Id = u.Id, 
-                    Number = u.Number, 
-                    Status = u.Status.ToString(), 
-                    UnitTypeName = u.UnitType?.Name 
+                    Number = u.UnitNumber, 
+                    Status = u.HousekeepingStatus, 
+                    UnitTypeName = ut?.Name ?? "Standard Room"
                 });
             }
         }
