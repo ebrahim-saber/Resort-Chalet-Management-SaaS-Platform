@@ -1,0 +1,63 @@
+## Ignore Visual Studio temporary files, build results, and user settings
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/xamarin)
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+out/
+msbuild.log
+msbuild.err
+msbuild.warn
+
+# Visual Studio 2015/2017/2019 cache/options directory
+.vs/
+# Visual Studio 2022 cache/options directory
+.vs/
+
+# Roslyn cache directories
+*.ide/
+
+# Logs folder
+src/ResortManagement.WebApi/Logs/
+Logs/
+
+# Database files
+*.mdf
+*.ldf
+*.ndf
+
+# Packages
+*.nupkg
+# NuGet Packages
+pkgs/
+**/[Pp]ackages/
+!**/[Pp]ackages/repositories.config
+**/[Px]g/
+
+# Rider
+.idea/
+*.sln.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# User Secrets
+appsettings.Development.json

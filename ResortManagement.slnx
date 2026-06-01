@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ResortManagement.Application/ResortManagement.Application.csproj" />
+    <Project Path="src/ResortManagement.Domain/ResortManagement.Domain.csproj" />
+    <Project Path="src/ResortManagement.Infrastructure/ResortManagement.Infrastructure.csproj" />
+    <Project Path="src/ResortManagement.WebApi/ResortManagement.WebApi.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,28 @@
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: resort_management_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SuperSecurePassword123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  webapi:
+    image: resort-management-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: resort_management_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=database;Database=ResortManagementDb;User Id=sa;Password=SuperSecurePassword123!;TrustServerCertificate=True
+    depends_on:
+      - database
+
+volumes:
+  mssql_data:

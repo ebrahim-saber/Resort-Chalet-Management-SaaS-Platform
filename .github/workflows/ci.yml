@@ -1,0 +1,30 @@
+name: Resort & Chalet Management SaaS Platform CI
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore src/ResortManagement.WebApi/ResortManagement.WebApi.csproj
+
+    - name: Compile Solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run Automated Tests
+      run: dotnet test --configuration Release --no-build --verbosity normal

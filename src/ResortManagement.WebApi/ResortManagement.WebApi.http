@@ -1,0 +1,6 @@
+@ResortManagement.WebApi_HostAddress = http://localhost:5165
+
+GET {{ResortManagement.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
