@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Reservations Booking Portal";
+    var showcaseUnitTypes = ViewBag.ShowcaseUnitTypes as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Luxury Booking Portal</h1>
+        <p class="header-meta">Book chalets, rooms, or suites with live dynamic rates calculations.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--grid-gap); margin-bottom: 40px;">
+    <!-- Showcase Property Units List -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <h2 style="font-size: 20px; font-weight: 600; color: var(--primary);">Available Unit Showcase</h2>
+        
+        @if (showcaseUnitTypes != null)
+        {
+            foreach (var item in showcaseUnitTypes)
+            {
+                <div class="property-card" style="display: grid; grid-template-columns: 1fr 1.5fr; min-height: 200px;">
+                    <div class="property-img-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg>
+                        <span style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;">LuxeStay Certified</span>
+                    </div>
+                    <div class="property-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                <h3 class="property-title" style="margin: 0; color: var(--primary);">@item.Name</h3>
+                                <span style="font-size: 13px; font-weight: 700; color: var(--secondary);">@item.BasePrice.ToString("C")/Night</span>
+                            </div>
+                            <p class="property-meta">Max Occupancy: @item.MaxOccupancy Guests | Custom amenities included.</p>
+                            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                                Features: @item.Amenities
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary" style="align-self: flex-start;" onclick="selectUnitForCalculator('@item.Name', @item.BasePrice);">
+                            Select for Calculator
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Interactive Pricing Calculator -->
+    <div>
+        <div class="glass-card" style="position: sticky; top: 40px;">
+            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--primary);">Rate Estimator</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Selected Unit</label>
+                <input class="form-control" type="text" id="calc-selected-unit-name" value="Royal Pool Chalet" readonly style="font-weight: 600; background-color: var(--border);" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Base Rate ($/Night)</label>
+                <input class="form-control" type="number" id="calc-base-price" value="450.00" step="0.01" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Check-In Date</label>
+                <input class="form-control" type="date" id="calc-check-in" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Check-Out Date</label>
+                <input class="form-control" type="date" id="calc-check-out" />
+            </div>
+
+            <div class="glass-card" style="padding: 16px; background: rgba(0,0,0,0.01); border: 1px solid var(--border-dark); margin-bottom: 24px;">
+                <div id="calc-price-result">
+                    <span style="color: var(--text-disabled); font-size: 13px;">Select stay dates to calculate rates breakdown...</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px;" onclick="bookEstimation();">
+                Reserve Estimated Stay
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set default date range helper
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const dayAfter = new Date(today);
+        dayAfter.setDate(today.getDate() + 4);
+
+        const formatDate = (date) => {
+            const yyyy = date.getFullYear();
+            let mm = date.getMonth() + 1;
+            let dd = date.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            return yyyy + '-' + mm + '-' + dd;
+        };
+
+        document.getElementById("calc-check-in").value = formatDate(tomorrow);
+        document.getElementById("calc-check-out").value = formatDate(dayAfter);
+        
+        // Trigger initial calculation
+        setTimeout(() => {
+            const event = new Event('change');
+            document.getElementById("calc-check-in").dispatchEvent(event);
+        }, 100);
+
+        function selectUnitForCalculator(name, price) {
+            document.getElementById("calc-selected-unit-name").value = name;
+            document.getElementById("calc-base-price").value = price;
+            
+            // Dispatch price change event
+            const event = new Event('change');
+            document.getElementById("calc-base-price").dispatchEvent(event);
+            
+            showLuxeAlert("Unit Selected", `${name} selected for calculation.`, "success");
+        }
+
+        function bookEstimation() {
+            const unit = document.getElementById("calc-selected-unit-name").value;
+            showLuxeAlert("Stay Reserved", `Your reservation request for ${unit} has been placed in draft. Check your invoice in details dashboard.`, "success");
+        }
+    </script>
+}

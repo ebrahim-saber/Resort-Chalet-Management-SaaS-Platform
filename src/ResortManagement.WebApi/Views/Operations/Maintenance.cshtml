@@ -1,0 +1,126 @@
+@{
+    ViewData["Title"] = "Maintenance Board";
+    var showcaseRequests = ViewBag.ShowcaseRequests as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Maintenance Operations</h1>
+        <p class="header-meta">Resolve hardware repairs, facilities upkeep, and urgent room maintenance.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1.2fr; gap: var(--grid-gap); margin-bottom: 40px;">
+    <!-- Active Maintenance Tickets List -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <h2 style="font-size: 20px; font-weight: 600; color: var(--primary);">Urgent Facilities Repair Tickets</h2>
+        
+        @if (showcaseRequests != null)
+        {
+            foreach (var ticket in showcaseRequests)
+            {
+                <div class="glass-card" id="ticket-card-@ticket.Id" style="display: flex; flex-direction: column; gap: 16px; border-left: 6px solid @(ticket.Priority == "Critical" ? "var(--error)" : ticket.Priority == "High" ? "var(--tertiary)" : "var(--secondary)");">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span class="status-pill @(ticket.Priority == "Critical" ? "danger" : ticket.Priority == "High" ? "warning" : "success")" style="margin-bottom: 8px;">
+                                @ticket.Priority Priority
+                            </span>
+                            <h3 style="font-size: 18px; font-weight: 600; color: var(--primary); margin-top: 4px;">@ticket.Title</h3>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 14px; font-weight: 700; color: var(--primary-container);">@ticket.UnitNumber</span>
+                            <div style="font-size: 12px; color: var(--text-disabled); margin-top: 2px;">@ticket.CreatedAt.ToString("MMM dd")</div>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                        @ticket.Description
+                    </p>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 12px; margin-top: 8px;">
+                        <div>
+                            <span style="font-size: 13px; color: var(--text-secondary);">Status: </span>
+                            <strong style="font-size: 13px; color: var(--primary);" id="ticket-status-@ticket.Id">@ticket.Status</strong>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="ticket-btn-@ticket.Id" onclick="resolveTicket('@ticket.Id', '@ticket.Title');" style="padding: 6px 14px; font-size: 12px; @(ticket.Status == "Resolved" ? "display: none;" : "")">
+                            Resolve Repair
+                        </button>
+                        <span id="ticket-solved-@ticket.Id" style="color: var(--secondary); font-weight: 600; font-size: 13px; @(ticket.Status == "Resolved" ? "" : "display: none;")">
+                            ✓ Fixed & Logged
+                        </span>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Create Maintenance Request Form -->
+    <div>
+        <div class="glass-card" style="position: sticky; top: 40px;">
+            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--primary);">Log Repair Ticket</h2>
+
+            <div class="form-group">
+                <label class="form-label">Room / Unit</label>
+                <input class="form-control" type="text" id="new-ticket-unit" placeholder="e.g. Villa 105" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Issue Title</label>
+                <input class="form-control" type="text" id="new-ticket-title" placeholder="e.g. Leaking Faucet" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select class="form-control" id="new-ticket-priority">
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" id="new-ticket-desc" rows="3" placeholder="Describe the issue..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px;" onclick="submitTicket();">
+                Submit Facility Request
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function resolveTicket(id, title) {
+            const statusLabel = document.getElementById(`ticket-status-${id}`);
+            const btn = document.getElementById(`ticket-btn-${id}`);
+            const solvedLabel = document.getElementById(`ticket-solved-${id}`);
+
+            if (statusLabel && btn && solvedLabel) {
+                statusLabel.textContent = "Resolved";
+                btn.style.display = "none";
+                solvedLabel.style.display = "inline";
+                
+                showLuxeAlert("Ticket Resolved", `"${title}" has been completed and marked resolved.`, "success");
+            }
+        }
+
+        function submitTicket() {
+            const unit = document.getElementById("new-ticket-unit").value;
+            const title = document.getElementById("new-ticket-title").value;
+            
+            if (!unit || !title) {
+                showLuxeAlert("Incomplete Form", "Please fill in the unit and issue details.", "danger");
+                return;
+            }
+
+            showLuxeAlert("Ticket Logged", `Maintenance request logged for ${unit}. Facilities staff assigned.`, "success");
+            
+            // Clear inputs
+            document.getElementById("new-ticket-unit").value = "";
+            document.getElementById("new-ticket-title").value = "";
+            document.getElementById("new-ticket-desc").value = "";
+        }
+    </script>
+}

@@ -25,7 +25,7 @@ builder.Host.UseSerilog();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 
 // 3. Add API Versioning
 builder.Services.AddApiVersioning(options =>
@@ -98,6 +98,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 // Tenant identification must run BEFORE routing/controllers so the context is set!
 app.UseTenantIdentification();
@@ -106,6 +107,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapHealthChecks("/health");
 
 try

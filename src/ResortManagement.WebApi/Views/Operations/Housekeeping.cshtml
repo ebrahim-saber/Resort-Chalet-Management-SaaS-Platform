@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "Housekeeping Board";
+    var showcaseTasks = ViewBag.ShowcaseTasks as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Housekeeping Operations</h1>
+        <p class="header-meta">Track property sanitation, pending room cleanups, and staff assignments.</p>
+    </div>
+</div>
+
+<div class="glass-card" style="margin-bottom: 40px;">
+    <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 24px; color: var(--primary);">Active Cleaning Tasks Checklist</h2>
+    
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Room Unit</th>
+                    <th>Sanitation Status</th>
+                    <th>Special Notes / Instructions</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (showcaseTasks != null)
+                {
+                    foreach (var task in showcaseTasks)
+                    {
+                        <tr id="task-row-@task.Id">
+                            <td style="font-weight: 600; color: var(--primary);">@task.UnitNumber</td>
+                            <td>
+                                @{
+                                    var badgeClass = "warning";
+                                    if (task.Status == "Completed") badgeClass = "success";
+                                    if (task.Status == "InProgress") badgeClass = "warning";
+                                    if (task.Status == "Pending") badgeClass = "danger";
+                                }
+                                <span class="status-pill @badgeClass" id="task-badge-@task.Id">@task.Status</span>
+                            </td>
+                            <td style="font-size: 13px; color: var(--text-secondary); max-width: 320px;">@task.Notes</td>
+                            <td style="font-size: 13px; color: var(--text-disabled);">@task.CreatedAt.ToString("hh:mm tt")</td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" id="task-btn-@task.Id" onclick="completeTask('@task.Id', '@task.UnitNumber');" style="padding: 6px 14px; font-size: 12px; @(task.Status == "Completed" ? "display: none;" : "")">
+                                    Mark Completed
+                                </button>
+                                <span id="task-checked-@task.Id" style="color: var(--secondary); font-weight: 600; font-size: 13px; @(task.Status == "Completed" ? "" : "display: none;")">
+                                    ✓ Verified Clean
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function completeTask(id, unit) {
+            // Smoothly update UI elements
+            const badge = document.getElementById(`task-badge-${id}`);
+            const btn = document.getElementById(`task-btn-${id}`);
+            const checkLabel = document.getElementById(`task-checked-${id}`);
+
+            if (badge && btn && checkLabel) {
+                badge.className = "status-pill success";
+                badge.textContent = "Completed";
+                btn.style.display = "none";
+                checkLabel.style.display = "inline";
+                
+                showLuxeAlert("Sanitation Completed", `${unit} has been sanitized and marked CLEAN for guests.`, "success");
+            }
+        }
+    </script>
+}
