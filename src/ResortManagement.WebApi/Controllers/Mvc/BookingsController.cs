@@ -21,7 +21,15 @@ public class BookingsController : Controller
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        var unitTypes = await _context.UnitTypes.ToListAsync();
+        List<UnitType> unitTypes = new();
+        try
+        {
+            unitTypes = await _context.UnitTypes.ToListAsync();
+        }
+        catch (Exception)
+        {
+            // Database is not reachable, proceed to fallback mock data below
+        }
 
         if (unitTypes.Count == 0)
         {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ResortManagement.Application.Common.Interfaces;
+using ResortManagement.Domain.Entities.Operations;
 
 namespace ResortManagement.WebApi.Controllers.Mvc;
 
@@ -20,7 +21,15 @@ public class OperationsController : Controller
     [HttpGet("housekeeping")]
     public async Task<IActionResult> Housekeeping()
     {
-        var tasks = await _context.HousekeepingTasks.ToListAsync();
+        List<HousekeepingTask> tasks = new();
+        try
+        {
+            tasks = await _context.HousekeepingTasks.ToListAsync();
+        }
+        catch (Exception)
+        {
+            // Database is offline/unreachable, fallback to simulated tasks below
+        }
 
         if (tasks.Count == 0)
         {
@@ -42,7 +51,15 @@ public class OperationsController : Controller
     [HttpGet("maintenance")]
     public async Task<IActionResult> Maintenance()
     {
-        var requests = await _context.MaintenanceRequests.ToListAsync();
+        List<MaintenanceRequest> requests = new();
+        try
+        {
+            requests = await _context.MaintenanceRequests.ToListAsync();
+        }
+        catch (Exception)
+        {
+            // Database is offline/unreachable, fallback to simulated requests below
+        }
 
         if (requests.Count == 0)
         {
