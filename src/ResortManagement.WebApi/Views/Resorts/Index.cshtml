@@ -1,0 +1,180 @@
+@{
+    ViewData["Title"] = "Featured Resorts Portfolio";
+    var resorts = ViewBag.Resorts as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Resort Portfolio</h1>
+        <p class="header-meta">Monitor regional distribution, unit allocation, and featured chalets across all destinations.</p>
+    </div>
+    <div class="glass-card" style="padding: 12px 24px; border-radius: 999px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-soft);">
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Total Occupancy</span>
+            <span style="font-size: 18px; font-weight: 700; color: var(--primary);">84%</span>
+        </div>
+        <div style="width: 1px; height: 24px; background: var(--border-dark);"></div>
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Active Properties</span>
+            <span style="font-size: 18px; font-weight: 700; color: var(--primary);">3 Major Estates</span>
+        </div>
+    </div>
+</div>
+
+<!-- Regional Bento Grid Layout -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--grid-gap); margin-bottom: 40px;">
+    <!-- Map distribution bento panel -->
+    <div class="glass-card" style="padding: 0; overflow: hidden; position: relative; height: 380px;">
+        <div style="position: absolute; top: 20px; left: 20px; z-index: 10; background: rgba(255,255,255,0.85); padding: 12px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-soft);">
+            <h3 style="font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">Regional Distribution</h3>
+            <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Alpine & European Region</span>
+        </div>
+        
+        <!-- Premium map screenshot mockup using beautiful topographical graphic -->
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA9bObV7O6lM6X1lcMNhDw8i1KO46UrdxAFLs_Cy-UBj7YbWvfVJq2PwSgfkyaJlQU8L04aIz5t81wrjTuf-82L09iS95juj3WIMg_NfJw6Vp8hzyIcyzj0Z4hBszYBu3XDFJl-3wf78NxfLrs3ROBmXUS_xaIC6yd1lY34qIsgLPRGV7_zGv6zooOJ8w4rsusawvA2dBWCtb_Ea5kJTmu6je0I8BHfxRS4_HYoPTW_b_1dn8BC2j2kBzKrh2KEL6vvuQcMSUQvlmk" 
+             style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;" alt="Swiss Topographical Map Distribution" />
+             
+        <div style="position: absolute; bottom: 20px; right: 20px; z-index: 10; display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; justify-content: center; background: #ffffff;">+</button>
+            <button class="btn btn-secondary" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; justify-content: center; background: #ffffff;">-</button>
+        </div>
+    </div>
+
+    <!-- Unit breakdown bento panel -->
+    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <h3 style="font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px;">Unit Distribution</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 24px; flex-grow: 1; justify-content: center;">
+            <div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; font-weight: 500;">
+                    <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></span> Luxury Chalets</span>
+                    <span style="font-weight: 700;">68 Units</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: var(--border-dark); border-radius: 999px;">
+                    <div style="width: 48%; height: 100%; background: var(--primary); border-radius: 999px;"></div>
+                </div>
+            </div>
+            
+            <div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; font-weight: 500;">
+                    <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--secondary);"></span> Private Villas</span>
+                    <span style="font-weight: 700;">42 Units</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: var(--border-dark); border-radius: 999px;">
+                    <div style="width: 30%; height: 100%; background: var(--secondary); border-radius: 999px;"></div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; font-weight: 500;">
+                    <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--tertiary);"></span> Penthouses</span>
+                    <span style="font-weight: 700;">32 Units</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: var(--border-dark); border-radius: 999px;">
+                    <div style="width: 22%; height: 100%; background: var(--tertiary); border-radius: 999px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Properties Grid -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h2 style="font-size: 22px; font-weight: 600; color: var(--primary);">Featured Properties</h2>
+    <button class="btn btn-secondary" onclick="window.location.href='/resorts/units'">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        View Detailed Units Grid
+    </button>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Resort Card 1 -->
+    <div class="property-card" onclick="window.location.href='/resorts/units'" style="cursor: pointer;">
+        <div class="property-img-box" style="height: 220px; overflow: hidden; position: relative;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb2fiu2TJHpYSCspoxkOY2AmtBmxXjpVWvF0GMoECIP5cDA-x8eYdBoYMswtzelsS358RduM_PFTv2TLB4V1CKkHGn633MrOCcyuDIRHrQKn-liYPJ9o2J2eaG346cYpys9U6qO0HnUEOqp6z_ZrX-2lIHFGzq4yGQR6FTetDnxhRQAT7iWIHH3E9bZ-9Jp0rOA9YK0QtibDO78CP8rkz2Oy6UTK3tS1BV6Mogus2WEbSkY51xCzeV9FEmIMEIGLBiUTIESZuUr5Y4" 
+                 style="width: 100%; height: 100%; object-fit: cover;" alt="Alpine Peak Resort" />
+            <span style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--primary); border: 1px solid var(--border);">★ 9.8</span>
+        </div>
+        <div class="property-body">
+            <h3 class="property-title">Alpine Peak Resort</h3>
+            <p class="property-meta" style="display: flex; align-items: center; gap: 4px;">
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                Zermatt, Switzerland
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; border-top: 1px solid var(--border-dark); padding-top: 16px; margin-top: 16px;">
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Units</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">24</p>
+                </div>
+                <div style="border-left: 1px solid var(--border-dark); border-right: 1px solid var(--border-dark);">
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Occupancy</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 2px;">92%</p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">RevPAR</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">$850</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resort Card 2 -->
+    <div class="property-card" onclick="window.location.href='/resorts/units'" style="cursor: pointer;">
+        <div class="property-img-box" style="height: 220px; overflow: hidden; position: relative;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVd9qZWAU37goVbZU_w7FHZQ7kWCJUGltR1CttxVgfhVQslI4jt5O8VR4IsmnQmxzT2QyhTQALH5MP7YrGAKn0TUmRdFj9af0KmJkwylCLfhPZhCnfThMgWMpb4VbGR1zyYbRChiSH-ps7K2C4s-567FoZCkm28NSp3hhN2nbHoUtnziFBcuLSAHtf06NBWpe2D1B6ZfWCtk0PLSWs5d3QdqqnwNoicF1XOLLCgf5lLv7ppqNulrfa_We1X1y_5plpNDgs-Bq9qkqF" 
+                 style="width: 100%; height: 100%; object-fit: cover;" alt="Lakeside Retreat" />
+            <span style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--primary); border: 1px solid var(--border);">★ 9.5</span>
+        </div>
+        <div class="property-body">
+            <h3 class="property-title">Lakeside Retreat</h3>
+            <p class="property-meta" style="display: flex; align-items: center; gap: 4px;">
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                St. Moritz, Switzerland
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; border-top: 1px solid var(--border-dark); padding-top: 16px; margin-top: 16px;">
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Units</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">18</p>
+                </div>
+                <div style="border-left: 1px solid var(--border-dark); border-right: 1px solid var(--border-dark);">
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Occupancy</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 2px;">78%</p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">RevPAR</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">$1,200</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resort Card 3 -->
+    <div class="property-card" onclick="window.location.href='/resorts/units'" style="cursor: pointer;">
+        <div class="property-img-box" style="height: 220px; overflow: hidden; position: relative;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrvUL3ZOIGdagSWDiEFU5r6z6sQP9GFOMt3Um-ZBp7sdpmr7q-mgcTsh7x62ws87dTkKr7-wfCaFzXVrO6pDjyn5Eq2fTUc_Ce0qs1YeciXE15cDgo3SNrKzOq8KknQXh3wAbjJBCs0NB6ownmN8W6ClFKGe-tB5vawX7aQ-3Ac6whAjS8mII03htojM3mbm4T_VbKxHB3VLCCPhT1JipG7DnmBfhbZ6QhmL5UFKA2FQ6WiGaaAVU-_N1inp9kqAw3oZRqAFsZwP2p" 
+                 style="width: 100%; height: 100%; object-fit: cover;" alt="The Grand Estate" />
+            <span style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; color: var(--primary); border: 1px solid var(--border);">★ 9.9</span>
+        </div>
+        <div class="property-body">
+            <h3 class="property-title">The Grand Estate</h3>
+            <p class="property-meta" style="display: flex; align-items: center; gap: 4px;">
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                Courchevel, France
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; border-top: 1px solid var(--border-dark); padding-top: 16px; margin-top: 16px;">
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Units</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">45</p>
+                </div>
+                <div style="border-left: 1px solid var(--border-dark); border-right: 1px solid var(--border-dark);">
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Occupancy</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 2px;">88%</p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">RevPAR</span>
+                    <p style="font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;">$920</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

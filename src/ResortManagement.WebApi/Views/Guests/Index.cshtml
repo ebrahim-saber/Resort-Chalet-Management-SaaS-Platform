@@ -1,0 +1,164 @@
+@{
+    ViewData["Title"] = "Loyalty Relations Registry";
+    var customers = ViewBag.Customers as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Guest Relations</h1>
+        <p class="header-meta">Manage your high-value clientele, review loyalty status, and track lifetime stays and spending.</p>
+    </div>
+</div>
+
+<!-- Loyalty Summary Cards -->
+<div class="dashboard-grid" style="margin-bottom: 40px;">
+    <!-- platinum count -->
+    <div class="glass-card metric-card">
+        <div class="metric-icon-box blue" style="background-color: rgba(205,154,95,0.1); color: var(--tertiary);">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+        </div>
+        <div class="metric-info" style="flex-grow: 1;">
+            <span class="metric-label">Total Platinum Guests</span>
+            <span class="metric-value">142</span>
+        </div>
+        <span class="status-pill success" style="font-size: 11px; font-weight: 600;">+12% this Q</span>
+    </div>
+
+    <!-- avg spend -->
+    <div class="glass-card metric-card">
+        <div class="metric-icon-box teal">
+            <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="metric-info" style="flex-grow: 1;">
+            <span class="metric-label">Average Spend / Stay</span>
+            <span class="metric-value">$18.5k</span>
+        </div>
+        <span class="status-pill success" style="font-size: 11px; font-weight: 600;">+$2.1k YOY</span>
+    </div>
+
+    <!-- booking velocity -->
+    <div class="glass-card metric-card">
+        <div class="metric-icon-box gold" style="background-color: rgba(0, 106, 102, 0.08); color: var(--secondary);">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="metric-info" style="flex-grow: 1;">
+            <span class="metric-label">Booking Velocity</span>
+            <span class="metric-value" style="color: var(--secondary);">High</span>
+        </div>
+    </div>
+</div>
+
+<!-- Search & Filtering Bar -->
+<div class="glass-card" style="padding: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div style="display: flex; gap: 8px;">
+        <button class="btn btn-primary" style="padding: 8px 18px; font-size: 13px;">All Guests</button>
+        <button class="btn btn-secondary" style="padding: 8px 18px; font-size: 13px;">Platinum</button>
+        <button class="btn btn-secondary" style="padding: 8px 18px; font-size: 13px;">Gold</button>
+    </div>
+    <div style="position: relative; width: 280px;">
+        <input class="form-control" type="text" placeholder="Search by name, email..." style="padding-left: 36px; padding-top: 10px; padding-bottom: 10px;" />
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-disabled);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+</div>
+
+<!-- Guest Cards Grid -->
+<div class="dashboard-grid">
+    <!-- Guest 1 -->
+    <div class="glass-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+        <div style="height: 90px; background: var(--primary-container); position: relative;">
+            <span class="status-pill warning" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); color: var(--tertiary); font-weight: 700;">♦ Platinum</span>
+        </div>
+        <div style="padding: 24px; position: relative; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPGfFfqT3mYKMsvDo9zy1LR5mHCKWw-xEARPEpVuVmfOyiXaeqlqfha76jKPKofIMeeJP2Eyct0sp5UHmnC0g6QqRh5ZA4F-yZf8sbaDYI5YSIQEWr7mdZ0D9BIIWKEyH2pthmBAEWrH0pNw28lbHh0ns5mEuxHmxksskPQLYlMkUBZi8FuAJfX6rWid6pBlh4FJ8BhELp_re80LNoQbePpA2RhctmceyPniSMzFTx71EdQlB3i9KBPjWnEImD6ajNPg5Y131q7RGi" 
+                 style="width: 72px; height: 72px; border-radius: 50%; border: 4px solid #ffffff; position: absolute; top: -36px; left: 24px; object-fit: cover; box-shadow: var(--shadow-soft);" alt="Alexander Sterling" />
+            
+            <div style="margin-top: 36px; flex-grow: 1;">
+                <h3 style="font-size: 18px; margin: 0; color: var(--primary);">Alexander Sterling</h3>
+                <span style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 20px;">alexander.s@sterlingcorp.com</span>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Total Spend</span>
+                        <span style="font-weight: 700; color: var(--primary);">$142,500</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Last Stayed</span>
+                        <span style="color: var(--text-primary); font-weight: 500;">Oct 12, 2023</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Next Stay</span>
+                        <span style="color: var(--secondary); font-weight: 600; background: rgba(0, 106, 102, 0.08); padding: 2px 6px; border-radius: 4px;">Dec 20, 2024</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="showLuxeAlert('Concierge Action', 'Opening concierge profile of Alexander Sterling.', 'success')">View Full Profile</button>
+        </div>
+    </div>
+
+    <!-- Guest 2 -->
+    <div class="glass-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+        <div style="height: 90px; background: var(--secondary); position: relative;">
+            <span class="status-pill success" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); color: var(--secondary); font-weight: 700;">★ Gold</span>
+        </div>
+        <div style="padding: 24px; position: relative; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuALZzV5zKBtDq6XtUo9Jedn3LSP9qRa9xPQiiqIa5jpSv0GP39nK5cMzxxuLCedVxuB87r6yWGaFMXuzNkONSFvgRg-StnJTqymxZaodc_YhDa0SrNL7yG0-VwE0xbGYt4w3iKD04W1UEqudIEqck-HhiWQlvN-YVBWqZS2G4_N7Uv--CCC7OID7iMfi_FxcJzBcvNc54aq99wfEfaJaKPtJLraOrnmNTxCdlFcnjq2MQrUznC6kDdABwTAhUvIDXPF6UXJ8IYOiWoP" 
+                 style="width: 72px; height: 72px; border-radius: 50%; border: 4px solid #ffffff; position: absolute; top: -36px; left: 24px; object-fit: cover; box-shadow: var(--shadow-soft);" alt="Eleanor Vance" />
+            
+            <div style="margin-top: 36px; flex-grow: 1;">
+                <h3 style="font-size: 18px; margin: 0; color: var(--primary);">Eleanor Vance</h3>
+                <span style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 20px;">e.vance@designstudio.net</span>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Total Spend</span>
+                        <span style="font-weight: 700; color: var(--primary);">$84,200</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Last Stayed</span>
+                        <span style="color: var(--text-primary); font-weight: 500;">Jan 05, 2024</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Next Stay</span>
+                        <span style="color: var(--text-disabled); font-style: italic;">No upcoming stays</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="showLuxeAlert('Concierge Action', 'Opening concierge profile of Eleanor Vance.', 'success')">View Full Profile</button>
+        </div>
+    </div>
+
+    <!-- Guest 3 -->
+    <div class="glass-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+        <div style="height: 90px; background: var(--primary-container); position: relative;">
+            <span class="status-pill warning" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); color: var(--tertiary); font-weight: 700;">♦ Platinum</span>
+        </div>
+        <div style="padding: 24px; position: relative; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7av2P73gHKP_2g90jqakZss9AmOT1kDFxq5ywg9w-EPF_cBoULfZzcGu5ykIO7Gd08iL5i5zb6YSLez2W_lLi32omRzQgpaBAqREmfgd_OdGNsrIeQ92mmb9aWSrXHeTio7J9GiNzTyKItg6ZBVn6fOer7EfHNX7A3QZD77NYQB_-_dDE5XKKxmHiqsuzHYbr01hedDyTwXQDyzFRs6TioLZhnPOU5RQYCo0eBKymz0nHAY_lIkOkPs1_-Bjy7mKOpJCzOIGDweRx" 
+                 style="width: 72px; height: 72px; border-radius: 50%; border: 4px solid #ffffff; position: absolute; top: -36px; left: 24px; object-fit: cover; box-shadow: var(--shadow-soft);" alt="Marcus Chen" />
+            
+            <div style="margin-top: 36px; flex-grow: 1;">
+                <h3 style="font-size: 18px; margin: 0; color: var(--primary);">Marcus Chen</h3>
+                <span style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 20px;">m.chen@innovate.io</span>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Total Spend</span>
+                        <span style="font-weight: 700; color: var(--primary);">$112,800</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-dark); padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Last Stayed</span>
+                        <span style="color: var(--text-primary); font-weight: 500;">Mar 15, 2024</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-bottom: 8px;">
+                        <span style="color: var(--text-disabled);">Next Stay</span>
+                        <span style="color: var(--secondary); font-weight: 600; background: rgba(0, 106, 102, 0.08); padding: 2px 6px; border-radius: 4px;">May 10, 2024</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="showLuxeAlert('Concierge Action', 'Opening concierge profile of Marcus Chen.', 'success')">View Full Profile</button>
+        </div>
+    </div>
+</div>

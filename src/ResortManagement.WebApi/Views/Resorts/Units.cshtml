@@ -1,0 +1,175 @@
+@{
+    ViewData["Title"] = "Units Inventory Catalog";
+    var units = ViewBag.Units as List<dynamic>;
+}
+
+<div class="workspace-header">
+    <div>
+        <h1 class="header-title">Portfolio Management</h1>
+        <p class="header-meta">Monitor real-time unit availability, block dynamic stay dates, and dispatch cleaning requests.</p>
+    </div>
+    <div style="display: flex; gap: 16px;">
+        <div class="glass-card" style="padding: 12px 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-soft);">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Total Units</span>
+            <p style="font-size: 24px; font-weight: 700; color: var(--primary); margin-top: 2px;">24</p>
+        </div>
+        <div class="glass-card" style="padding: 12px 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-soft);">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Average Occupancy</span>
+            <p style="font-size: 24px; font-weight: 700; color: var(--secondary); margin-top: 2px;">82%</p>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 280px 1fr; gap: var(--grid-gap); margin-bottom: 40px;">
+    <!-- Advanced Sidebar Filters -->
+    <div>
+        <div class="glass-card" style="position: sticky; top: 40px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark); padding-bottom: 16px; margin-bottom: 24px;">
+                <h2 style="font-size: 16px; font-weight: 700; color: var(--primary); margin: 0;">Filters</h2>
+                <button class="btn btn-ghost" style="padding: 0; font-size: 13px; text-decoration: underline;" onclick="resetFilters();">Reset</button>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Status</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" checked id="filter-avail" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Available
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" checked id="filter-occup" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Occupied
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" checked id="filter-maint" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Maintenance
+                    </label>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 24px; border-top: 1px solid var(--border-dark); padding-top: 20px;">
+                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Location</h3>
+                <div style="position: relative;">
+                    <input class="form-control" type="text" placeholder="Search destinations..." style="padding-left: 36px;" />
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-disabled);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                    <span style="font-size: 11px; font-weight: 600; background: var(--primary); color: #ffffff; padding: 4px 10px; border-radius: 999px; display: flex; align-items: center; gap: 4px;">Chamonix <span style="cursor: pointer;">×</span></span>
+                    <span style="font-size: 11px; font-weight: 600; background: var(--border-dark); color: var(--text-primary); padding: 4px 10px; border-radius: 999px; cursor: pointer;">Zermatt</span>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-dark); padding-top: 20px;">
+                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Bedrooms</h3>
+                <input type="range" min="1" max="8" value="3" style="width: 100%; accent-color: var(--secondary);" />
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+                    <span>1+ Beds</span>
+                    <span>8+ Beds</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Unit Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--grid-gap); align-content: start;">
+        <!-- Unit Card 1 -->
+        <div class="property-card">
+            <div class="property-img-box" style="position: relative; height: 180px;">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBtmfr9S1_kufizmLmq234fYY1dPwq4OceLMKS2V_3jlFjk6bJnoPsmQ6m6fjRtQLNIs1I4g4F2QQ1N6DK49W6EdbS82LrwGVT91_FFy6GgcQ_KKHTKPoFIiov__f1N-rhJiETC2R4KIfn7ibTn7Ob0K5H0P1SNhDYQWytN2MdQ7-wUyHxq22KaYMGESumf0JWJJubfiI-QlG1_0qwhLE6eDerUml3TXy7Va6250uB-1w3mH_VZra1qyvUbkqfrr9kSy7g85h9-Oig" 
+                     style="width: 100%; height: 100%; object-fit: cover;" alt="Alpine Penthouse" />
+                <span class="status-pill success" style="position: absolute; top: 12px; right: 12px; background: rgba(0, 106, 102, 0.95); color: #ffffff; border: 1px solid var(--border);">Available</span>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
+                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Alpine Penthouse</h3>
+                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
+                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Chamonix, France
+                    </span>
+                </div>
+            </div>
+            <div class="property-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
+                        <span style="display: flex; align-items: center; gap: 4px;">🛏 4 Beds</span>
+                        <span style="display: flex; align-items: center; gap: 4px;">🚿 3 Baths</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€1,200</span>
+                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid var(--border-dark); padding-top: 16px;">
+                    <button class="btn btn-secondary" style="padding: 10px; justify-content: center;" onclick="showLuxeAlert('Blocked', 'Alpine Penthouse dates successfully blocked.', 'success')">Block Dates</button>
+                    <button class="btn btn-primary" style="padding: 10px; justify-content: center; background-color: var(--secondary);" onclick="showLuxeAlert('Clean Dispatched', 'Clean request has been scheduled.', 'success')">Request Clean</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unit Card 2 -->
+        <div class="property-card">
+            <div class="property-img-box" style="position: relative; height: 180px;">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSEiJcQZ0h0A-6npESsAc-pKEmGLPnGsbHLr7bIYGhKYkQCNfHaUkgmTiMTU3z28EMZNBxZ2Q1i7tsIKLbGcyerqmuG8MzgZZhfR5v16x6Wcf9tAiCw75KN39w9o0Tn7Rj2wrZAPGkdLncNlmkWM2qUlJq03krjpis1iQabRiYBPhYHdLn8sFHhp30YEUf4REDYKY2tAGsnKVFp4rUxvpN4gl-QwxVBB2DaejvnGJQTBpuP5j-wghf7MGz1tZZU7HmLb6rEKHf6BDN" 
+                     style="width: 100%; height: 100%; object-fit: cover;" alt="Nordic Retreat" />
+                <span class="status-pill warning" style="position: absolute; top: 12px; right: 12px; background: rgba(15, 61, 94, 0.95); color: #ffffff; border: 1px solid var(--border);">Occupied</span>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
+                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Nordic Retreat</h3>
+                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
+                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Zermatt, Switzerland
+                    </span>
+                </div>
+            </div>
+            <div class="property-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
+                        <span style="display: flex; align-items: center; gap: 4px;">🛏 2 Beds</span>
+                        <span style="display: flex; align-items: center; gap: 4px;">🚿 2 Baths</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€850</span>
+                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
+                    </div>
+                </div>
+                <div style="border-top: 1px solid var(--border-dark); padding-top: 16px;">
+                    <button class="btn btn-secondary" style="width: 100%; padding: 10px; justify-content: center;" onclick="window.location.href='/bookings'">View Reservation Log</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unit Card 3 -->
+        <div class="property-card">
+            <div class="property-img-box" style="position: relative; height: 180px;">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAT0d5yECFJhAWXKmNsyG4QgtMJs0b9nHs5yGcrI9zhk5b-9FqJeDcSWwaC0i2qItirczsm11dO3UsMLMoeZWjw9xN6Z768RH6ok1_fPRrmVFgmHY6N0w_RiZ-Zzn27spspseJiJA0qImIzYnjuvogrS4WNknweyWLtlu2JJFxaNnsdf_FWLlhfD89DzgrJd7YPBrbHzI01WxnwkUTgkNGyVKXSgHesfM4E7CWf1MTq4X8GPor02imvHtA0AbJ8jYz1OMnsaTH3YX3" 
+                     style="width: 100%; height: 100%; object-fit: cover;" alt="Lakeview Suite" />
+                <span class="status-pill danger" style="position: absolute; top: 12px; right: 12px; background: rgba(186, 26, 26, 0.95); color: #ffffff; border: 1px solid var(--border);">Maintenance</span>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
+                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Lakeview Suite</h3>
+                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
+                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                        St. Moritz, Switzerland
+                    </span>
+                </div>
+            </div>
+            <div class="property-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
+                        <span style="display: flex; align-items: center; gap: 4px;">🛏 1 Bed</span>
+                        <span style="display: flex; align-items: center; gap: 4px;">🚿 1.5 Baths</span>
+                    </div>
+                    <div style="text-align: right; opacity: 0.5;">
+                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€600</span>
+                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
+                    </div>
+                </div>
+                <div style="border-top: 1px solid var(--border-dark); padding-top: 16px;">
+                    <button class="btn btn-secondary" style="width: 100%; color: var(--error); border-color: var(--error); padding: 10px; justify-content: center;" onclick="window.location.href='/operations/maintenance'">View Active Repair Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function resetFilters() {
+        document.getElementById("filter-avail").checked = true;
+        document.getElementById("filter-occup").checked = true;
+        document.getElementById("filter-maint").checked = true;
+        showLuxeAlert("Filters Reset", "Filters have been successfully restored.", "success");
+    }
+</script>
