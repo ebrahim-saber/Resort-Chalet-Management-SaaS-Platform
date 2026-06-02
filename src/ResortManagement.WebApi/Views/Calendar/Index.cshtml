@@ -1,0 +1,300 @@
+@using ResortManagement.Domain.Entities.Reservations
+@using ResortManagement.Domain.Entities.Resorts
+@using ResortManagement.Domain.Entities.Operations
+@using static ResortManagement.WebApi.Controllers.Mvc.CalendarController
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "PMS Operational Timeline";
+    var units = ViewBag.Units as List<CalendarUnitDto> ?? new List<CalendarUnitDto>();
+    var reservations = ViewBag.Reservations as List<CalendarReservationDto> ?? new List<CalendarReservationDto>();
+    var housekeeping = ViewBag.Housekeeping as List<CalendarHousekeepingDto> ?? new List<CalendarHousekeepingDto>();
+    var maintenance = ViewBag.Maintenance as List<CalendarMaintenanceDto> ?? new List<CalendarMaintenanceDto>();
+    var resorts = ViewBag.Resorts as List<Resort> ?? new List<Resort>();
+    var selectedResortId = (Guid)ViewBag.SelectedResortId;
+    var startDate = (DateTime)ViewBag.StartDate;
+    var endDate = (DateTime)ViewBag.EndDate;
+    var totalDays = (endDate - startDate).Days;
+}
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop lg:px-margin-desktop w-full pt-28 pb-20">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-[32px] font-headline-lg font-bold text-primary mb-1">PMS Operational Timeline</h1>
+            <p class="text-body-md text-on-surface-variant">Live operations, housekeeping schedules, and guest allocations.</p>
+        </div>
+        
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="get" action="/calendar" class="flex flex-wrap items-center gap-3">
+                <select name="resortId" class="bg-surface border border-outline-variant/50 text-primary rounded-full px-4 py-2 text-label-md font-semibold focus:outline-none focus:ring-2 focus:ring-primary transition-all" onchange="this.form.submit()">
+                    @foreach (var resort in resorts)
+                    {
+                        <!option value="@resort.Id" @(resort.Id == selectedResortId ? "selected" : "")>@resort.Name</!option>
+                    }
+                </select>
+                
+                <input type="date" name="startDate" value="@startDate.ToString("yyyy-MM-dd")" class="bg-surface border border-outline-variant/50 text-primary rounded-full px-4 py-2 text-label-md font-semibold focus:outline-none focus:ring-2 focus:ring-primary transition-all" onchange="this.form.submit()" />
+            </form>
+            
+            <button class="bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-primary px-6 py-2 rounded-full text-label-md font-semibold transition-all shadow-sm flex items-center gap-2" onclick="rescheduleModeToggle()">
+                <span class="material-symbols-outlined text-[20px]">calendar_today</span>Reschedule Stay
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Board Grid -->
+    <div class="border border-outline-variant/30 rounded-2xl bg-white/75 backdrop-blur-md shadow-sm overflow-hidden">
+        <div class="overflow-x-auto relative">
+            <table class="w-full text-left border-collapse" style="min-width: 1200px; table-layout: fixed;">
+                <thead>
+                    <tr class="border-b border-outline-variant/30 bg-surface">
+                        <th style="width: 200px; position: sticky; left: 0; z-index: 20;" class="ps-6 py-4 bg-surface font-bold text-primary text-label-sm uppercase">Room / Unit</th>
+                        @for (int i = 0; i < totalDays; i++)
+                        {
+                            var day = startDate.AddDays(i);
+                            var isWeekend = day.DayOfWeek == DayOfWeek.Friday || day.DayOfWeek == DayOfWeek.Saturday;
+                            <th class="text-center py-2.5 @(isWeekend ? "bg-surface-container-low" : "")" style="width: 50px;">
+                                <div class="text-[12px] font-medium text-on-surface-variant">@day.ToString("ddd")</div>
+                                <div class="text-[15px] font-bold @(day.Date == DateTime.Today ? "text-secondary" : "text-primary")">@day.Day</div>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/20">
+                    @foreach (var unit in units)
+                    {
+                        var unitReservations = reservations.Where(r => r.UnitId == unit.Id).ToList();
+                        var unitHousekeeping = housekeeping.Where(h => h.UnitId == unit.Id).ToList();
+                        var unitMaintenance = maintenance.Where(m => m.UnitId == unit.Id).ToList();
+
+                        <tr class="align-middle bg-white/30">
+                            <!-- Unit Card Block (Sticky Left) -->
+                            <td style="position: sticky; left: 0; z-index: 10;" class="ps-6 py-4 bg-white/95 backdrop-blur-md border-r border-outline-variant/10">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center @(unit.HousekeepingStatus == "Clean" ? "bg-secondary-container text-on-secondary-container" : unit.HousekeepingStatus == "Dirty" ? "bg-error-container text-on-error-container" : "bg-surface-container-high text-on-surface")">
+                                        <span class="material-symbols-outlined text-[18px]">@(unit.HousekeepingStatus == "Clean" ? "check" : unit.HousekeepingStatus == "Dirty" ? "cleaning_services" : "build")</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-primary text-label-md">@unit.Name</div>
+                                        <div class="text-on-surface-variant text-[11px] font-medium">@unit.HousekeepingStatus</div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Timeline Days Grid -->
+                            @for (int i = 0; i < totalDays; i++)
+                            {
+                                var date = startDate.AddDays(i);
+                                var stay = unitReservations.FirstOrDefault(r => date >= r.CheckInDate.Date && date < r.CheckOutDate.Date);
+                                var hkTask = unitHousekeeping.FirstOrDefault(h => h.CreatedAt.Date == date);
+                                var maint = unitMaintenance.FirstOrDefault(m => m.CreatedAt.Date == date);
+
+                                if (stay != null)
+                                {
+                                    var isCheckIn = date == stay.CheckInDate.Date;
+                                    var nights = (stay.CheckOutDate - stay.CheckInDate).Days;
+                                    
+                                    if (isCheckIn)
+                                    {
+                                        var span = Math.Min(nights, (endDate - date).Days);
+                                        <td colspan="@span" class="p-1">
+                                            <div class="rounded-xl p-2 text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer text-white flex items-center gap-1.5 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md" 
+                                                 style="background: linear-gradient(135deg, #0f3d5e 0%, #002741 100%);"
+                                                 onclick="showReservationDetail('@stay.Id', '@stay.GuestName', '@stay.CheckInDate.ToShortDateString()', '@stay.CheckOutDate.ToShortDateString()', '@stay.TotalPrice.ToString("C")')">
+                                                <span class="material-symbols-outlined text-[16px]">account_circle</span>
+                                                <span class="text-label-sm font-bold">@stay.GuestName</span>
+                                            </div>
+                                        </td>
+                                        i += (span - 1);
+                                    }
+                                }
+                                else if (hkTask != null)
+                                {
+                                    <td class="p-1 text-center">
+                                        <div class="w-7 h-7 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mx-auto" title="Housekeeping: @hkTask.Status">
+                                            <span class="material-symbols-outlined text-[14px]">cleaning_services</span>
+                                        </div>
+                                    </td>
+                                }
+                                else if (maint != null)
+                                {
+                                    <td class="p-1 text-center">
+                                        <div class="w-7 h-7 rounded-full bg-error-container text-on-error-container flex items-center justify-center mx-auto" title="Maintenance: @maint.Description">
+                                            <span class="material-symbols-outlined text-[14px]">build</span>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="h-12 border-r border-outline-variant/10"></td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- Reschedule Stay Dialog Modal (Vanilla JS Glassmorphic) -->
+<div id="rescheduleModal" class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-50 hidden justify-center items-center p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-2xl shadow-2xl relative border border-white/40 bg-white/90">
+        <!-- Close Button -->
+        <button onclick="closeModal('rescheduleModal')" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <h5 class="text-headline-md font-bold text-primary mb-4">Reschedule Stay</h5>
+        
+        <form id="rescheduleForm" class="space-y-4">
+            <input type="hidden" id="modalResId" name="reservationId" />
+            
+            <div>
+                <label class="block text-label-sm text-on-surface-variant font-semibold mb-1">Guest Name</label>
+                <input type="text" id="modalGuestName" class="w-full px-4 py-2 bg-surface rounded-xl border border-outline-variant/40 text-primary font-semibold focus:outline-none" readonly />
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-on-surface-variant font-semibold mb-1">Select Room/Unit</label>
+                <select id="modalUnitSelect" name="unitId" class="w-full px-4 py-2 bg-surface rounded-xl border border-outline-variant/40 text-primary font-semibold focus:outline-none focus:ring-2 focus:ring-primary">
+                    @foreach (var unit in units)
+                    {
+                        <option value="@unit.Id">@unit.Name (@unit.HousekeepingStatus)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-label-sm text-on-surface-variant font-semibold mb-1">Check In</label>
+                    <input type="date" id="modalCheckIn" name="checkIn" class="w-full px-4 py-2 bg-surface rounded-xl border border-outline-variant/40 text-primary font-semibold focus:outline-none focus:ring-2 focus:ring-primary" required />
+                </div>
+                <div>
+                    <label class="block text-label-sm text-on-surface-variant font-semibold mb-1">Check Out</label>
+                    <input type="date" id="modalCheckOut" name="checkOut" class="w-full px-4 py-2 bg-surface rounded-xl border border-outline-variant/40 text-primary font-semibold focus:outline-none focus:ring-2 focus:ring-primary" required />
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" class="border border-outline-variant hover:bg-surface-container-low text-primary px-5 py-2 rounded-full text-label-md font-semibold transition-colors" onclick="closeModal('rescheduleModal')">Cancel</button>
+                <button type="button" class="bg-primary hover:bg-primary-container text-white hover:text-on-primary-container px-6 py-2 rounded-full text-label-md font-semibold transition-colors" onclick="submitReschedule()">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Details Modal (Vanilla JS Glassmorphic) -->
+<div id="detailModal" class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-50 hidden justify-center items-center p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-2xl shadow-2xl relative border border-white/40 bg-white/90">
+        <!-- Close Button -->
+        <button onclick="closeModal('detailModal')" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <h5 class="text-headline-md font-bold text-primary mb-4">Reservation Details</h5>
+
+        <div class="flex items-center gap-3.5 mb-6">
+            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-[24px]">verified</span>
+            </div>
+            <div>
+                <h4 class="text-headline-sm font-bold text-primary mb-0.5" id="detailGuest">Elena Higgins</h4>
+                <span class="bg-secondary-container text-on-secondary-container px-2.5 py-0.5 rounded-full text-[12px] font-bold">Confirmed Stay</span>
+            </div>
+        </div>
+
+        <div class="space-y-3.5 divide-y divide-outline-variant/20">
+            <div class="flex justify-between items-center py-2.5">
+                <span class="text-label-sm text-on-surface-variant font-semibold">Stay Period</span>
+                <span class="text-body-md font-bold text-primary" id="detailDates">Dec 20, 2026 - Dec 27, 2026</span>
+            </div>
+
+            <div class="flex justify-between items-center py-2.5">
+                <span class="text-label-sm text-on-surface-variant font-semibold">Total Price</span>
+                <span class="text-body-md font-bold text-secondary" id="detailPrice">$3,700.00</span>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-6">
+            <button type="button" class="border border-secondary text-secondary hover:bg-secondary-container hover:text-on-secondary-container px-5 py-2 rounded-full text-label-md font-semibold transition-colors" id="btnEditReservation">Reschedule Stay</button>
+            <button type="button" class="bg-primary hover:bg-primary-container text-white hover:text-on-primary-container px-6 py-2 rounded-full text-label-md font-semibold transition-colors" onclick="closeModal('detailModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    }
+
+    function showReservationDetail(id, guest, start, end, price) {
+        document.getElementById('detailGuest').innerText = guest;
+        document.getElementById('detailDates').innerText = start + " - " + end;
+        document.getElementById('detailPrice').innerText = price;
+        
+        document.getElementById('btnEditReservation').onclick = function() {
+            closeModal('detailModal');
+            triggerReschedule(id, guest, start, end);
+        };
+
+        openModal('detailModal');
+    }
+
+    function triggerReschedule(id, guest, start, end) {
+        document.getElementById('modalResId').value = id;
+        document.getElementById('modalGuestName').value = guest;
+        
+        const formatToInputDate = (str) => {
+            const date = new Date(str);
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        };
+        
+        document.getElementById('modalCheckIn').value = formatToInputDate(start);
+        document.getElementById('modalCheckOut').value = formatToInputDate(end);
+
+        openModal('rescheduleModal');
+    }
+
+    function submitReschedule() {
+        const formData = new FormData(document.getElementById('rescheduleForm'));
+        
+        fetch('/calendar/update-booking', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Rescheduled stay successfully! New price calculated.");
+                location.reload();
+            } else {
+                alert("Rescheduling rejected: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("An operational error occurred while rescheduling.");
+        });
+    }
+
+    function rescheduleModeToggle() {
+        alert("Click on any existing stay blocks in the grid and choose 'Reschedule Stay' to drag-and-drop or reschedule guests instantly.");
+    }
+</script>

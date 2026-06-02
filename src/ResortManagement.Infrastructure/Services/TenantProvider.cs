@@ -11,10 +11,6 @@ public class TenantProvider : ITenantProvider
 
     public void SetTenantId(Guid tenantId)
     {
-        if (_tenantId != Guid.Empty && _tenantId != tenantId)
-        {
-            throw new InvalidOperationException("Tenant ID has already been set for this request context.");
-        }
         _tenantId = tenantId;
     }
 }

@@ -1,0 +1,115 @@
+@{
+    ViewData["Title"] = "Concierge Support Center - ChaletElite";
+}
+
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPGfFfqT3mYKMsvDo9zy1LR5mHCKWw-xEARPEpVuVmfOyiXaeqlqfha76jKPKofIMeeJP2Eyct0sp5UHmnC0g6QqRh5ZA4F-yZf8sbaDYI5YSIQEWr7mdZ0D9BIIWKEyH2pthmBAEWrH0pNw28lbHh0ns5mEuxHmxksskPQLYlMkUBZi8FuAJfX6rWid6pBlh4FJ8BhELp_re80LNoQbePpA2RhctmceyPniSMzFTx71EdQlB3i9KBPjWnEImD6ajNPg5Y131q7RGi'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-surface-container-lowest/95 via-surface/90 to-surface-container-low/95 backdrop-blur-[6px]"></div>
+</div>
+
+<main class="max-w-[900px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop pt-32 pb-20 w-full relative">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <span class="material-symbols-outlined text-[48px] text-primary bg-primary-container/20 p-4 rounded-full mb-4">room_service</span>
+        <h1 class="text-display-md font-bold text-primary mb-2">Concierge Support Center</h1>
+        <p class="text-body-lg text-on-surface-variant max-w-xl mx-auto">Get high-priority engineering, operational assistance, or request bespoke feature implementations.</p>
+    </div>
+
+    <!-- Two-column Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <!-- Sidebar Cards (Contact info) -->
+        <div class="md:col-span-1 space-y-6">
+            <div class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-[28px] text-secondary mb-2">support_agent</span>
+                <h3 class="text-headline-sm font-bold text-primary mb-1">Direct Assistance</h3>
+                <p class="text-body-sm text-on-surface-variant mb-4">24/7 Priority support hotline for active elite plans.</p>
+                <p class="text-label-md text-secondary font-bold font-mono">+41 22 730 55 00</p>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-[28px] text-secondary mb-2">mark_email_unread</span>
+                <h3 class="text-headline-sm font-bold text-primary mb-1">Email Concierge</h3>
+                <p class="text-body-sm text-on-surface-variant mb-4">Typical response time for general inquiries is under 1 hour.</p>
+                <p class="text-label-md text-secondary font-bold font-mono">concierge@@chaletelite.com</p>
+            </div>
+        </div>
+
+        <!-- Interactive Form -->
+        <div class="md:col-span-2">
+            <div class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-8 shadow-md">
+                <h2 class="text-headline-md font-bold text-primary mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[24px] text-secondary">edit_note</span>
+                    Submit Support Ticket
+                </h2>
+
+                <form id="support-ticket-form" onsubmit="submitSupportTicket(event);" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label for="supportName" class="text-label-sm text-on-surface-variant font-semibold mb-2">Full Name</label>
+                            <input type="text" id="supportName" name="name" required class="bg-white/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="e.g. Ibrahim Saber" />
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="supportEmail" class="text-label-sm text-on-surface-variant font-semibold mb-2">Work Email</label>
+                            <input type="email" id="supportEmail" name="email" required class="bg-white/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="e.g. manager@@chaletelite.com" />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="supportCategory" class="text-label-sm text-on-surface-variant font-semibold mb-2">Inquiry Category</label>
+                        <select id="supportCategory" name="category" required class="bg-white/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all">
+                            <option value="Operational">Operational / Room Management Assistance</option>
+                            <option value="Technical">Technical Bug / System Outage</option>
+                            <option value="Billing">Billing & SaaS Subscription</option>
+                            <option value="Bespoke">Bespoke Feature Request</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="supportPriority" class="text-label-sm text-on-surface-variant font-semibold mb-2">Severity Level</label>
+                        <select id="supportPriority" name="priority" required class="bg-white/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all">
+                            <option value="Low">Low - Informational / Guidance</option>
+                            <option value="Medium" selected>Medium - Minor operational blocker</option>
+                            <option value="High">High - Core service degraded</option>
+                            <option value="Critical">Critical - Production outage / Guest checked-out blocked</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="supportMessage" class="text-label-sm text-on-surface-variant font-semibold mb-2">Detailed Description</label>
+                        <textarea id="supportMessage" name="message" required rows="4" class="bg-white/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all resize-none" placeholder="Provide as much technical or guest details as possible..."></textarea>
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button type="submit" class="w-full md:w-auto px-8 py-3 bg-primary text-on-primary text-label-md rounded-xl font-semibold hover:bg-primary/95 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">send</span> Dispatch Request
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Success Alert Banner (Hidden by default) -->
+                <div id="ticket-success-alert" style="display: none;" class="mt-6 bg-secondary-container/30 border border-secondary/50 rounded-xl p-6 text-center text-on-surface flex flex-col items-center justify-center transition-all duration-300">
+                    <span class="material-symbols-outlined text-[36px] text-secondary mb-2 animate-bounce">verified</span>
+                    <h4 class="text-headline-sm font-bold text-primary mb-1">Ticket Dispatched Successfully</h4>
+                    <p class="text-body-sm text-on-surface-variant max-w-sm">Your priority concierge ticket has been created and assigned ticket ID <strong class="font-mono">TKT-2026-602-EL</strong>. Our engineering desk is reviewing your request.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function submitSupportTicket(event) {
+        event.preventDefault();
+        
+        // Mock sending request by hiding the form and showing the success banner
+        const form = document.getElementById("support-ticket-form");
+        const alertBanner = document.getElementById("ticket-success-alert");
+        
+        form.style.opacity = "0";
+        setTimeout(() => {
+            form.style.display = "none";
+            alertBanner.style.display = "flex";
+            setTimeout(() => { alertBanner.style.opacity = "1"; }, 10);
+        }, 300);
+    }
+</script>

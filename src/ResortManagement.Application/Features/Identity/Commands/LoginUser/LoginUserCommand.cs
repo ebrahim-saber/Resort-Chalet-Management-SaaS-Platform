@@ -77,8 +77,14 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthRes
             .Distinct()
             .ToListAsync(cancellationToken);
 
+        var roles = await _context.Roles
+            .IgnoreQueryFilters()
+            .Where(r => roleIds.Contains(r.Id))
+            .Select(r => r.Name)
+            .ToListAsync(cancellationToken);
+
         // 4. Generate JWT Access Token
-        var token = _jwtProvider.GenerateToken(user, permissions);
+        var token = _jwtProvider.GenerateToken(user, permissions, roles);
 
         // 5. Generate and Save Refresh Token
         var refreshTokenString = _jwtProvider.GenerateRefreshToken();

@@ -3,125 +3,321 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to LuxeStay SaaS</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>ChaletElite - Digital Concierge Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1a1c1e",
+                      "on-secondary-container": "#00716c",
+                      "secondary-fixed-dim": "#51dad3",
+                      "on-primary-fixed-variant": "#204a6b",
+                      "on-primary": "#ffffff",
+                      "primary-container": "#0f3d5e",
+                      "on-error-container": "#93000a",
+                      "surface": "#f9f9fc",
+                      "surface-container-high": "#e8e8eb",
+                      "surface-tint": "#3a6285",
+                      "on-primary-fixed": "#001d33",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#cd9a5f",
+                      "surface-dim": "#dadadd",
+                      "background": "#f9f9fc",
+                      "tertiary-container": "#553200",
+                      "on-secondary-fixed": "#00201e",
+                      "inverse-on-surface": "#f1f0f4",
+                      "primary": "#002741",
+                      "inverse-primary": "#a3caf2",
+                      "inverse-surface": "#2f3033",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed": "#2b1700",
+                      "tertiary-fixed-dim": "#f4bc7e",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#72f7ef",
+                      "tertiary": "#371f00",
+                      "secondary": "#006a66",
+                      "on-primary-container": "#81a8ce",
+                      "surface-container-highest": "#e2e2e5",
+                      "surface-bright": "#f9f9fc",
+                      "surface-variant": "#e2e2e5",
+                      "surface-container-low": "#f3f3f6",
+                      "tertiary-fixed": "#ffddba",
+                      "secondary-container": "#72f7ef",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#c2c7ce",
+                      "outline": "#72777e",
+                      "primary-fixed": "#cee5ff",
+                      "primary-fixed-dim": "#a3caf2",
+                      "surface-container": "#eeedf1",
+                      "on-secondary-fixed-variant": "#00504c",
+                      "on-surface-variant": "#42474e",
+                      "on-tertiary-fixed-variant": "#643f0b",
+                      "on-background": "#1a1c1e",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "section-gap": "80px",
+                      "unit": "8px",
+                      "container-max": "1440px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "margin-tablet": "32px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                      "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                      "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                      "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+              }
+            }
+          },
+        }
+    </script>
     <style>
-        body {
-            background: radial-gradient(circle at 10% 20%, rgba(0, 39, 65, 0.05) 0%, rgba(249, 249, 252, 1) 90%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 39, 65, 0.1);
         }
-
-        .auth-container {
-            width: 100%;
-            max-width: 480px;
-            margin: auto;
-        }
-
-        .auth-logo-box {
-            text-align: center;
-            margin-bottom: 32px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .auth-logo {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(0, 106, 102, 0.25);
-        }
-
-        .auth-logo svg {
-            fill: #ffffff;
-            width: 32px;
-            height: 32px;
-        }
-
-        .auth-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .auth-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .error-banner {
-            background-color: rgba(186, 26, 26, 0.06);
-            border-left: 4px solid var(--error);
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            color: var(--error);
-            margin-bottom: 24px;
-            font-weight: 500;
+        .input-glow:focus {
+            box-shadow: 0 0 0 4px rgba(0, 106, 102, 0.1);
+            border-color: #006a66;
+            outline: none;
         }
     </style>
 </head>
-<body>
-    <div class="auth-container">
-        <div class="auth-logo-box">
-            <div class="auth-logo">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L4.5 9h15L12 2zm-7.5 9h15v10h-15V11zm7.5 3c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z" />
-                </svg>
-            </div>
-            <h1 class="auth-title">LuxeStay Portal</h1>
-            <span class="auth-subtitle">Resort & Chalet Management SaaS Platform</span>
+<body class="bg-background min-h-screen relative overflow-hidden flex items-center justify-center font-body-md">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDt1tUQNW0_RGSJMSLcSBiUpJdVdreV2Glkxn1nMmoHG6nmqyUkTJay7wpWlYGMa5aPWpY3umJ3DsO2Fn34CYiQEMfMgpjB_RU1GVTq18vYEXLf3oqbH9ARky5F4VtEOgEJHUNGpS0JkPu1xAXafNPQWzGZ3U3BMG9rFMsoIdDiFwm9A-uESx2ktMr4g7aoiLYrw435WCFtbt-iDAVCGgS5hxitGbfdUnbDwOZUK2jcZV65-rhAVcWv0jFh0zgR_MN5QAo6yRTNH3Rp');">
+        <div class="absolute inset-0 bg-primary/40 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    </div>
+    
+    <!-- Login Container -->
+    <div class="relative z-10 w-full max-w-md px-margin-mobile md:px-0">
+        <!-- Brand Logo Area -->
+        <div class="text-center mb-8">
+            <h1 class="text-[32px] font-semibold tracking-tight text-white mb-2 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-[36px]" style="color: #D4A95A;">holiday_village</span>
+                ChaletElite
+            </h1>
+            <p class="font-body-md text-body-md text-white/80">Digital Concierge Access</p>
         </div>
-
-        <div class="glass-card">
-            <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 24px; color: var(--primary);">Sign In</h2>
+        
+        <!-- Glassmorphic Card -->
+        <div class="glass-panel rounded-2xl p-8 md:p-10 w-full transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,39,65,0.15)]">
+            
+            <!-- Tabs for Login / Register -->
+            <div class="flex border-b border-outline-variant/30 mb-6">
+                <button onclick="switchTab('login')" id="tab-login-btn" class="flex-1 pb-3 text-center font-semibold text-label-md text-primary border-b-2 border-primary transition-all">Sign In</button>
+                <button onclick="switchTab('register')" id="tab-register-btn" class="flex-1 pb-3 text-center font-semibold text-label-md text-on-surface-variant border-b-2 border-transparent transition-all">Create Account</button>
+            </div>
 
             @if (ViewBag.Error != null)
             {
-                <div class="error-banner">
+                <div class="bg-error/10 border-l-4 border-error p-4 rounded-lg mb-6 text-sm text-error font-medium">
                     @ViewBag.Error
                 </div>
             }
 
-            <form action="/login" method="post">
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
-                    <input class="form-control" type="email" id="email" name="email" required placeholder="name@company.com" value="manager@luxestay.com" />
+            @if (ViewBag.RegisterError != null)
+            {
+                <div class="bg-error/10 border-l-4 border-error p-4 rounded-lg mb-6 text-sm text-error font-medium">
+                    @ViewBag.RegisterError
                 </div>
+            }
+            
+            <!-- Login Form Container -->
+            <div id="login-form-container">
+                <form action="/login" method="POST" class="space-y-6">
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-2" for="email">Email Address</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">mail</span>
+                            </span>
+                            <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="email" name="email" placeholder="concierge@chaletelite.com" required type="email" value="manager@chaletelite.com"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-2" for="password">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">lock</span>
+                            </span>
+                            <input class="w-full pl-10 pr-10 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="password" name="password" placeholder="••••••••" required type="password" value="manager123"/>
+                            <button class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';">
+                                <span class="material-symbols-outlined">visibility_off</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="flex items-center">
+                            <input class="h-4 w-4 text-secondary focus:ring-secondary border-outline-variant rounded cursor-pointer" id="remember-me" name="remember-me" type="checkbox" checked/>
+                            <label class="ml-2 block font-body-md text-[14px] text-on-surface-variant cursor-pointer" for="remember-me">
+                                Remember me
+                            </label>
+                        </div>
+                        <div class="text-sm">
+                            <a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors" href="#">Forgot password?</a>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm font-semibold text-label-md text-white bg-primary hover:bg-primary/95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200" type="submit">
+                        Sign In
+                        <span class="material-symbols-outlined ml-2 text-[20px]">arrow_forward</span>
+                    </button>
+                </form>
 
-                <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input class="form-control" type="password" id="password" name="password" required placeholder="••••••••" value="SuperSecurePassword123!" />
+                <div class="mt-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-outline-variant/30"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white rounded-md font-body-md text-[14px] text-on-surface-variant">Or continue with</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <button onclick="window.location.href='/auth/google-login'" class="w-full flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200" type="button">
+                            <svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 24 24">
+                                <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"></path>
+                            </svg>
+                            Google
+                        </button>
+                        <button onclick="window.location.href='/auth/facebook-login'" class="w-full flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200" type="button">
+                            <svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 24 24">
+                                <path d="M12,2C6.477,2,2,6.477,2,12c0,4.991,3.657,9.128,8.438,9.879V14.89h-2.54V12h2.54V9.797c0-2.506,1.492-3.89,3.777-3.89c1.094,0,2.238,0.195,2.238,0.195v2.46h-1.26c-1.243,0-1.63,0.771-1.63,1.562V12h2.773l-0.443,2.89h-2.33v6.989C18.343,21.129,22,16.99,22,12C22,6.477,17.523,2,12,2z"></path>
+                            </svg>
+                            Facebook
+                        </button>
+                    </div>
                 </div>
+            </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; font-size: 13px;">
-                    <label style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" style="accent-color: var(--secondary);" checked /> Remember me
-                    </label>
-                    <a href="#" style="color: var(--secondary); text-decoration: none; font-weight: 500;">Forgot Password?</a>
-                </div>
-
-                <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px;" type="submit">
-                    Access Dashboard
-                </button>
-            </form>
+            <!-- Register Form Container -->
+            <div id="register-form-container" class="hidden">
+                <form action="/register" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-1" for="tenantName">Resort / Company Name</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">domain</span>
+                            </span>
+                            <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="tenantName" name="tenantName" placeholder="Grand Alpine Resort" required type="text"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-1" for="subdomain">Subdomain</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">language</span>
+                            </span>
+                            <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="subdomain" name="subdomain" placeholder="grandalpine" required type="text"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-1" for="adminFullName">Admin Full Name</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">person</span>
+                            </span>
+                            <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="adminFullName" name="adminFullName" placeholder="Ibrahim Saber" required type="text"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-1" for="adminEmail">Admin Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">mail</span>
+                            </span>
+                            <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="adminEmail" name="adminEmail" placeholder="admin@grandalpine.com" required type="email"/>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-primary mb-1" for="adminPassword">Admin Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="material-symbols-outlined text-outline">lock</span>
+                            </span>
+                            <input class="w-full pl-10 pr-10 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface transition-all duration-200 input-glow" id="adminPassword" name="adminPassword" placeholder="••••••••" required type="password"/>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-semibold text-label-md text-white bg-primary hover:bg-primary/95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 mt-4" type="submit">
+                        Create Account
+                        <span class="material-symbols-outlined ml-2 text-[20px]">add_home_work</span>
+                    </button>
+                </form>
+            </div>
+            
+            <p class="mt-8 text-center font-body-md text-[13px] text-on-surface-variant">
+                By signing in, you agree to our <a class="text-secondary hover:underline" href="#">Terms of Service</a> and <a class="text-secondary hover:underline" href="#">Privacy Policy</a>.
+            </p>
         </div>
-
-        <p style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-secondary);">
-            Don't have a resort account? <a href="#" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Register Tenant</a>
-        </p>
     </div>
+
+    <script>
+        function switchTab(tab) {
+            const loginForm = document.getElementById('login-form-container');
+            const registerForm = document.getElementById('register-form-container');
+            const loginBtn = document.getElementById('tab-login-btn');
+            const registerBtn = document.getElementById('tab-register-btn');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginBtn.className = "flex-1 pb-3 text-center font-semibold text-label-md text-primary border-b-2 border-primary transition-all";
+                registerBtn.className = "flex-1 pb-3 text-center font-semibold text-label-md text-on-surface-variant border-b-2 border-transparent transition-all";
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                loginBtn.className = "flex-1 pb-3 text-center font-semibold text-label-md text-on-surface-variant border-b-2 border-transparent transition-all";
+                registerBtn.className = "flex-1 pb-3 text-center font-semibold text-label-md text-primary border-b-2 border-primary transition-all";
+            }
+        }
+
+        // Auto-switch to register tab if there was a registration error
+        @if (ViewBag.RegisterError != null)
+        {
+            <text>switchTab('register');</text>
+        }
+    </script>
 </body>
 </html>
+

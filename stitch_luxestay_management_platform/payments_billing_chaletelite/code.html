@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChaletElite - Payments &amp; Billing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1a1c1e",
+                      "on-secondary-container": "#00716c",
+                      "secondary-fixed-dim": "#51dad3",
+                      "on-primary-fixed-variant": "#204a6b",
+                      "on-primary": "#ffffff",
+                      "primary-container": "#0f3d5e",
+                      "on-error-container": "#93000a",
+                      "surface": "#f9f9fc",
+                      "surface-container-high": "#e8e8eb",
+                      "surface-tint": "#3a6285",
+                      "on-primary-fixed": "#001d33",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#cd9a5f",
+                      "surface-dim": "#dadadd",
+                      "background": "#f9f9fc",
+                      "tertiary-container": "#553200",
+                      "on-secondary-fixed": "#00201e",
+                      "inverse-on-surface": "#f1f0f4",
+                      "primary": "#002741",
+                      "inverse-primary": "#a3caf2",
+                      "inverse-surface": "#2f3033",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed": "#2b1700",
+                      "tertiary-fixed-dim": "#f4bc7e",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#72f7ef",
+                      "tertiary": "#371f00",
+                      "secondary": "#006a66",
+                      "on-primary-container": "#81a8ce",
+                      "surface-container-highest": "#e2e2e5",
+                      "surface-bright": "#f9f9fc",
+                      "surface-variant": "#e2e2e5",
+                      "surface-container-low": "#f3f3f6",
+                      "tertiary-fixed": "#ffddba",
+                      "secondary-container": "#72f7ef",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#c2c7ce",
+                      "outline": "#72777e",
+                      "primary-fixed": "#cee5ff",
+                      "primary-fixed-dim": "#a3caf2",
+                      "surface-container": "#eeedf1",
+                      "on-secondary-fixed-variant": "#00504c",
+                      "on-surface-variant": "#42474e",
+                      "on-tertiary-fixed-variant": "#643f0b",
+                      "on-background": "#1a1c1e",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "section-gap": "80px",
+                      "unit": "8px",
+                      "container-max": "1440px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "margin-tablet": "32px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      }
+              }
+            },
+          }
+      </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px 0 rgba(0, 39, 65, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative pt-[104px]">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center px-8 h-16 w-full z-50 fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/40 dark:border-white/10 bg-white/70 dark:bg-on-surface/70 backdrop-blur-xl shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] backdrop-blur-xl shadow-2xl shadow-primary/5 hidden md:flex">
+<div class="flex items-center gap-8">
+<div class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">
+                ChaletElite
+            </div>
+<nav class="flex gap-6">
+<!-- Analytics active for Revenue/Billing intent -->
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Resorts</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Reservations</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md px-4 py-2 scale-95 transition-transform duration-200" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-primary dark:text-primary-fixed">
+<button class="p-2 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+<button class="text-primary dark:text-primary-fixed text-label-md font-label-md px-4 py-2 border border-outline-variant/30 rounded-full hover:bg-white/20 dark:hover:bg-on-surface/20 transition-all duration-300">
+                Quick Actions
+            </button>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-6 py-2 rounded-full hover:bg-primary/90 transition-all shadow-md">
+                New Booking
+            </button>
+</div>
+</header>
+<!-- SideNavBar (Mobile/Tablet replacement for logic, hidden on large desktop) -->
+<nav class="hidden lg:flex flex-col p-6 z-40 fixed left-0 top-0 h-full w-64 border-r border-white/20 bg-white/80 dark:bg-on-surface/80 backdrop-blur-lg shadow-xl shadow-lg md:hidden">
+<div class="flex flex-col gap-8 h-full">
+<div class="flex items-center gap-3">
+<img alt="Resort Logo" class="w-10 h-10 rounded-full object-cover" data-alt="A small, elegant logo graphic for a luxury alpine resort featuring a stylized mountain peak in deep ocean blue against a crisp white background. Minimalist luxury hospitality brand identity. High contrast, sharp edges, professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATh4NCDpF7-t1YlTnFy2TF8frWnxjGPZ4tUgfbvb7ejk0YhJ86NeRYFDVX5vr7vQ-p7p6qL26OqZ2cofZQOAUr8XfkBiO3b9urRZYy-IwqcWTM4hxtw6XGDDcvYWTFabk3a9vpBpRG7c_MKkH1NM6fVRYIeTDsZ6A8Y6m40unqoXTtAMW0XlwhOYyl-Xq8nDNVMh_8i_V9SaB8ncgbp2Vw3Hdv1lHdoHg7vl26C8NREzdXke29miyRmTb1RuLrP9tPeB0MiDNne9K7"/>
+<div>
+<h2 class="text-label-md font-label-md font-bold text-primary">Alpine Peak</h2>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Luxury Chalets</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 flex-grow mt-8">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="holiday_village">holiday_village</span> Portfolio
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span> Bookings
+                </a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-lg text-label-md font-label-md opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span> Revenue
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="engineering">engineering</span> Staff
+                </a>
+</div>
+<button class="bg-primary text-on-primary text-label-md font-label-md w-full py-3 rounded-lg mt-auto hover:bg-primary/90 transition-all">
+                Maintenance Request
+            </button>
+<div class="flex flex-col gap-2 mt-4 pt-4 border-t border-outline-variant/30">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high rounded-lg text-label-md font-label-md hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span> Support
+                </a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-8 md:py-12 flex flex-col gap-section-gap w-full lg:ml-0">
+<!-- Header Section -->
+<section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-2">Financial Overview</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl">Executive summary of revenue performance, pending transactions, and key metrics across the chalet portfolio.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 border border-secondary text-secondary text-label-md font-label-md rounded-full hover:bg-secondary/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="download">download</span> Export Report
+                </button>
+</div>
+</section>
+<!-- Key Metrics Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- RevPAR -->
+<div class="glass-panel rounded-xl p-6 md:p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300 group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+<span class="text-secondary text-label-md font-label-md bg-secondary/10 px-3 py-1 rounded-full flex items-center gap-1">+12.4% <span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span></span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface-variant mb-1">RevPAR (YTD)</p>
+<h3 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary">€ 1,245.00</h3>
+</div>
+</div>
+<!-- ADR -->
+<div class="glass-panel rounded-xl p-6 md:p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300 group relative overflow-hidden">
+<div class="absolute -right-10 -top-10 opacity-5 w-40 h-40 bg-secondary rounded-full blur-3xl"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="p-3 bg-surface-variant text-on-surface-variant rounded-lg">
+<span class="material-symbols-outlined" data-icon="sell">sell</span>
+</div>
+<span class="text-secondary text-label-md font-label-md bg-secondary/10 px-3 py-1 rounded-full flex items-center gap-1">+5.2% <span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span></span>
+</div>
+<div class="relative z-10">
+<p class="text-label-md font-label-md text-on-surface-variant mb-1">ADR (Average Daily Rate)</p>
+<h3 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary">€ 3,890.00</h3>
+</div>
+</div>
+<!-- Total Revenue -->
+<div class="glass-panel bg-primary rounded-xl p-6 md:p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300 group border-none shadow-[0_8px_30px_rgb(0,39,65,0.3)]">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-white/20 text-on-primary rounded-lg backdrop-blur-md">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<span class="text-on-primary text-label-md font-label-md bg-white/20 px-3 py-1 rounded-full flex items-center gap-1">+18.9% <span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span></span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-primary-fixed-dim mb-1">Total Revenue (Q3)</p>
+<h3 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-on-primary">€ 4.2M</h3>
+</div>
+</div>
+</section>
+<!-- Charts Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter h-auto lg:h-[400px]">
+<!-- Main Revenue Area Chart -->
+<div class="lg:col-span-2 glass-panel rounded-xl p-6 flex flex-col h-full">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-headline-md font-headline-md text-primary">Revenue Trends</h3>
+<select class="bg-surface border border-outline-variant/50 text-on-surface text-label-sm font-label-sm rounded-md px-3 py-1.5 focus:ring-secondary focus:border-secondary">
+<option>Last 6 Months</option>
+<option>Year to Date</option>
+<option>Last 12 Months</option>
+</select>
+</div>
+<div class="flex-grow relative w-full h-[250px] lg:h-auto">
+<canvas id="revenueChart"></canvas>
+</div>
+</div>
+<!-- Occupancy/Payment Bar Chart -->
+<div class="glass-panel rounded-xl p-6 flex flex-col h-full">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-headline-md font-headline-md text-primary">Collection Status</h3>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined" data-icon="more_vert">more_vert</span></button>
+</div>
+<div class="flex-grow relative w-full h-[250px] lg:h-auto">
+<canvas id="collectionChart"></canvas>
+</div>
+</div>
+</section>
+<!-- Invoice Management & Timeline Layout -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Invoices List -->
+<div class="lg:col-span-2 glass-panel rounded-xl p-6 overflow-hidden flex flex-col">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+<h3 class="text-headline-md font-headline-md text-primary">Recent Invoices</h3>
+<div class="flex gap-2 bg-surface-container-low p-1 rounded-lg">
+<button class="px-4 py-1.5 bg-white shadow-sm rounded-md text-label-sm font-label-sm text-primary transition-all">All</button>
+<button class="px-4 py-1.5 rounded-md text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-all">Paid</button>
+<button class="px-4 py-1.5 rounded-md text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-all">Overdue</button>
+<button class="px-4 py-1.5 rounded-md text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-all">Draft</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/30 text-label-sm font-label-sm text-on-surface-variant">
+<th class="pb-3 font-medium">Invoice ID</th>
+<th class="pb-3 font-medium">Client / Property</th>
+<th class="pb-3 font-medium">Date</th>
+<th class="pb-3 font-medium">Amount</th>
+<th class="pb-3 font-medium">Status</th>
+<th class="pb-3 font-medium"></th>
+</tr>
+</thead>
+<tbody class="text-body-md font-body-md">
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-lowest/50 transition-colors">
+<td class="py-4 font-medium text-primary">INV-2023-142</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-label-sm font-label-sm">EH</div>
+<div>
+<p class="text-primary font-medium text-sm">Elena Higgins</p>
+<p class="text-on-surface-variant text-xs">Chalet Zermatt Peak</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Oct 12, 2024</td>
+<td class="py-4 font-medium text-primary">€ 24,500.00</td>
+<td class="py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Paid
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span></button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-lowest/50 transition-colors">
+<td class="py-4 font-medium text-primary">INV-2023-145</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-label-sm font-label-sm">MR</div>
+<div>
+<p class="text-primary font-medium text-sm">Marcus Rostova</p>
+<p class="text-on-surface-variant text-xs">Alpine Lodge Cortina</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Oct 15, 2024</td>
+<td class="py-4 font-medium text-primary">€ 18,200.00</td>
+<td class="py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-error/10 text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Overdue
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span></button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-lowest/50 transition-colors">
+<td class="py-4 font-medium text-primary">INV-2023-148</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center text-label-sm font-label-sm">SV</div>
+<div>
+<p class="text-primary font-medium text-sm">Sophia Varela</p>
+<p class="text-on-surface-variant text-xs">Chalet Mont Blanc</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Oct 18, 2024</td>
+<td class="py-4 font-medium text-primary">€ 32,000.00</td>
+<td class="py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-surface-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Draft
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Payment Tracking Timeline -->
+<div class="glass-panel rounded-xl p-6 flex flex-col">
+<h3 class="text-headline-md font-headline-md text-primary mb-6">Recent Activity</h3>
+<div class="relative pl-6 border-l-2 border-outline-variant/30 flex flex-col gap-6 flex-grow">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-white p-1 rounded-full border-2 border-secondary">
+<div class="w-2 h-2 bg-secondary rounded-full"></div>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Today, 10:42 AM</p>
+<p class="text-body-md font-body-md text-primary font-medium">Payment Received</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-1">€24,500 via Wire Transfer from Elena Higgins.</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-white p-1 rounded-full border-2 border-outline">
+<div class="w-2 h-2 bg-outline rounded-full"></div>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Yesterday, 14:15 PM</p>
+<p class="text-body-md font-body-md text-primary font-medium">Invoice Generated</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-1">INV-2023-148 created for Chalet Mont Blanc.</p>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative">
+<div class="absolute -left-[31px] bg-white p-1 rounded-full border-2 border-error">
+<div class="w-2 h-2 bg-error rounded-full"></div>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Oct 16, 09:00 AM</p>
+<p class="text-body-md font-body-md text-primary font-medium">Payment Overdue</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-1">Automated reminder sent to Marcus Rostova for INV-2023-145.</p>
+</div>
+</div>
+<button class="mt-6 text-secondary text-label-md font-label-md hover:underline text-left">View Full History</button>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-12 px-margin-desktop w-full mt-section-gap w-full border-t border-outline-variant/30 bg-surface-container-low bg-surface-container-lowest dark:bg-on-surface flat no shadows">
+<div class="text-headline-sm font-headline-sm text-primary mb-4 md:mb-0">
+            ChaletElite
+        </div>
+<div class="flex gap-6 mb-4 md:mb-0">
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">API Docs</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Concierge Support</a>
+</div>
+<div class="text-tertiary dark:text-tertiary-fixed text-label-sm font-label-sm">
+            © 2024 ChaletElite Luxury Management. All rights reserved.
+        </div>
+</footer>
+<!-- Chart Scripts -->
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tailwind Colors extracted for Chart.js
+            const colors = {
+                primary: '#002741',
+                secondary: '#006a66',
+                secondaryLight: 'rgba(0, 106, 102, 0.1)',
+                surfaceVariant: '#e2e2e5',
+                onSurfaceVariant: '#42474e'
+            };
+
+            // Revenue Area Chart
+            const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+            
+            // Create gradient
+            let gradient = ctxRevenue.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(0, 39, 65, 0.4)'); // Primary with opacity
+            gradient.addColorStop(1, 'rgba(0, 39, 65, 0.0)');
+
+            new Chart(ctxRevenue, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Gross Revenue',
+                        data: [1.2, 1.9, 1.5, 2.8, 3.2, 4.2],
+                        borderColor: colors.primary,
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: colors.primary,
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 14 },
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '€ ' + context.parsed.y + 'M';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: colors.surfaceVariant,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: colors.onSurfaceVariant,
+                                font: { family: 'Inter', size: 12 },
+                                callback: function(value) { return '€' + value + 'M'; }
+                            }
+                        },
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: {
+                                color: colors.onSurfaceVariant,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+
+            // Collection Bar Chart
+            const ctxCollection = document.getElementById('collectionChart').getContext('2d');
+            new Chart(ctxCollection, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3'],
+                    datasets: [
+                        {
+                            label: 'Collected',
+                            data: [85, 90, 75],
+                            backgroundColor: colors.secondary,
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        },
+                        {
+                            label: 'Pending',
+                            data: [15, 10, 25],
+                            backgroundColor: colors.surfaceVariant,
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { family: 'Inter', size: 12 },
+                                color: colors.onSurfaceVariant
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 14 },
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            stacked: true,
+                            max: 100,
+                            grid: {
+                                color: colors.surfaceVariant,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            stacked: true,
+                            grid: { display: false, drawBorder: false },
+                            ticks: {
+                                color: colors.onSurfaceVariant,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

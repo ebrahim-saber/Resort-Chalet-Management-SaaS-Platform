@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Register Property Resort";
+}
+
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPGfFfqT3mYKMsvDo9zy1LR5mHCKWw-xEARPEpVuVmfOyiXaeqlqfha76jKPKofIMeeJP2Eyct0sp5UHmnC0g6QqRh5ZA4F-yZf8sbaDYI5YSIQEWr7mdZ0D9BIIWKEyH2pthmBAEWrH0pNw28lbHh0ns5mEuxHmxksskPQLYlMkUBZi8FuAJfX6rWid6pBlh4FJ8BhELp_re80LNoQbePpA2RhctmceyPniSMzFTx71EdQlB3i9KBPjWnEImD6ajNPg5Y131q7RGi'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-surface-container-lowest/95 via-surface/90 to-surface-container-low/95 backdrop-blur-[6px]"></div>
+</div>
+
+<main class="max-w-xl mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop pt-32 pb-20 flex flex-col justify-center min-h-screen w-full relative">
+    <div class="bg-white/80 backdrop-blur-2xl border border-white/60 rounded-3xl p-8 md:p-10 shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
+        <header class="mb-8 text-center relative">
+            <div class="inline-flex items-center justify-center bg-gradient-to-br from-primary to-primary-container p-4 rounded-3xl shadow-lg mb-4 text-white hover:scale-105 transition-transform duration-300">
+                <span class="material-symbols-outlined text-[36px]">apartment</span>
+            </div>
+            <h1 class="text-display-sm-mobile md:text-headline-lg font-bold text-primary tracking-tight">Register Luxury Resort</h1>
+            <p class="text-body-md text-on-surface-variant max-w-sm mx-auto mt-2">Introduce a new destination property to your global hospitality SaaS portfolio.</p>
+        </header>
+
+        <form action="/resorts/create" method="POST" class="space-y-6">
+            <!-- Resort Name -->
+            <div class="space-y-2">
+                <label for="name" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">business</span>
+                    Resort Brand Name
+                </label>
+                <div class="relative">
+                    <input type="text" id="name" name="name" required 
+                           class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl pl-4 pr-10 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold placeholder:text-outline/65" 
+                           placeholder="e.g. Chalet Mont Blanc Executive" />
+                </div>
+            </div>
+
+            <!-- Address Location -->
+            <div class="space-y-2">
+                <label for="address" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">distance</span>
+                    Physical Destination Address
+                </label>
+                <div class="relative">
+                    <input type="text" id="address" name="address" required 
+                           class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl pl-4 pr-10 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold placeholder:text-outline/65" 
+                           placeholder="e.g. Chemin des Alpages, 74400 Chamonix, France" />
+                </div>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="space-y-2">
+                <label for="contactNumber" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">call</span>
+                    Concierge Contact Number
+                </label>
+                <div class="relative">
+                    <input type="text" id="contactNumber" name="contactNumber" 
+                           class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl pl-4 pr-10 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold placeholder:text-outline/65" 
+                           placeholder="e.g. +33 4 50 53 00 00" />
+                </div>
+            </div>
+
+            <div class="pt-4 flex gap-4">
+                <button type="button" onclick="window.location.href='/resorts'" 
+                        class="w-1/2 py-3.5 border border-outline-variant/60 text-primary text-label-md rounded-2xl font-bold hover:bg-surface-container-low transition-all active:scale-[0.98]">
+                    Cancel
+                </button>
+                <button type="submit" 
+                        class="w-1/2 py-3.5 bg-primary hover:bg-primary-container text-on-primary text-label-md rounded-2xl font-bold shadow-lg shadow-primary/10 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-[0.98]">
+                    Save Resort
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

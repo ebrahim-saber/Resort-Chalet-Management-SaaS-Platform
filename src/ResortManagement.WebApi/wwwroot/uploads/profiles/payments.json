@@ -1,0 +1,36 @@
+{
+  "fefe6423-3449-40d5-969b-65713f137246": {
+    "PayPal": {
+      "IsActive": false,
+      "Email": "",
+      "WalletNumber": "",
+      "BankName": "",
+      "AccountHolder": "",
+      "IBAN": ""
+    },
+    "VodafoneCash": {
+      "IsActive": true,
+      "Email": "",
+      "WalletNumber": "01090057724",
+      "BankName": "",
+      "AccountHolder": "",
+      "IBAN": ""
+    },
+    "CreditCard": {
+      "IsActive": true,
+      "Email": "",
+      "WalletNumber": "",
+      "BankName": "",
+      "AccountHolder": "",
+      "IBAN": ""
+    },
+    "BankTransfer": {
+      "IsActive": false,
+      "Email": "",
+      "WalletNumber": "",
+      "BankName": "",
+      "AccountHolder": "",
+      "IBAN": ""
+    }
+  }
+}

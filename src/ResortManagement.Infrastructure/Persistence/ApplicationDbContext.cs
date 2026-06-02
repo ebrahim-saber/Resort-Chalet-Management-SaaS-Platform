@@ -132,8 +132,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
                     if (entry.Entity is IMustHaveTenant tenantEntity)
                     {
-                        // Safely inject tenant context automatically
-                        if (tenantEntity.TenantId == Guid.Empty)
+                        // Safely inject tenant context and prevent cross-tenant parameter tampering
+                        if (_tenantProvider.TenantId != Guid.Empty)
                         {
                             tenantEntity.TenantId = _tenantProvider.TenantId;
                         }
@@ -162,6 +162,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     private async Task DispatchEventsAsync(CancellationToken cancellationToken)
     {
+        if (_mediator == null) return;
+
         var entities = ChangeTracker.Entries<AggregateRoot>()
             .Select(e => e.Entity)
             .Where(e => e.DomainEvents.Any())

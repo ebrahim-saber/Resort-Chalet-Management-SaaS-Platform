@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChaletElite - Luxury Resort Management</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "surface-container-lowest": "#ffffff",
+                            "on-surface": "#1a1c1e",
+                            "on-secondary-container": "#00716c",
+                            "secondary-fixed-dim": "#51dad3",
+                            "on-primary-fixed-variant": "#204a6b",
+                            "on-primary": "#ffffff",
+                            "primary-container": "#0f3d5e",
+                            "on-error-container": "#93000a",
+                            "surface": "#f9f9fc",
+                            "surface-container-high": "#e8e8eb",
+                            "surface-tint": "#3a6285",
+                            "on-primary-fixed": "#001d33",
+                            "on-secondary": "#ffffff",
+                            "on-tertiary-container": "#cd9a5f",
+                            "surface-dim": "#dadadd",
+                            "background": "#f9f9fc",
+                            "tertiary-container": "#553200",
+                            "on-secondary-fixed": "#00201e",
+                            "inverse-on-surface": "#f1f0f4",
+                            "primary": "#002741",
+                            "inverse-primary": "#a3caf2",
+                            "inverse-surface": "#2f3033",
+                            "error": "#ba1a1a",
+                            "on-tertiary-fixed": "#2b1700",
+                            "tertiary-fixed-dim": "#f4bc7e",
+                            "on-error": "#ffffff",
+                            "secondary-fixed": "#72f7ef",
+                            "tertiary": "#371f00",
+                            "secondary": "#006a66",
+                            "on-primary-container": "#81a8ce",
+                            "surface-container-highest": "#e2e2e5",
+                            "surface-bright": "#f9f9fc",
+                            "surface-variant": "#e2e2e5",
+                            "surface-container-low": "#f3f3f6",
+                            "tertiary-fixed": "#ffddba",
+                            "secondary-container": "#72f7ef",
+                            "error-container": "#ffdad6",
+                            "outline-variant": "#c2c7ce",
+                            "outline": "#72777e",
+                            "primary-fixed": "#cee5ff",
+                            "primary-fixed-dim": "#a3caf2",
+                            "surface-container": "#eeedf1",
+                            "on-secondary-fixed-variant": "#00504c",
+                            "on-surface-variant": "#42474e",
+                            "on-tertiary-fixed-variant": "#643f0b",
+                            "on-background": "#1a1c1e",
+                            "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "margin-mobile": "20px",
+                            "section-gap": "80px",
+                            "unit": "8px",
+                            "container-max": "1440px",
+                            "margin-desktop": "64px",
+                            "gutter": "24px",
+                            "margin-tablet": "32px"
+                    },
+                    "fontFamily": {
+                            "headline-md": ["Inter"],
+                            "label-sm": ["Inter"],
+                            "display-lg": ["Inter"],
+                            "label-md": ["Inter"],
+                            "headline-lg-mobile": ["Inter"],
+                            "display-lg-mobile": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                            "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        
+        /* Animation keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-inverse-primary selection:text-primary">
+<!-- JSON Component: TopNavBar -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/40 dark:border-white/10 backdrop-blur-xl shadow-2xl shadow-primary/5 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] bg-white/70 dark:bg-on-surface/70 flex justify-between items-center px-8 h-16 z-50">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">ChaletElite</span>
+</div>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-6">
+<a class="text-label-md font-label-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Dashboard</a>
+<a class="text-label-md font-label-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Resorts</a>
+<a class="text-label-md font-label-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Reservations</a>
+<a class="text-label-md font-label-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 py-2" href="#">Analytics</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<!-- Search Icon (Mobile) / Input (Desktop) - simplified for nav structure -->
+<button class="hidden lg:flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors w-10 h-10 rounded-full hover:bg-white/20">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="hidden lg:flex text-label-md font-label-md text-primary border border-primary px-4 py-2 rounded-full hover:bg-primary hover:text-white transition-colors duration-300">Quick Actions</button>
+<button class="text-label-md font-label-md bg-primary-container text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity duration-300 shadow-md">New Booking</button>
+<div class="hidden sm:flex items-center gap-2 border-l border-outline-variant/30 pl-4 ml-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative w-full min-h-[921px] flex items-center justify-center pt-24 overflow-hidden">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-surface/40 via-transparent to-surface z-10"></div>
+<img alt="Luxury resort background" class="w-full h-full object-cover object-center" data-alt="A breathtaking, wide-angle shot of a luxurious alpine chalet nested in snow-capped mountains during golden hour. The architecture features modern glass facades blending with natural wood, glowing warmly from within against the cool twilight. The scene is illuminated by soft, high-key lighting that emphasizes a pristine, airy, light-mode aesthetic. The color palette centers on pristine whites, soft icy blues, and warm golden accents emanating from the property, conveying a mood of quiet luxury and supreme calm." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO67FORUlLm2FiZkGc7NEB-Vx9G1SjTBACxgQyPHit58-XKsV4127b5tpYEcSL6wjf4QKh0W3foY52Wg4FR7oy8AqUQHtlmy3vUChXUeFx1xoZVmGYLj8ydTvnZEjE4wUlUjPMDznafAQCgNE1ZpPn-t42_M4lfUeBtA8s7_-aFsiodRGhneqLWpxfEC0x_hFRbySssIzgfz5o3iKp29ga72eXq-bMWj6jlK44KkWn5zk2v54l1mcfTSMM9FmZFf4z23c8x5-uXDQJ"/>
+</div>
+<!-- Content -->
+<div class="relative z-20 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center animate-fade-in">
+<span class="inline-block py-1 px-3 rounded-full border border-on-tertiary-container/30 bg-white/50 backdrop-blur-md text-label-sm font-label-sm text-on-tertiary-container mb-6 tracking-widest uppercase">The Digital Concierge</span>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary max-w-4xl mx-auto leading-tight mb-6">
+                Elevate Every Stay. <br/> Master Every Detail.
+            </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+                ChaletElite is the premier property management system designed exclusively for high-end resorts and luxury chalets. Seamlessly blend world-class hospitality with intelligent operational control.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="w-full sm:w-auto px-8 py-4 rounded-full bg-primary-container text-white text-label-md font-label-md shadow-lg hover:-translate-y-1 transition-transform duration-300">
+                    Request a Demo
+                </button>
+<button class="w-full sm:w-auto px-8 py-4 rounded-full border border-secondary text-secondary text-label-md font-label-md hover:bg-secondary/5 transition-colors duration-300 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+                    Watch Platform Tour
+                </button>
+</div>
+</div>
+</header>
+<!-- Stats Section -->
+<section class="py-section-gap w-full bg-surface relative z-20 -mt-12">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Stat 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] border border-white/40 text-center transform transition-transform hover:-translate-y-1">
+<h3 class="text-display-lg font-display-lg text-primary mb-2 stat-number" data-target="98">0</h3>
+<p class="text-label-md font-label-md text-on-tertiary-container uppercase tracking-wider">Average Occupancy %</p>
+</div>
+<!-- Stat 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] border border-white/40 text-center transform transition-transform hover:-translate-y-1">
+<h3 class="text-display-lg font-display-lg text-primary mb-2 stat-number" data-target="45">0</h3>
+<p class="text-label-md font-label-md text-on-tertiary-container uppercase tracking-wider">Revenue Growth %</p>
+</div>
+<!-- Stat 3 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] border border-white/40 text-center transform transition-transform hover:-translate-y-1">
+<h3 class="text-display-lg font-display-lg text-primary mb-2 stat-number" data-target="1200">0</h3>
+<p class="text-label-md font-label-md text-on-tertiary-container uppercase tracking-wider">Properties Managed</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section (Bento Grid) -->
+<section class="py-section-gap w-full bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="mb-16 max-w-3xl">
+<h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary mb-4">Orchestrate the Perfect Guest Experience</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Beyond traditional property management. Our intelligent tools give your staff the foresight to anticipate needs before they arise.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px]">
+<!-- Feature 1: Large Card -->
+<div class="md:col-span-8 rounded-3xl overflow-hidden relative group shadow-sm hover:shadow-lg transition-all duration-500">
+<img alt="Dashboard view" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A bright, minimalist office space featuring a sleek wooden desk with a modern laptop displaying a sophisticated data dashboard. The room is flooded with natural daylight filtering through sheer curtains, emphasizing a pristine white and soft gray color palette. Small, elegant desk accessories in brushed gold add a touch of luxury. The overall mood is focused, professional, and immaculately clean, reflecting a high-end corporate environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXrKcc-gJv5rtJ9oHbwF035pJRS9fNVqz21qWE4zQGRKZhN67sVfeKDzLdASveZTQw7sFobtHggGJp3IGTh3x4GqRbIHUyCgwznaaNs2h7icD8EAOh-SiUm5l607TfKJip94rwBGbqvcO47uhzVgb_ot3KyMueLMG7re-8zZWjy5SNTYY-dSwYJMg0jU77u_VYXb6oHN0oo67fPTf3rUArmdo79nI2bin5lCucu1-jbpg4DKWJCH6xbHvmlo7IqD0o_7WEFcsE7FI9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="bg-white/20 backdrop-blur-md rounded-xl p-6 border border-white/30 text-white">
+<span class="material-symbols-outlined mb-3 text-[32px]">dashboard</span>
+<h3 class="text-headline-md font-headline-md mb-2">Unified Command Center</h3>
+<p class="text-body-md font-body-md opacity-90">Monitor reservations, staff deployment, and guest requests across your entire portfolio from a single, intuitive interface.</p>
+</div>
+</div>
+</div>
+<!-- Feature 2: Small Card -->
+<div class="md:col-span-4 rounded-3xl overflow-hidden relative group shadow-sm hover:shadow-lg transition-all duration-500 bg-surface-container-lowest border border-outline-variant/30 p-8 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-6">
+<span class="material-symbols-outlined icon-fill">calendar_month</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-3">Intelligent Booking</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Yield management algorithms that maximize revenue while ensuring optimal calendar flow.</p>
+</div>
+<a class="text-label-md font-label-md text-secondary hover:text-primary transition-colors flex items-center gap-1 mt-4" href="#">
+                        Explore Calendar <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Feature 3: Small Card -->
+<div class="md:col-span-4 rounded-3xl overflow-hidden relative group shadow-sm hover:shadow-lg transition-all duration-500 bg-surface-container-lowest border border-outline-variant/30 p-8 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-full bg-tertiary-container/10 flex items-center justify-center text-on-tertiary-container mb-6">
+<span class="material-symbols-outlined icon-fill">concierge</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-3">Guest Experience App</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">A white-labeled mobile interface for guests to arrange spa treatments, dining, and transport.</p>
+</div>
+<a class="text-label-md font-label-md text-on-tertiary-container hover:text-primary transition-colors flex items-center gap-1 mt-4" href="#">
+                        View App Features <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Feature 4: Medium Card -->
+<div class="md:col-span-8 rounded-3xl overflow-hidden relative group shadow-sm hover:shadow-lg transition-all duration-500 bg-primary-container p-8 flex items-center">
+<div class="relative z-10 max-w-md text-white">
+<span class="material-symbols-outlined mb-4 text-[32px] text-inverse-primary">insights</span>
+<h3 class="text-headline-md font-headline-md mb-3">Predictive Analytics</h3>
+<p class="text-body-md font-body-md text-white/80 mb-6">Leverage historical data and market trends to forecast demand, optimize pricing, and allocate resources with precision.</p>
+<button class="px-6 py-2 rounded-full border border-white/30 hover:bg-white hover:text-primary-container transition-colors duration-300 text-label-md font-label-md">
+                            Read the Whitepaper
+                        </button>
+</div>
+<!-- Abstract decorative element -->
+<div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle at center, #a3caf2 0%, transparent 70%);"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-section-gap w-full bg-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center">
+<h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary mb-4">Transparent Investment</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl mx-auto mb-16">Select the tier that aligns with your property portfolio. No hidden fees, just unparalleled value.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
+<!-- Tier 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/30 shadow-sm flex flex-col">
+<h3 class="text-headline-md font-headline-md text-primary mb-2">Boutique</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-6">For independent luxury properties.</p>
+<div class="mb-8">
+<span class="text-display-lg font-display-lg text-primary">$499</span>
+<span class="text-label-md font-label-md text-on-surface-variant">/mo</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">Up to 5 properties</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">Standard PMS integration</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">Email support</span></li>
+</ul>
+<button class="w-full py-3 rounded-full border border-primary text-primary text-label-md font-label-md hover:bg-primary/5 transition-colors">Select Boutique</button>
+</div>
+<!-- Tier 2 (Highlighted) -->
+<div class="bg-primary-container rounded-2xl p-8 border border-primary-container shadow-xl relative transform md:-translate-y-4 flex flex-col">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-on-tertiary-container text-white px-4 py-1 rounded-full text-label-sm font-label-sm uppercase tracking-wider">Most Popular</div>
+<h3 class="text-headline-md font-headline-md text-white mb-2">Enterprise Resort</h3>
+<p class="text-body-md font-body-md text-white/80 mb-6">Comprehensive tools for multi-location resorts.</p>
+<div class="mb-8">
+<span class="text-display-lg font-display-lg text-white">$1,299</span>
+<span class="text-label-md font-label-md text-white/70">/mo</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow text-white/90">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">check</span><span class="text-body-md font-body-md">Unlimited properties</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">check</span><span class="text-body-md font-body-md">Advanced yield management</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">check</span><span class="text-body-md font-body-md">White-label guest app</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed text-[20px]">check</span><span class="text-body-md font-body-md">24/7 Priority support</span></li>
+</ul>
+<button class="w-full py-3 rounded-full bg-white text-primary-container text-label-md font-label-md hover:bg-surface-container-low transition-colors shadow-md">Select Enterprise</button>
+</div>
+<!-- Tier 3 -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/30 shadow-sm flex flex-col">
+<h3 class="text-headline-md font-headline-md text-primary mb-2">Global Portfolio</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-6">Custom architecture for international brands.</p>
+<div class="mb-8">
+<span class="text-headline-lg font-headline-lg text-primary">Custom Pricing</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">Dedicated server instances</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">Custom API development</span></li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary text-[20px]">check</span><span class="text-body-md font-body-md text-on-surface">On-site training &amp; deployment</span></li>
+</ul>
+<button class="w-full py-3 rounded-full border border-primary text-primary text-label-md font-label-md hover:bg-primary/5 transition-colors">Contact Sales</button>
+</div>
+</div>
+</div>
+</section>
+<!-- JSON Component: Footer -->
+<footer class="w-full border-t border-outline-variant/30 bg-surface-container-low flex flex-col md:flex-row justify-between items-center py-12 px-margin-mobile md:px-margin-desktop mt-section-gap flat no shadows gap-6 md:gap-0">
+<!-- Brand Logo -->
+<div class="text-headline-sm font-headline-sm text-primary font-bold">
+            ChaletElite
+        </div>
+<!-- Links -->
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">API Docs</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Concierge Support</a>
+</div>
+<!-- Copyright -->
+<div class="text-body-md font-body-md text-tertiary dark:text-tertiary-fixed text-center md:text-right">
+            © 2024 ChaletElite Luxury Management. All rights reserved.
+        </div>
+</footer>
+<!-- Simple JS for Stat Counter Animation -->
+<script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200; 
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const inc = target / speed;
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + inc);
+                            setTimeout(updateCount, 1);
+                        } else {
+                            counter.innerText = target + (target > 100 ? '+' : '%'); 
+                        }
+                    };
+                    updateCount();
+                });
+            };
+
+            // Intersection Observer to trigger animation when in view
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    animateCounters();
+                    observer.disconnect();
+                }
+            }, { threshold: 0.5 });
+
+            const statsSection = document.querySelector('.bg-surface.relative.z-20');
+            if(statsSection) observer.observe(statsSection);
+        });
+    </script>
+</body></html>

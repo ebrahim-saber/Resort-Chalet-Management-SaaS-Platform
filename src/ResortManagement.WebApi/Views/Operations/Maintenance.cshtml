@@ -1,126 +1,551 @@
 @{
-    ViewData["Title"] = "Maintenance Board";
-    var showcaseRequests = ViewBag.ShowcaseRequests as List<dynamic>;
+    ViewData["Title"] = "Maintenance Operations Board";
+    var showcaseRequests = (ViewBag.ShowcaseRequests as System.Collections.IEnumerable)?.Cast<dynamic>().ToList() ?? new List<dynamic>();
+    var activeRequests = showcaseRequests.Where(r => (string)r.Status != "Resolved").ToList();
+    var criticalCount = activeRequests.Count(r => (string)r.Priority == "Critical");
+    var activeCount = activeRequests.Count;
+
+    var assetImages = new string[] {
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBpsE7FGwuIDc1AAHUKfqWZjSCFYMMmCuxSQupgV_us9olXTcKAfiMfF0pTOq6PQHt2KE1qZKeaGIEzYlvUk7w5MCXq7G3mqGKUEe3hOsZR8qYG_AQj1HQBGt_YAFg7gVKTrSupFn_S-NdEJ4r87GnZmj7CFUsk6TuatNP_ZskIMmL1it0VvXgigLKrp8EJUE-9zYod4Trwxl3db3zf59N0iRsOzB3ToBaC8IoI8o8-qcHXCd0bSMX6M3mTM1zDALS9yBG9WPbfdU7l",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuCvgn-mPhUYdsyc1Am9qBVRUFnyOCNbCkj8jPOqWYIMXIy8qCWt3ITtn_dBHbT2g5-xdLzVaq3huN-SrOV3sH1YXWqX2HJfDj0jv7Zk3CFwTV1e3hbvzXIr7k1g2SSanVfME98cCtPDfsAfebES9hiw3JQxHYp8V6-PgS1diVkA1zuEwWgrHuS239dOweQlJCt8G7_dOGik1SeXfJ0z0CRHe75j7CxR9o52K6HUONnNpL6mrNVu9Sncr-Q3kxJz6ikTSzJ5AUum0RBu",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBRz8k7UP2peZMu6InDGlbVGPMLh-Q3FCssk3cSgxW1LlOYhHRwV4aggY8roonfFFO-eJAgEpHevETr-UFXMzOO9Gkztks6BdBdrnaRvKDZe1X0Kr-FZL25wchg1bT1CCo2DKqBny1WjOlpAerPmP4J_Gu3VGyORUk4y1YWNh-RWKIsU7iURCRTSQr4Rtcy0NDjozuwPZsOXrp82fki7T-_0yno9I_5U79nD78FCTulIhbbJU_nquMuJelmQoeRxCK3jbgQV8GjRLV7"
+    };
+
+    var techAvatars = new string[] {
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuDY2PJXecid2_Qw7PkwCyKgR86BIdL-1n6vRNsRalB-WsxSkOmcRn6tPBFvxyfxDRrZqC_cUyACt2VA203zZJYcVK-zq22_tnVe95Tp0SFoHJFe0HnqK29aWaTTG7WlqzlQ0K2OGYc5BLOPvQlj10TkSDiBm8dKCrLY9Ky7Zn3toepP8mmW__cNVoRHcMyUI87kC3vLrZN9PQRXOFUqC6z4WCdVHFabraTTSYB2yDgEMTwyJAxkrdm9C6Hw-yQ3JrmKNss6CiWoxxeO",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuAWny2KZ7gsQDEf3qutkVFj5sssToK9BtHEo6ECPEeVuH-y2lIAyvQY7gdB7Q9uD07-ylNXViqsNu1VMOLJwIf7B7IKlhxNx0FHGmWA1hHu0FWxUmVFOKOr-XCYd0Ds7sA33uCEDDf0meDgXCdPMPpD0anrDRCTeVlXl2d6u9oaFDpfE-607v6Ytd1-vN5Mr5oPGFxmljLa8m1b4IJTRjAzTIYZqfEtZVaJWoinhlbr-7ViVMdsjBVeouFGD-_rWNFLy4KrokHRgPr0"
+    };
 }
 
-<div class="workspace-header">
-    <div>
-        <h1 class="header-title">Maintenance Operations</h1>
-        <p class="header-meta">Resolve hardware repairs, facilities upkeep, and urgent room maintenance.</p>
-    </div>
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpsE7FGwuIDc1AAHUKfqWZjSCFYMMmCuxSQupgV_us9olXTcKAfiMfF0pTOq6PQHt2KE1qZKeaGIEzYlvUk7w5MCXq7G3mqGKUEe3hOsZR8qYG_AQj1HQBGt_YAFg7gVKTrSupFn_S-NdEJ4r87GnZmj7CFUsk6TuatNP_ZskIMmL1it0VvXgigLKrp8EJUE-9zYod4Trwxl3db3zf59N0iRsOzB3ToBaC8IoI8o8-qcHXCd0bSMX6M3mTM1zDALS9yBG9WPbfdU7l'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-surface-container-lowest/95 via-surface/90 to-surface-container-low/95 backdrop-blur-[4px]"></div>
 </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1.2fr; gap: var(--grid-gap); margin-bottom: 40px;">
-    <!-- Active Maintenance Tickets List -->
-    <div style="display: flex; flex-direction: column; gap: 24px;">
-        <h2 style="font-size: 20px; font-weight: 600; color: var(--primary);">Urgent Facilities Repair Tickets</h2>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pt-28 pb-20 flex flex-col min-h-screen w-full relative">
+    
+    <!-- Toast Notification Hub -->
+    <div id="toast-container" class="fixed top-24 right-6 z-[999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Page Header -->
+    <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div>
+            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary font-bold mb-2">Maintenance Operations</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Real-time asset tracking and facility management for alpine chalet suites.</p>
+        </div>
+        <div class="flex gap-4 w-full md:w-auto">
+            <button class="flex-1 md:flex-none bg-white/80 border border-outline-variant/30 text-on-surface font-label-md text-label-md px-5 py-2.5 rounded-xl hover:shadow-md transition-all flex items-center justify-center gap-2" onclick="showNotification('تصفية البيانات', 'جاري تحميل خيارات التصفية المتقدمة...', 'info');">
+                <span class="material-symbols-outlined text-[20px]">filter_list</span> Filter
+            </button>
+            <button class="flex-1 md:flex-none bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 font-semibold" onclick="openModal();">
+                <span class="material-symbols-outlined text-[20px]">add</span> Create Work Order
+            </button>
+        </div>
+    </header>
+
+    <!-- Stats Overview Row -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-12">
+        <!-- Stat Card 1 -->
+        <div class="bg-white/70 backdrop-blur-xl border border-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-2 bg-error-container rounded-xl text-error">
+                    <span class="material-symbols-outlined text-[24px]">warning</span>
+                </div>
+            </div>
+            <h3 id="stat-critical" class="text-display-lg font-bold text-on-surface mb-1">@criticalCount</h3>
+            <p class="text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Critical Issues</p>
+        </div>
         
-        @if (showcaseRequests != null)
-        {
-            foreach (var ticket in showcaseRequests)
-            {
-                <div class="glass-card" id="ticket-card-@ticket.Id" style="display: flex; flex-direction: column; gap: 16px; border-left: 6px solid @(ticket.Priority == "Critical" ? "var(--error)" : ticket.Priority == "High" ? "var(--tertiary)" : "var(--secondary)");">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <span class="status-pill @(ticket.Priority == "Critical" ? "danger" : ticket.Priority == "High" ? "warning" : "success")" style="margin-bottom: 8px;">
-                                @ticket.Priority Priority
-                            </span>
-                            <h3 style="font-size: 18px; font-weight: 600; color: var(--primary); margin-top: 4px;">@ticket.Title</h3>
+        <!-- Stat Card 2 -->
+        <div class="bg-white/70 backdrop-blur-xl border border-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-2 bg-primary-container/20 rounded-xl text-primary">
+                    <span class="material-symbols-outlined text-[24px]">build</span>
+                </div>
+            </div>
+            <h3 id="stat-active" class="text-display-lg font-bold text-on-surface mb-1">@activeCount</h3>
+            <p class="text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Active Work Orders</p>
+        </div>
+        
+        <!-- Stat Card 3 -->
+        <div class="bg-white/70 backdrop-blur-xl border border-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-2 bg-secondary-container/20 rounded-xl text-secondary">
+                    <span class="material-symbols-outlined text-[24px]">calendar_month</span>
+                </div>
+            </div>
+            <h3 class="text-display-lg font-bold text-on-surface mb-1">28</h3>
+            <p class="text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Scheduled Tasks</p>
+        </div>
+        
+        <!-- Stat Card 4 -->
+        <div class="bg-white/70 backdrop-blur-xl border border-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-2 bg-surface-variant/40 rounded-xl text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[24px]">check_circle</span>
+                </div>
+            </div>
+            <h3 class="text-display-lg font-bold text-on-surface mb-1">94%</h3>
+            <p class="text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Resolution Rate</p>
+        </div>
+    </section>
+
+    <!-- Main Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+        
+        <!-- Left Column: Active Visual Tracking (Spans 8) -->
+        <section class="lg:col-span-8 space-y-6">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-headline-md font-headline-md text-primary font-bold">Priority Asset Tracking</h2>
+                <button class="text-label-md text-secondary hover:underline flex items-center gap-1 font-semibold" onclick="showNotification('خريطة المنتجع', 'جاري الاتصال بنظام تحديد المواقع وتتبع الأصول المباشر...', 'info');">
+                    View Map <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+            </div>
+            
+            <!-- Work Order Grid -->
+            <div id="tickets-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @if (showcaseRequests.Count == 0)
+                {
+                    <div class="col-span-2 text-center py-12 bg-white/40 backdrop-blur-md rounded-2xl border border-dashed border-outline-variant">
+                        <span class="material-symbols-outlined text-[48px] text-outline-variant mb-2">construction</span>
+                        <p class="text-body-lg text-on-surface-variant font-medium">No facility requests currently logged.</p>
+                    </div>
+                }
+                else
+                {
+                    for (int i = 0; i < showcaseRequests.Count; i++)
+                    {
+                        var ticket = showcaseRequests[i];
+                        var isResolved = (ticket.Status == "Resolved");
+                        var imageIndex = i % assetImages.Length;
+                        var techIndex = i % techAvatars.Length;
+                        var image = assetImages[imageIndex];
+                        var avatar = techAvatars[techIndex];
+                        
+                        var priorityBg = ticket.Priority == "Critical" ? "bg-error text-on-error" : ticket.Priority == "High" ? "bg-tertiary-fixed-dim/90 text-on-tertiary-fixed" : "bg-secondary-container text-on-secondary-container";
+                        var priorityIcon = ticket.Priority == "Critical" ? "priority_high" : ticket.Priority == "High" ? "warning" : "schedule";
+                        var priorityText = ticket.Priority == "Critical" ? "Urgent" : ticket.Priority == "High" ? "Elevated" : "Standard";
+                        var spanClass = (i % 3 == 2) ? "md:col-span-2" : "";
+
+                        <article id="ticket-card-@ticket.Id" class="bg-white border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col h-full @spanClass">
+                            <div class="h-48 relative overflow-hidden shrink-0">
+                                <img alt="@ticket.Title image" class="w-full h-full object-cover" src="@image" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+                                <div class="absolute top-4 right-4 @priorityBg font-label-sm text-label-sm px-3 py-1 rounded-full shadow-sm flex items-center gap-1 font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">@priorityIcon</span> @priorityText
+                                </div>
+                                <div class="absolute bottom-4 left-4 text-white">
+                                    <p class="font-label-sm text-label-sm uppercase tracking-widest opacity-80 mb-0.5">Asset ID: AS-@ticket.UnitNumber.Replace(" ", "-").ToUpper()</p>
+                                    <h3 class="text-headline-md font-bold">@ticket.UnitNumber</h3>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 flex-grow flex flex-col justify-between">
+                                <div class="mb-5">
+                                    <h4 class="font-label-md text-label-md text-on-surface text-lg font-bold mb-2">@ticket.Title</h4>
+                                    <p class="text-body-md text-on-surface-variant line-clamp-3">@ticket.Description</p>
+                                </div>
+                                
+                                <div class="pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        @if (ticket.Priority == "Critical")
+                                        {
+                                            <img alt="Tech Avatar" class="w-8 h-8 rounded-full border border-surface-variant object-cover" src="@avatar" />
+                                            <span class="font-label-md text-label-md text-on-surface font-semibold">Tech: Marcus J.</span>
+                                        }
+                                        else if (ticket.Priority == "High")
+                                        {
+                                            <img alt="Tech Avatar" class="w-8 h-8 rounded-full border border-surface-variant object-cover" src="@avatar" />
+                                            <span class="font-label-md text-label-md text-on-surface font-semibold">Tech: Sarah T.</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-bold text-label-sm">UN</div>
+                                            <span class="font-label-md text-label-md text-outline font-semibold">Unassigned</span>
+                                        }
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <span id="ticket-status-@ticket.Id" class="font-label-sm text-label-sm text-primary bg-primary-container/20 px-2.5 py-1 rounded-md font-semibold">@ticket.Status</span>
+                                        
+                                        <button id="ticket-btn-@ticket.Id" class="bg-secondary text-on-secondary hover:bg-secondary/95 text-label-sm px-4 py-2 rounded-lg transition-colors font-semibold shadow-sm flex items-center gap-1" onclick="resolveTicket('@ticket.Id', '@ticket.Title');" style="@(isResolved ? "display: none;" : "")">
+                                            <span class="material-symbols-outlined text-[16px]">check</span> Resolve
+                                        </button>
+                                        
+                                        <span id="ticket-solved-@ticket.Id" class="text-secondary font-bold text-label-sm flex items-center gap-1" style="@(isResolved ? "" : "display: none;")">
+                                            <span class="material-symbols-outlined text-[18px]">check_circle</span> Solved
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <!-- Right Column: Scheduled & History (Spans 4) -->
+        <aside class="lg:col-span-4 space-y-6">
+            <!-- Glassmorphic Panel Container -->
+            <div class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl shadow-sm p-6">
+                <!-- Tabs -->
+                <div class="flex space-x-4 border-b border-outline-variant/30 mb-6">
+                    <button class="pb-3 border-b-2 border-primary font-label-md text-label-md text-primary font-bold">Scheduled</button>
+                    <button class="pb-3 border-b-2 border-transparent font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors font-semibold" onclick="showNotification('سجل العمليات', 'جاري تحميل تقارير وأرشيف الصيانة التاريخية...', 'info');">History</button>
+                </div>
+                
+                <!-- Scheduled List (Timeline Style) -->
+                <div class="space-y-6 relative before:absolute before:inset-0 before:ml-[15px] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-outline-variant/40 before:to-transparent">
+                    <!-- Item 1 -->
+                    <div class="relative flex items-start group">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white bg-surface-variant text-on-surface-variant shadow-sm shrink-0 absolute left-0 z-10">
+                            <span class="material-symbols-outlined text-[16px]">calendar_month</span>
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 14px; font-weight: 700; color: var(--primary-container);">@ticket.UnitNumber</span>
-                            <div style="font-size: 12px; color: var(--text-disabled); margin-top: 2px;">@ticket.CreatedAt.ToString("MMM dd")</div>
+                        <div class="ml-12 p-4 rounded-xl border border-outline-variant/20 bg-white/90 shadow-sm hover:shadow-md transition-shadow w-full">
+                            <div class="flex items-center justify-between mb-1">
+                                <time class="font-label-sm text-label-sm text-secondary font-semibold">Today, 2:00 PM</time>
+                            </div>
+                            <h4 class="font-label-md text-label-md text-on-surface font-bold mb-1">Elevator Servicing</h4>
+                            <p class="text-body-md text-on-surface-variant text-sm line-clamp-2">Routine quarterly safety check for Main Lodge elevators 1 &amp; 2.</p>
                         </div>
                     </div>
-
-                    <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
-                        @ticket.Description
-                    </p>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 12px; margin-top: 8px;">
-                        <div>
-                            <span style="font-size: 13px; color: var(--text-secondary);">Status: </span>
-                            <strong style="font-size: 13px; color: var(--primary);" id="ticket-status-@ticket.Id">@ticket.Status</strong>
+                    
+                    <!-- Item 2 -->
+                    <div class="relative flex items-start group">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white bg-surface-variant text-on-surface-variant shadow-sm shrink-0 absolute left-0 z-10">
+                            <span class="material-symbols-outlined text-[16px]">water_drop</span>
                         </div>
-                        <button class="btn btn-secondary btn-sm" id="ticket-btn-@ticket.Id" onclick="resolveTicket('@ticket.Id', '@ticket.Title');" style="padding: 6px 14px; font-size: 12px; @(ticket.Status == "Resolved" ? "display: none;" : "")">
-                            Resolve Repair
-                        </button>
-                        <span id="ticket-solved-@ticket.Id" style="color: var(--secondary); font-weight: 600; font-size: 13px; @(ticket.Status == "Resolved" ? "" : "display: none;")">
-                            ✓ Fixed & Logged
-                        </span>
+                        <div class="ml-12 p-4 rounded-xl border border-outline-variant/20 bg-white/40 shadow-sm hover:shadow-md transition-shadow w-full">
+                            <div class="flex items-center justify-between mb-1">
+                                <time class="font-label-sm text-label-sm text-outline font-semibold">Tomorrow, 9:00 AM</time>
+                            </div>
+                            <h4 class="font-label-md text-label-md text-on-surface font-bold mb-1">Irrigation Winterization</h4>
+                            <p class="text-body-md text-on-surface-variant text-sm line-clamp-2">Blowing out lines for all exterior landscaping zones.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 3 -->
+                    <div class="relative flex items-start group">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white bg-surface-variant text-on-surface-variant shadow-sm shrink-0 absolute left-0 z-10">
+                            <span class="material-symbols-outlined text-[16px]">bolt</span>
+                        </div>
+                        <div class="ml-12 p-4 rounded-xl border border-outline-variant/20 bg-white/40 shadow-sm hover:shadow-md transition-shadow w-full">
+                            <div class="flex items-center justify-between mb-1">
+                                <time class="font-label-sm text-label-sm text-outline font-semibold">Oct 24, 11:00 AM</time>
+                            </div>
+                            <h4 class="font-label-md text-label-md text-on-surface font-bold mb-1">Generator Test</h4>
+                            <p class="text-body-md text-on-surface-variant text-sm line-clamp-2">Monthly load test for emergency backup power systems.</p>
+                        </div>
                     </div>
                 </div>
-            }
-        }
+                
+                <button class="w-full mt-6 py-3 border border-outline-variant/30 rounded-xl text-primary font-label-md text-label-md hover:bg-white/50 transition-colors flex justify-center items-center gap-2 font-semibold" onclick="showNotification('جدول الصيانة', 'جاري تحميل جدول الصيانة الكامل للنظام...', 'info');">
+                    View Full Schedule
+                </button>
+            </div>
+        </aside>
     </div>
+</main>
 
-    <!-- Create Maintenance Request Form -->
-    <div>
-        <div class="glass-card" style="position: sticky; top: 40px;">
-            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--primary);">Log Repair Ticket</h2>
+<!-- Create Work Order Glassmorphic Modal -->
+<div id="workorder-modal" class="fixed inset-0 bg-primary/20 backdrop-blur-sm z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300" onclick="closeModalOnOuterClick(event)">
+    <div class="bg-white/95 backdrop-blur-2xl border border-white max-w-md w-[90%] p-8 rounded-2xl shadow-xl relative transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        
+        <!-- Close Button -->
+        <button class="absolute top-6 right-6 text-on-surface-variant hover:text-primary transition-colors" onclick="closeModal()">
+            <span class="material-symbols-outlined text-[24px]">close</span>
+        </button>
 
-            <div class="form-group">
-                <label class="form-label">Room / Unit</label>
-                <input class="form-control" type="text" id="new-ticket-unit" placeholder="e.g. Villa 105" required />
+        <h2 class="text-headline-md font-bold mb-6 text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined">construction</span> Log Repair Ticket
+        </h2>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-label-md text-primary font-bold mb-2">Room / Unit</label>
+                <input class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-white/80 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all font-body-md text-primary" type="text" id="new-ticket-unit" placeholder="e.g. Chalet 104" required />
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Issue Title</label>
-                <input class="form-control" type="text" id="new-ticket-title" placeholder="e.g. Leaking Faucet" required />
+            <div>
+                <label class="block text-label-md text-primary font-bold mb-2">Issue Title</label>
+                <input class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-white/80 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all font-body-md text-primary" type="text" id="new-ticket-title" placeholder="e.g. HVAC Filter Leak" required />
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Priority</label>
-                <select class="form-control" id="new-ticket-priority">
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Critical">Critical</option>
+            <div>
+                <label class="block text-label-md text-primary font-bold mb-2">Priority</label>
+                <select class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-white/80 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all font-body-md text-primary" id="new-ticket-priority">
+                    <option value="Medium">Standard (Medium)</option>
+                    <option value="High">Elevated (High)</option>
+                    <option value="Critical">Urgent (Critical)</option>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea class="form-control" id="new-ticket-desc" rows="3" placeholder="Describe the issue..."></textarea>
+            <div>
+                <label class="block text-label-md text-primary font-bold mb-2">Description</label>
+                <textarea class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-white/80 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all font-body-md text-primary" id="new-ticket-desc" rows="3" placeholder="Provide clear technical description..."></textarea>
             </div>
 
-            <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px;" onclick="submitTicket();">
-                Submit Facility Request
-            </button>
+            <div class="pt-2">
+                <button class="w-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-3.5 rounded-xl hover:shadow-lg transition-all flex justify-center items-center gap-2 font-semibold shadow" onclick="submitTicket();">
+                    Submit Facility Request
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        // Modal Handlers with premium fade/scale animations
+        function openModal() {
+            const modal = document.getElementById("workorder-modal");
+            const modalBody = modal.querySelector("div");
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                modal.classList.add("opacity-100");
+                modalBody.classList.remove("scale-95");
+                modalBody.classList.add("scale-100");
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("workorder-modal");
+            const modalBody = modal.querySelector("div");
+            modal.classList.remove("opacity-100");
+            modal.classList.add("opacity-0");
+            modalBody.classList.remove("scale-100");
+            modalBody.classList.add("scale-95");
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function closeModalOnOuterClick(e) {
+            closeModal();
+        }
+
+        // Custom Premium Toast Notification System
+        function showNotification(title, message, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = "bg-white/95 backdrop-blur-xl border border-white shadow-xl rounded-2xl p-4 w-80 transform translate-x-full transition-all duration-300 flex items-start gap-3 pointer-events-auto border-l-4 " + 
+                (type === "success" ? "border-l-secondary" : type === "warning" ? "border-l-tertiary-fixed-dim" : "border-l-error");
+            
+            const icon = type === "success" ? "check_circle" : type === "warning" ? "warning" : "error";
+            const iconColor = type === "success" ? "text-secondary" : type === "warning" ? "text-on-tertiary-fixed-variant" : "text-error";
+
+            toast.innerHTML = `
+                <span class="material-symbols-outlined ${iconColor}">${icon}</span>
+                <div class="flex-grow">
+                    <h5 class="font-bold text-primary text-label-md mb-0.5">${title}</h5>
+                    <p class="text-[12px] text-on-surface-variant">${message}</p>
+                </div>
+                <button class="text-outline hover:text-primary" onclick="this.parentElement.remove()"><span class="material-symbols-outlined text-[16px]">close</span></button>
+            `;
+
+            container.appendChild(toast);
+            
+            // Trigger animation slide-in
+            setTimeout(() => {
+                toast.classList.remove("translate-x-full");
+                toast.classList.add("translate-x-0");
+            }, 10);
+
+            // Auto dismiss
+            setTimeout(() => {
+                toast.classList.remove("translate-x-0");
+                toast.classList.add("translate-x-full");
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Handle Resolving a Ticket in real-time
         function resolveTicket(id, title) {
             const statusLabel = document.getElementById(`ticket-status-${id}`);
             const btn = document.getElementById(`ticket-btn-${id}`);
             const solvedLabel = document.getElementById(`ticket-solved-${id}`);
+            const card = document.getElementById(`ticket-card-${id}`);
 
-            if (statusLabel && btn && solvedLabel) {
-                statusLabel.textContent = "Resolved";
-                btn.style.display = "none";
-                solvedLabel.style.display = "inline";
-                
-                showLuxeAlert("Ticket Resolved", `"${title}" has been completed and marked resolved.`, "success");
-            }
-        }
-
-        function submitTicket() {
-            const unit = document.getElementById("new-ticket-unit").value;
-            const title = document.getElementById("new-ticket-title").value;
-            
-            if (!unit || !title) {
-                showLuxeAlert("Incomplete Form", "Please fill in the unit and issue details.", "danger");
+            if (id.startsWith("new-")) {
+                if (statusLabel && btn && solvedLabel) {
+                    statusLabel.textContent = "Resolved";
+                    statusLabel.className = "font-label-sm text-label-sm text-secondary bg-secondary-container/20 px-2.5 py-1 rounded-md font-semibold";
+                    btn.style.display = "none";
+                    solvedLabel.style.display = "flex";
+                    if (card) card.classList.add("opacity-80");
+                    const activeStat = document.getElementById("stat-active");
+                    if (activeStat) activeStat.textContent = Math.max(0, (parseInt(activeStat.textContent) || 0) - 1);
+                    showNotification("تم حل البلاغ", `تم إتمام عملية الإصلاح وحل البلاغ "${title}" بنجاح.`, "success");
+                }
                 return;
             }
 
-            showLuxeAlert("Ticket Logged", `Maintenance request logged for ${unit}. Facilities staff assigned.`, "success");
-            
-            // Clear inputs
-            document.getElementById("new-ticket-unit").value = "";
-            document.getElementById("new-ticket-title").value = "";
-            document.getElementById("new-ticket-desc").value = "";
+            fetch(`/operations/maintenance/${id}/resolve`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (res.ok) {
+                    if (statusLabel && btn && solvedLabel) {
+                        statusLabel.textContent = "Resolved";
+                        statusLabel.className = "font-label-sm text-label-sm text-secondary bg-secondary-container/20 px-2.5 py-1 rounded-md font-semibold";
+                        btn.style.display = "none";
+                        solvedLabel.style.display = "flex";
+                        if (card) card.classList.add("opacity-80");
+                        const activeStat = document.getElementById("stat-active");
+                        if (activeStat) activeStat.textContent = Math.max(0, (parseInt(activeStat.textContent) || 0) - 1);
+                        showNotification("تم حل البلاغ", `تم تسجيل حل بلاغ الصيانة "${title}" في قاعدة البيانات بنجاح.`, "success");
+                    }
+                } else {
+                    showNotification("خطأ في العملية", "فشل تحديث حالة البلاغ في الخادم.", "error");
+                }
+            })
+            .catch(() => {
+                showNotification("خطأ في الشبكة", "حدث خطأ غير متوقع أثناء الاتصال بالخادم.", "error");
+            });
+        }
+
+        // Asset images and tech avatars arrays for client-side injection
+        const assetImages = [
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBpsE7FGwuIDc1AAHUKfqWZjSCFYMMmCuxSQupgV_us9olXTcKAfiMfF0pTOq6PQHt2KE1qZKeaGIEzYlvUk7w5MCXq7G3mqGKUEe3hOsZR8qYG_AQj1HQBGt_YAFg7gVKTrSupFn_S-NdEJ4r87GnZmj7CFUsk6TuatNP_ZskIMmL1it0VvXgigLKrp8EJUE-9zYod4Trwxl3db3zf59N0iRsOzB3ToBaC8IoI8o8-qcHXCd0bSMX6M3mTM1zDALS9yBG9WPbfdU7l",
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuCvgn-mPhUYdsyc1Am9qBVRUFnyOCNbCkj8jPOqWYIMXIy8qCWt3ITtn_dBHbT2g5-xdLzVaq3huN-SrOV3sH1YXWqX2HJfDj0jv7Zk3CFwTV1e3hbvzXIr7k1g2SSanVfME98cCtPDfsAfebES9hiw3JQxHYp8V6-PgS1diVkA1zuEwWgrHuS239dOweQlJCt8G7_dOGik1SeXfJ0z0CRHe75j7CxR9o52K6HUONnNpL6mrNVu9Sncr-Q3kxJz6ikTSzJ5AUum0RBu",
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBRz8k7UP2peZMu6InDGlbVGPMLh-Q3FCssk3cSgxW1LlOYhHRwV4aggY8roonfFFO-eJAgEpHevETr-UFXMzOO9Gkztks6BdBdrnaRvKDZe1X0Kr-FZL25wchg1bT1CCo2DKqBny1WjOlpAerPmP4J_Gu3VGyORUk4y1YWNh-RWKIsU7iURCRTSQr4Rtcy0NDjozuwPZsOXrp82fki7T-_0yno9I_5U79nD78FCTulIhbbJU_nquMuJelmQoeRxCK3jbgQV8GjRLV7"
+        ];
+
+        const techAvatars = [
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuDY2PJXecid2_Qw7PkwCyKgR86BIdL-1n6vRNsRalB-WsxSkOmcRn6tPBFvxyfxDRrZqC_cUyACt2VA203zZJYcVK-zq22_tnVe95Tp0SFoHJFe0HnqK29aWaTTG7WlqzlQ0K2OGYc5BLOPvQlj10TkSDiBm8dKCrLY9Ky7Zn3toepP8mmW__cNVoRHcMyUI87kC3vLrZN9PQRXOFUqC6z4WCdVHFabraTTSYB2yDgEMTwyJAxkrdm9C6Hw-yQ3JrmKNss6CiWoxxeO",
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuAWny2KZ7gsQDEf3qutkVFj5sssToK9BtHEo6ECPEeVuH-y2lIAyvQY7gdB7Q9uD07-ylNXViqsNu1VMOLJwIf7B7IKlhxNx0FHGmWA1hHu0FWxUmVFOKOr-XCYd0Ds7sA33uCEDDf0meDgXCdPMPpD0anrDRCTeVlXl2d6u9oaFDpfE-607v6Ytd1-vN5Mr5oPGFxmljLa8m1b4IJTRjAzTIYZqfEtZVaJWoinhlbr-7ViVMdsjBVeouFGD-_rWNFLy4KrokHRgPr0"
+        ];
+
+        // AJAX dynamic ticket logging
+        function submitTicket() {
+            const unit = document.getElementById("new-ticket-unit").value.trim();
+            const title = document.getElementById("new-ticket-title").value.trim();
+            const priority = document.getElementById("new-ticket-priority").value;
+            const desc = document.getElementById("new-ticket-desc").value.trim();
+
+            if (!unit || !title) {
+                showNotification("خطأ في الإدخال", "يرجى كتابة اسم الغرفة/الوحدة وعنوان المشكلة.", "warning");
+                return;
+            }
+
+            fetch("/operations/maintenance/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    unitNumber: unit,
+                    title: title,
+                    priority: priority,
+                    description: desc
+                })
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (res.ok) {
+                    const id = data.id;
+                    const image = assetImages[Math.floor(Math.random() * assetImages.length)];
+                    const avatar = techAvatars[Math.floor(Math.random() * techAvatars.length)];
+
+                    // Styling variables based on priority
+                    let priorityBg = "bg-secondary-container text-on-secondary-container";
+                    let priorityIcon = "schedule";
+                    let priorityText = "Standard";
+                    if (priority === "Critical") {
+                        priorityBg = "bg-error text-on-error";
+                        priorityIcon = "priority_high";
+                        priorityText = "Urgent";
+                    } else if (priority === "High") {
+                        priorityBg = "bg-tertiary-fixed-dim/90 text-on-tertiary-fixed";
+                        priorityIcon = "warning";
+                        priorityText = "Elevated";
+                    }
+
+                    // Create new DOM card structure
+                    const card = document.createElement("article");
+                    card.id = `ticket-card-${id}`;
+                    card.className = "bg-white border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col h-full transform scale-95 opacity-0";
+                    
+                    card.innerHTML = `
+                        <div class="h-48 relative overflow-hidden shrink-0">
+                            <img alt="${title} image" class="w-full h-full object-cover" src="${image}" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+                            <div class="absolute top-4 right-4 ${priorityBg} font-label-sm text-label-sm px-3 py-1 rounded-full shadow-sm flex items-center gap-1 font-semibold">
+                                <span class="material-symbols-outlined text-[14px]">${priorityIcon}</span> ${priorityText}
+                            </div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <p class="font-label-sm text-label-sm uppercase tracking-widest opacity-80 mb-0.5">Asset ID: AS-${unit.replace(/\s+/g, '-').toUpperCase()}</p>
+                                <h3 class="text-headline-md font-bold">${unit}</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 flex-grow flex flex-col justify-between">
+                            <div class="mb-5">
+                                <h4 class="font-label-md text-label-md text-on-surface text-lg font-bold mb-2">${title}</h4>
+                                <p class="text-body-md text-on-surface-variant line-clamp-3">${desc || 'No description provided.'}</p>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <img alt="Tech Avatar" class="w-8 h-8 rounded-full border border-surface-variant object-cover" src="${avatar}" />
+                                    <span class="font-label-md text-label-md text-on-surface font-semibold">Tech: Dispatching...</span>
+                                </div>
+                                
+                                <div class="flex items-center gap-2">
+                                    <span id="ticket-status-${id}" class="font-label-sm text-label-sm text-primary bg-primary-container/20 px-2.5 py-1 rounded-md font-semibold">Open</span>
+                                    
+                                    <button id="ticket-btn-${id}" class="bg-secondary text-on-secondary hover:bg-secondary/95 text-label-sm px-4 py-2 rounded-lg transition-colors font-semibold shadow-sm flex items-center gap-1" onclick="resolveTicket('${id}', '${title}');">
+                                        <span class="material-symbols-outlined text-[16px]">check</span> Resolve
+                                    </button>
+                                    
+                                    <span id="ticket-solved-${id}" class="text-secondary font-bold text-label-sm flex items-center gap-1" style="display: none;">
+                                        <span class="material-symbols-outlined text-[18px]">check_circle</span> Solved
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Prepend card inside tickets grid
+                    const grid = document.getElementById("tickets-grid");
+                    if (grid) {
+                        if (grid.querySelector(".col-span-2.text-center")) {
+                            grid.innerHTML = "";
+                        }
+                        grid.insertBefore(card, grid.firstChild);
+                        
+                        // Animate entrance
+                        setTimeout(() => {
+                            card.classList.remove("scale-95", "opacity-0");
+                            card.classList.add("scale-100", "opacity-100");
+                        }, 50);
+                    }
+
+                    // Update stats counter
+                    const activeStat = document.getElementById("stat-active");
+                    if (activeStat) activeStat.textContent = (parseInt(activeStat.textContent) || 0) + 1;
+                    if (priority === "Critical") {
+                        const critStat = document.getElementById("stat-critical");
+                        if (critStat) critStat.textContent = (parseInt(critStat.textContent) || 0) + 1;
+                    }
+
+                    showNotification("تم تسجيل الطلب", `تم تسجيل بلاغ صيانة للوحدة ${unit} بنجاح وجاري إرسال الفنيين.`, "success");
+
+                    // Reset inputs & close modal
+                    document.getElementById("new-ticket-unit").value = "";
+                    document.getElementById("new-ticket-title").value = "";
+                    document.getElementById("new-ticket-desc").value = "";
+                    document.getElementById("new-ticket-priority").value = "Medium";
+                    closeModal();
+                } else {
+                    showNotification("فشل تسجيل الطلب", data.message || "حدث خطأ أثناء حفظ بلاغ الصيانة.", "error");
+                }
+            })
+            .catch(() => {
+                showNotification("خطأ في الشبكة", "فشل الاتصال بالخادم لتسجيل بلاغ الصيانة.", "error");
+            });
         }
     </script>
 }

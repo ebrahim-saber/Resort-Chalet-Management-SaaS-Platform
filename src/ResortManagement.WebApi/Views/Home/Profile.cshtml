@@ -1,0 +1,695 @@
+@{
+    ViewData["Title"] = "Settings & Profile Suite";
+    var user = ViewBag.User as ResortManagement.Domain.Entities.Identity.User;
+    var tenant = ViewBag.Tenant as ResortManagement.Domain.Entities.SaaS.Tenant;
+    var teamList = ViewBag.Team as IEnumerable<dynamic> ?? new List<dynamic>();
+    var gateways = ViewBag.Gateways as Dictionary<string, string> ?? new Dictionary<string, string>();
+    Func<string, string, string> GetGatewayVal = (key, def) => gateways.TryGetValue(key, out var val) ? val : def;
+    Func<string, bool> IsGatewayEnabled = (key) => GetGatewayVal(key, "false") == "true";
+    
+    // Resolve user avatar dynamically in real-time
+    var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+    var avatarUrl = "";
+    if (!string.IsNullOrEmpty(email))
+    {
+        try
+        {
+            var path = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles", "avatars.json");
+            if (System.IO.File.Exists(path))
+            {
+                var text = System.IO.File.ReadAllText(path);
+                var dict = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.Dictionary<string, string>>(text);
+                if (dict != null && dict.TryGetValue(email.ToLowerInvariant(), out var url))
+                {
+                    avatarUrl = url;
+                }
+            }
+        }
+        catch {}
+    }
+    if (string.IsNullOrEmpty(avatarUrl))
+    {
+        avatarUrl = User.FindFirst("AvatarUrl")?.Value ?? "https://lh3.googleusercontent.com/aida-public/AB6AXuD5tzsdzyh_iuKmPmtlvydMcmgZuBsA2NHfDjopajkiIBzjTOsu-NapK-CnPTBAJhDiykSrzgWbwuv9bHTEkE85RL6KewvTioW0lm3Bqe-5LtX6uXQmYWuYIJc5OueC9bjv3KFzltacJwjHFQJudqygvgh7lgAiD43irizFKnvg7ZAmsP6qYABFjAra6bGvJwHE_Ay_gV_pdmavebEQp-E9PYI3uLT-dTPX52QzHgFMNfEDZoGlGqxRiF10nncKu8Zetp3tF-0ZPVAG";
+    }
+}
+
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXH3PoTGB1clyJ0mMfFVveuuzfOxZK_IJ0eXZuujz_4erPhUUFf6mtaX4q5SxjS1Nl0aPDTq3tTLyaklKNGzynqYw0Lk67l-NMGwbeQlJLLTEl6LWYJwnxaSXBalLsuKcBYwfWfAponeBUfOE7CJkN0veFuJxt20TL8y_oxEO65_NgnYD6GZW9VDetnJNqiSWugBSlSX1iiHpCTpt1jiQ3I19gK2O_u_hxInVjedjzn54BpcADrykfPcmSsFCBMBurWK_9xVj-Dlrg'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-surface-container-lowest/95 via-surface/90 to-surface-container-low/95 backdrop-blur-[4px]"></div>
+</div>
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop pt-28 pb-20 flex flex-col min-h-screen w-full relative">
+    
+    <!-- Toast Notification Hub -->
+    <div id="profile-toast-container" class="fixed top-24 right-6 z-[999] flex flex-col gap-3 pointer-events-none">
+        @if (TempData["Success"] != null)
+        {
+            <div class="bg-white/95 backdrop-blur-xl border border-white shadow-xl rounded-2xl p-4 w-80 flex items-start gap-3 pointer-events-auto border-l-4 border-l-secondary translate-x-0 transition-transform duration-300">
+                <span class="material-symbols-outlined text-secondary">check_circle</span>
+                <div class="flex-grow">
+                    <h5 class="font-bold text-primary text-label-md mb-0.5">Success</h5>
+                    <p class="text-[12px] text-on-surface-variant">@TempData["Success"]</p>
+                </div>
+                <button class="text-outline hover:text-primary" onclick="this.parentElement.remove()"><span class="material-symbols-outlined text-[16px]">close</span></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="bg-white/95 backdrop-blur-xl border border-white shadow-xl rounded-2xl p-4 w-80 flex items-start gap-3 pointer-events-auto border-l-4 border-l-error translate-x-0 transition-transform duration-300">
+                <span class="material-symbols-outlined text-error">error</span>
+                <div class="flex-grow">
+                    <h5 class="font-bold text-primary text-label-md mb-0.5">Error</h5>
+                    <p class="text-[12px] text-on-surface-variant">@TempData["Error"]</p>
+                </div>
+                <button class="text-outline hover:text-primary" onclick="this.parentElement.remove()"><span class="material-symbols-outlined text-[16px]">close</span></button>
+            </div>
+        }
+    </div>
+
+    <!-- Page Header -->
+    <header class="mb-12">
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary font-bold mb-2">Settings Suite</h1>
+        <p class="text-body-lg text-on-surface-variant">Manage your personal profile, hospitality branding, and SaaS configurations.</p>
+    </header>
+
+    <!-- Main Grid Content -->
+    <div class="flex flex-col lg:flex-row gap-8 flex-grow">
+        
+        <!-- Side Navigation (Settings Tabs) -->
+        <aside class="w-full lg:w-64 flex-shrink-0">
+            <div class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-4 shadow-sm sticky top-28">
+                <nav class="flex flex-col space-y-2" id="settings-nav">
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary-container text-on-secondary-container transition-all font-semibold" data-target="brand">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <span class="text-label-md">Profile & Brand</span>
+                    </button>
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="billing">
+                        <span class="material-symbols-outlined">credit_card</span>
+                        <span class="text-label-md">Subscription & Billing</span>
+                    </button>
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="users">
+                        <span class="material-symbols-outlined">manage_accounts</span>
+                        <span class="text-label-md">Team Management</span>
+                    </button>
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="gateways">
+                        <span class="material-symbols-outlined">payments</span>
+                        <span class="text-label-md">Payment Integrations</span>
+                    </button>
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="security">
+                        <span class="material-symbols-outlined">security</span>
+                        <span class="text-label-md">Security Suite</span>
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="flex-grow bg-white/70 backdrop-blur-xl border border-white rounded-2xl shadow-sm p-6 md:p-10 min-h-[500px]">
+            
+            <!-- Profile & Brand Tab -->
+            <div class="tab-content active" id="brand">
+                <h2 class="text-headline-lg font-bold text-primary mb-6 border-b border-outline-variant/30 pb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">account_circle</span> Profile & Brand
+                </h2>
+                
+                <div class="space-y-8">
+                    <!-- Photo upload simulated -->
+                    <div>
+                        <h3 class="text-headline-md text-primary font-bold mb-2">Display Avatar</h3>
+                        <p class="text-body-md text-on-surface-variant mb-4">Your profile avatar used in the management dashboard.</p>
+                        
+                        <form action="/profile/update-avatar" method="POST" enctype="multipart/form-data" id="avatar-form" class="flex items-center gap-6">
+                            <img id="avatar-img" class="w-24 h-24 rounded-full border-2 border-white shadow-md object-cover" src="@avatarUrl" alt="Avatar" />
+                            <div class="flex flex-col gap-2">
+                                <input type="file" name="avatarFile" id="avatarFile" accept="image/*" class="hidden" onchange="document.getElementById('avatar-form').submit();" />
+                                <button type="button" class="bg-secondary text-white text-label-sm px-5 py-2 rounded-lg hover:bg-secondary/95 transition-all font-semibold shadow" onclick="document.getElementById('avatarFile').click();">
+                                    Change Photo
+                                </button>
+                                <span class="text-label-sm text-outline font-medium">JPEG or PNG. Maximum 2MB.</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <form action="/profile/update" method="POST" class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-outline-variant/10">
+                            <div class="col-span-2">
+                                <h3 class="text-headline-md text-primary font-bold">Personal Details</h3>
+                                <p class="text-body-md text-on-surface-variant">Update your administrative account particulars in SQL Server.</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Full Name</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="text" name="fullName" value="@(user?.FullName ?? "")" required />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Email Address</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="email" name="email" value="@(user?.Email ?? "")" required />
+                            </div>
+                        </div>
+
+                        <!-- Tenant / Resort Brand settings -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-outline-variant/10">
+                            <div class="col-span-2">
+                                <h3 class="text-headline-md text-primary font-bold">Resort branding</h3>
+                                <p class="text-body-md text-on-surface-variant">Display title used on booking receipts and invoicing ledgers.</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Resort Brand Name</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="text" name="tenantName" value="@(tenant?.Name ?? "")" required />
+                            </div>
+
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Property Subdomain</label>
+                                <input class="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-3 text-body-md outline-none text-outline font-semibold cursor-not-allowed" type="text" value="@(tenant?.Subdomain ?? "")" disabled />
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-outline-variant/10 flex justify-end">
+                            <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all font-bold">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Billing Settings -->
+            <div class="tab-content hidden" id="billing">
+                <h2 class="text-headline-lg font-bold text-primary mb-6 border-b border-outline-variant/30 pb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">credit_card</span> Subscription & Billing
+                </h2>
+                <div class="bg-surface-container-low/40 rounded-2xl p-8 border border-outline-variant/20 flex flex-col items-center justify-center text-center h-64">
+                    <span class="material-symbols-outlined text-[48px] text-outline mb-2">workspace_premium</span>
+                    <h3 class="text-body-lg font-bold text-primary mb-1">Premium subscription tier</h3>
+                    <p class="text-body-md text-on-surface-variant max-w-sm">Your SaaS subscription remains active until May 2027. Next transaction due for $499.</p>
+                    <button class="bg-secondary text-on-secondary font-label-sm text-label-sm px-6 py-2.5 rounded-lg mt-4 font-semibold shadow hover:bg-secondary/95 transition-all" onclick="showProfileToast('Export Receipts', 'Compiling invoices history log and downloading PDF statement...', 'success');">View Receipts</button>
+                </div>
+            </div>
+
+            <!-- Team Management -->
+            <div class="tab-content hidden" id="users">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-outline-variant/30 pb-4">
+                    <h2 class="text-headline-lg font-bold text-primary flex items-center gap-2">
+                        <span class="material-symbols-outlined">manage_accounts</span> Team Management
+                    </h2>
+                    <button type="button" class="bg-secondary text-white text-label-sm px-5 py-2.5 rounded-xl hover:bg-secondary/95 transition-all font-bold shadow flex items-center gap-2" onclick="openTeamModal()">
+                        <span class="material-symbols-outlined text-[18px]">person_add</span> Add Team Member
+                    </button>
+                </div>
+
+                <!-- Client Side Search and Filter Bar -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div class="relative flex-grow">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                        <input id="team-search" type="text" placeholder="Search staff members by name or email..." class="w-full bg-white/60 border border-outline-variant/50 rounded-xl pl-12 pr-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-medium" onkeyup="filterTeam()" />
+                    </div>
+                    <select id="dept-filter" class="bg-white/60 border border-outline-variant/50 rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-medium" onchange="filterTeam()">
+                        <option value="">All Departments</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Reception">Reception</option>
+                    </select>
+                </div>
+
+                <!-- Staff Roster Table -->
+                <div class="overflow-x-auto bg-white/40 border border-outline-variant/20 rounded-2xl shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant/30 bg-surface-container-low/40">
+                                <th class="p-4 text-label-md text-primary font-bold">Staff Member</th>
+                                <th class="p-4 text-label-md text-primary font-bold">Department</th>
+                                <th class="p-4 text-label-md text-primary font-bold">Account Access</th>
+                                <th class="p-4 text-label-md text-primary font-bold">Status</th>
+                                <th class="p-4 text-label-md text-primary font-bold text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="team-table-body">
+                            @if (!teamList.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-on-surface-variant font-medium">
+                                        No team members registered yet.
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var member in teamList)
+                                {
+                                    <tr class="border-b border-outline-variant/10 hover:bg-white/20 transition-colors team-row" data-name="@member.FullName" data-email="@member.Email" data-dept="@member.Department">
+                                        <td class="p-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-body-lg shadow-sm">
+                                                    @member.FullName[0]
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-primary text-body-md">@member.FullName</h4>
+                                                    <p class="text-label-sm text-outline">@member.Email</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-4">
+                                            <span class="bg-surface-container-high text-primary px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase border border-outline-variant/20">
+                                                @member.Department
+                                            </span>
+                                        </td>
+                                        <td class="p-4">
+                                            <div class="flex items-center gap-1.5 text-on-surface-variant font-semibold text-body-sm">
+                                                <span class="material-symbols-outlined text-[18px]">verified_user</span>
+                                                System Member
+                                            </div>
+                                        </td>
+                                        <td class="p-4">
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-green-500/10 text-green-700 border border-green-500/20">
+                                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                                Active
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-right">
+                                            <form action="/profile/team/@member.Id/delete" method="POST" onsubmit="return confirm('Are you sure you want to remove this staff member?');">
+                                                <button type="submit" class="text-error hover:text-error/80 flex items-center gap-1 transition-all ml-auto">
+                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                    <span class="text-label-sm font-semibold">Remove</span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Security Suite -->
+            <div class="tab-content hidden" id="security">
+                <h2 class="text-headline-lg font-bold text-primary mb-6 border-b border-outline-variant/30 pb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">security</span> Security Suite
+                </h2>
+                
+                <div class="max-w-xl space-y-8">
+                    <div>
+                        <h3 class="text-headline-md text-primary font-bold mb-2">Change Password</h3>
+                        <p class="text-body-md text-on-surface-variant">Update your administrative credentials mapped to Microsoft SQL Server.</p>
+                    </div>
+
+                    <form action="/profile/change-password" method="POST" class="space-y-6" id="password-form" onsubmit="return validatePasswordChange()">
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Current Password</label>
+                            <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="password" name="currentPassword" id="currentPassword" required />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">New Password</label>
+                            <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="password" name="newPassword" id="newPassword" required />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Confirm New Password</label>
+                            <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all text-primary font-semibold" type="password" name="confirmPassword" id="confirmPassword" required />
+                            <p id="password-match-error" class="text-error text-label-sm font-semibold mt-1 hidden">Passwords do not match.</p>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all font-bold">
+                                Change Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Payment Integrations Tab -->
+            <div class="tab-content hidden" id="gateways">
+                <h2 class="text-headline-lg font-bold text-primary mb-6 border-b border-outline-variant/30 pb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">payments</span> Payment Integrations
+                </h2>
+                
+                <form action="/profile/payments/save" method="POST" class="space-y-8">
+                    <p class="text-body-md text-on-surface-variant mb-6">Select and configure payment gateways for your customers to settle booking invoices.</p>
+
+                    <!-- PayPal Card -->
+                    <div class="bg-white/50 border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-[32px] text-primary">account_balance_wallet</span>
+                                <div>
+                                    <h3 class="text-body-lg font-bold text-primary">PayPal Checkout</h3>
+                                    <p class="text-label-sm text-outline">Enable global credit card and PayPal wallet payments.</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="payPalEnabled" value="true" class="sr-only peer" @(IsGatewayEnabled("PayPal_Enabled") ? "checked" : "") onchange="document.getElementById('paypal-config').style.display = this.checked ? 'grid' : 'none'">
+                                <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4" id="paypal-config" style="@(IsGatewayEnabled("PayPal_Enabled") ? "" : "display: none;")">
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">PayPal Client ID</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="payPalClientId" value="@GetGatewayVal("PayPal_ClientId", "")" placeholder="Enter PayPal Client ID" />
+                            </div>
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">PayPal Client Secret</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="password" name="payPalSecret" value="@GetGatewayVal("PayPal_Secret", "")" placeholder="Enter Client Secret" />
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Environment</label>
+                                <select class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" name="payPalEnv">
+                                    <option value="sandbox" selected="@(GetGatewayVal("PayPal_Env", "sandbox") == "sandbox")">Sandbox (Testing)</option>
+                                    <option value="production" selected="@(GetGatewayVal("PayPal_Env", "sandbox") == "production")">Production (Live)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vodafone Cash Card -->
+                    <div class="bg-white/50 border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-[32px] text-primary">phone_android</span>
+                                <div>
+                                    <h3 class="text-body-lg font-bold text-primary">Vodafone Cash (Egyptian Localized)</h3>
+                                    <p class="text-label-sm text-outline">Accept instant Egypt local mobile wallet payments.</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="vodafoneEnabled" value="true" class="sr-only peer" @(IsGatewayEnabled("Vodafone_Enabled") ? "checked" : "") onchange="document.getElementById('vodafone-config').style.display = this.checked ? 'grid' : 'none'">
+                                <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4" id="vodafone-config" style="@(IsGatewayEnabled("Vodafone_Enabled") ? "" : "display: none;")">
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Vodafone Wallet Number</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="vodafoneNumber" value="@GetGatewayVal("Vodafone_Number", "")" placeholder="e.g. 01012345678" />
+                            </div>
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Merchant ID</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="vodafoneMerchantId" value="@GetGatewayVal("Vodafone_MerchantId", "")" placeholder="Enter Wallet Merchant ID" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stripe Card -->
+                    <div class="bg-white/50 border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-[32px] text-primary">credit_card</span>
+                                <div>
+                                    <h3 class="text-body-lg font-bold text-primary">Stripe Payment Gateway</h3>
+                                    <p class="text-label-sm text-outline">Accept global Visa, MasterCard, and Apple Pay checkouts.</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="stripeEnabled" value="true" class="sr-only peer" @(IsGatewayEnabled("Stripe_Enabled") ? "checked" : "") onchange="document.getElementById('stripe-config').style.display = this.checked ? 'grid' : 'none'">
+                                <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4" id="stripe-config" style="@(IsGatewayEnabled("Stripe_Enabled") ? "" : "display: none;")">
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Stripe Publishable Key</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="stripePublishableKey" value="@GetGatewayVal("Stripe_PublishableKey", "")" placeholder="pk_test_..." />
+                            </div>
+                            <div>
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Stripe Secret Key</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="password" name="stripeSecretKey" value="@GetGatewayVal("Stripe_SecretKey", "")" placeholder="sk_test_..." />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- InstaPay & Fawry Local Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- InstaPay -->
+                        <div class="bg-white/50 border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-body-lg font-bold text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[24px]">send</span> InstaPay Egypt
+                                </h3>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="instaPayEnabled" value="true" class="sr-only peer" @(IsGatewayEnabled("InstaPay_Enabled") ? "checked" : "") onchange="document.getElementById('instapay-config').style.display = this.checked ? 'block' : 'none'">
+                                    <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                                </label>
+                            </div>
+                            <div id="instapay-config" style="@(IsGatewayEnabled("InstaPay_Enabled") ? "" : "display: none;")">
+                                <label class="block text-label-sm text-primary font-bold mb-1.5">Payment Address (IPA)</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="instaPayAddress" value="@GetGatewayVal("InstaPay_Address", "")" placeholder="name@instapay" />
+                            </div>
+                        </div>
+
+                        <!-- Fawry -->
+                        <div class="bg-white/50 border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-body-lg font-bold text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[24px]">account_balance</span> Fawry Egypt
+                                </h3>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="fawryEnabled" value="true" class="sr-only peer" @(IsGatewayEnabled("Fawry_Enabled") ? "checked" : "") onchange="document.getElementById('fawry-config').style.display = this.checked ? 'grid' : 'none'">
+                                    <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-1 gap-3" id="fawry-config" style="@(IsGatewayEnabled("Fawry_Enabled") ? "" : "display: none;")">
+                                <div>
+                                    <label class="block text-label-sm text-primary font-bold mb-1">Merchant Code</label>
+                                    <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="fawryMerchantCode" value="@GetGatewayVal("Fawry_MerchantCode", "")" placeholder="Merchant Code" />
+                                </div>
+                                <div>
+                                    <label class="block text-label-sm text-primary font-bold mb-1">Security Key</label>
+                                    <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="password" name="fawrySecurityKey" value="@GetGatewayVal("Fawry_SecurityKey", "")" placeholder="Security Key" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-outline-variant/10 flex justify-end">
+                        <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all font-bold">
+                            Save Gateway Integrations
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</main>
+
+<!-- Modern Glassmorphic Roster Registration Modal -->
+<div id="team-modal" class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-primary/20 backdrop-blur-md hidden opacity-0 transition-all duration-300">
+    <div class="bg-white/90 backdrop-blur-2xl border border-white rounded-3xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform scale-95 transition-transform duration-300 relative">
+        <button type="button" class="absolute top-6 right-6 text-outline hover:text-primary transition-colors" onclick="closeTeamModal()">
+            <span class="material-symbols-outlined text-[24px]">close</span>
+        </button>
+
+        <h3 class="text-headline-lg font-bold text-primary mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined">person_add</span> Register Team Member
+        </h3>
+        <p class="text-body-md text-on-surface-variant mb-6">Create a secure system user profile and assign dynamic security levels.</p>
+
+        <form action="/profile/team/create" method="POST" class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-label-sm text-primary font-bold mb-1.5">First Name</label>
+                    <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="firstName" required />
+                </div>
+                <div>
+                    <label class="block text-label-sm text-primary font-bold mb-1.5">Last Name</label>
+                    <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="lastName" required />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-label-sm text-primary font-bold mb-1.5">Email Address</label>
+                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="email" name="email" required />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-label-sm text-primary font-bold mb-1.5">Department</label>
+                    <select class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" name="department" required>
+                        <option value="Administration">Administration</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Reception">Reception</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-label-sm text-primary font-bold mb-1.5">Security Role</label>
+                    <select class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-2.5 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" name="role" required>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Operations Manager">Operations Manager</option>
+                        <option value="Housekeeper">Housekeeper</option>
+                        <option value="Maintenance Technician">Maintenance Technician</option>
+                        <option value="Receptionist">Receptionist</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-surface-container-low/60 border border-outline-variant/30 rounded-xl p-4 flex gap-3 items-start mt-2">
+                <span class="material-symbols-outlined text-secondary text-[20px]">info</span>
+                <p class="text-body-sm text-on-surface-variant">The new staff member will be registered with a temporary credential setup: <strong class="text-primary">StaffPass123!</strong>. They must change their password on first sign-in.</p>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t border-outline-variant/10">
+                <button type="button" class="bg-surface-container border border-outline-variant text-primary text-label-md px-5 py-2.5 rounded-xl font-bold hover:bg-surface-container-high transition-all" onclick="closeTeamModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-primary text-on-primary text-label-md px-6 py-2.5 rounded-xl font-bold shadow hover:shadow-lg transition-all">
+                    Register Staff
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .tab-content.hidden {
+        display: none !important;
+    }
+    .tab-content.active {
+        display: block !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Reset all tabs
+                navButtons.forEach(b => {
+                    b.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+                    b.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                });
+                tabContents.forEach(c => {
+                    c.classList.add('hidden');
+                    c.classList.remove('active');
+                });
+
+                // Set active tab
+                btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                
+                const targetId = btn.getAttribute('data-target');
+                const targetTab = document.getElementById(targetId);
+                if (targetTab) {
+                    targetTab.classList.remove('hidden');
+                    targetTab.classList.add('active');
+                }
+            });
+        });
+
+        // Check if there is an active tab target in URL hashes
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            const targetBtn = document.querySelector(`.nav-btn[data-target="${hash}"]`);
+            if (targetBtn) targetBtn.click();
+        }
+
+        // Auto slide-out toast message if present
+        const toast = document.querySelector('#profile-toast-container > div');
+        if (toast) {
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+                toast.classList.add('translate-x-0');
+            }, 10);
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0');
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+    });
+
+    // Team search and filter
+    function filterTeam() {
+        const query = document.getElementById('team-search').value.toLowerCase().trim();
+        const dept = document.getElementById('dept-filter').value;
+        const rows = document.querySelectorAll('.team-row');
+
+        rows.forEach(row => {
+            const name = row.getAttribute('data-name').toLowerCase();
+            const email = row.getAttribute('data-email').toLowerCase();
+            const rDept = row.getAttribute('data-dept');
+
+            const matchesQuery = name.includes(query) || email.includes(query);
+            const matchesDept = !dept || rDept === dept;
+
+            if (matchesQuery && matchesDept) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Modal Control
+    function openTeamModal() {
+        const modal = document.getElementById('team-modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeTeamModal() {
+        const modal = document.getElementById('team-modal');
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Client side password matching check
+    function validatePasswordChange() {
+        const newPass = document.getElementById('newPassword').value;
+        const confPass = document.getElementById('confirmPassword').value;
+        const errorText = document.getElementById('password-match-error');
+
+        if (newPass !== confPass) {
+            errorText.classList.remove('hidden');
+            return false;
+        }
+        errorText.classList.add('hidden');
+        return true;
+    }
+
+    function showProfileToast(title, message, type = 'success') {
+        const container = document.getElementById('profile-toast-container');
+        if (!container) return;
+
+        const borderCol = type === 'success' ? 'border-l-secondary' : type === 'error' ? 'border-l-error' : 'border-l-primary';
+        const icon = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
+        const iconCol = type === 'success' ? 'text-secondary' : type === 'error' ? 'text-error' : 'text-primary';
+
+        const toast = document.createElement('div');
+        toast.className = `bg-white/95 backdrop-blur-xl border border-white shadow-xl rounded-2xl p-4 w-80 flex items-start gap-3 pointer-events-auto border-l-4 ${borderCol} opacity-0 translate-x-8 transition-all duration-300`;
+        toast.innerHTML = `
+            <span class="material-symbols-outlined ${iconCol}">${icon}</span>
+            <div class="flex-grow">
+                <h5 class="font-bold text-primary text-label-md mb-0.5">${title}</h5>
+                <p class="text-[12px] text-on-surface-variant">${message}</p>
+            </div>
+            <button class="text-outline hover:text-primary" onclick="this.parentElement.remove()"><span class="material-symbols-outlined text-[16px]">close</span></button>
+        `;
+        container.appendChild(toast);
+        
+        // Trigger reflow & slide-in
+        setTimeout(() => {
+            toast.classList.remove('opacity-0', 'translate-x-8');
+        }, 10);
+
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-x-8');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+</script>

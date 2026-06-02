@@ -7,8 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using ResortManagement.Application.Common.Interfaces;
 using ResortManagement.Application.Features.Analytics.Queries.GetDashboardStats;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ResortManagement.WebApi.Controllers.Mvc;
 
+[Authorize]
 [Route("dashboard")]
 public class DashboardController : Controller
 {
@@ -25,7 +28,7 @@ public class DashboardController : Controller
     public async Task<IActionResult> Index()
     {
         DashboardStatsDto? stats = null;
-        string resortName = "LuxeStay Royal Resort (Simulated)";
+        string resortName = "Luxury Management Portal";
 
         try
         {
@@ -39,18 +42,18 @@ public class DashboardController : Controller
         }
         catch (Exception)
         {
-            // Database is offline/unreachable, fallback gracefully to simulated statistics
+            // Database is offline/unreachable
         }
 
         if (stats == null)
         {
             stats = new DashboardStatsDto(
-                TotalRevenue: 148250.00m,
-                PendingRevenue: 12400.00m,
-                OccupancyRate: 78.45,
-                TotalReservations: 142,
-                ActiveMaintenanceRequests: 3,
-                DirtyUnitsCount: 5
+                TotalRevenue: 0.00m,
+                PendingRevenue: 0.00m,
+                OccupancyRate: 0.00,
+                TotalReservations: 0,
+                ActiveMaintenanceRequests: 0,
+                DirtyUnitsCount: 0
             );
         }
 
@@ -58,19 +61,25 @@ public class DashboardController : Controller
 
         // Fetch recent reservations for dashboard table
         List<ResortManagement.Domain.Entities.Reservations.Reservation> recentReservations = new();
+        List<ResortManagement.Domain.Entities.Resorts.Resort> topResorts = new();
         try
         {
             recentReservations = await _context.Reservations
                 .OrderByDescending(r => r.CreatedAt)
                 .Take(5)
                 .ToListAsync();
+
+            topResorts = await _context.Resorts
+                .Take(2)
+                .ToListAsync();
         }
         catch (Exception)
         {
-            // Database is unreachable, fallback to empty list which triggers premium mock reservations view
+            // Database is unreachable
         }
 
         ViewBag.RecentReservations = recentReservations;
+        ViewBag.TopResorts = topResorts;
 
         return View(stats);
     }

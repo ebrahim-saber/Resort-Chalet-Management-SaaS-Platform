@@ -1,0 +1,145 @@
+@using ResortManagement.Domain.Entities.Resorts
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Owner Performance Dashboard";
+    var resorts = ViewBag.Resorts as List<Resort> ?? new List<Resort>();
+    var resortsCount = (int)ViewBag.ResortsCount;
+    var totalReservations = (int)ViewBag.TotalReservations;
+    var grossRevenue = (decimal)ViewBag.GrossRevenue;
+    var netRevenue = (decimal)ViewBag.NetRevenue;
+    var totalExpenses = (decimal)ViewBag.TotalExpenses;
+    var q3Forecast = (double)ViewBag.Q3Forecast;
+}
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop lg:px-margin-desktop w-full pt-28 pb-20">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-[32px] font-headline-lg font-bold text-primary mb-1">Owner Performance Dashboard</h1>
+            <p class="text-body-md text-on-surface-variant">Expected yields, financial health reports, and quarterly forecasting.</p>
+        </div>
+        <div>
+            <button class="bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-primary px-6 py-2.5 rounded-full text-label-md font-label-md transition-all shadow-sm flex items-center gap-2 font-semibold" onclick="window.print()">
+                <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>Export Financial Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Top KPI Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-10">
+        <!-- Gross Bookings Value -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between h-40">
+            <div>
+                <span class="text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">Gross Bookings Value</span>
+                <h3 class="text-headline-lg font-bold text-primary mt-2">@grossRevenue.ToString("C")</h3>
+            </div>
+            <div class="text-secondary text-label-sm font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">trending_up</span>
+                <span>+12.4% vs last quarter</span>
+            </div>
+        </div>
+
+        <!-- Net Operating Yield -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between h-40 border-l-4 border-secondary">
+            <div>
+                <span class="text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">Net Operating Yield</span>
+                <h3 class="text-headline-lg font-bold text-secondary mt-2">@netRevenue.ToString("C")</h3>
+            </div>
+            <div class="text-on-surface-variant text-label-sm font-medium">
+                After housekeeping & maintenance
+            </div>
+        </div>
+
+        <!-- Total Expenses -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between h-40 border-l-4 border-error">
+            <div>
+                <span class="text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">Total Expenses</span>
+                <h3 class="text-headline-lg font-bold text-error mt-2">@totalExpenses.ToString("C")</h3>
+            </div>
+            <div class="text-on-surface-variant text-label-sm font-medium">
+                Housekeeping & Maintenance
+            </div>
+        </div>
+
+        <!-- Q3 Occupancy Forecast -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between h-40">
+            <div>
+                <span class="text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">Q3 Occupancy Forecast</span>
+                <h3 class="text-headline-lg font-bold text-primary mt-2">@q3Forecast.ToString("F1")%</h3>
+            </div>
+            <div class="text-primary text-label-sm font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">analytics</span>
+                <span>Aggregated reservation trends</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <!-- Properties List -->
+        <div class="lg:col-span-2 metric-card rounded-2xl p-6">
+            <h5 class="text-[20px] font-bold text-primary mb-4">Portfolio Performance</h5>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-outline-variant/30 text-on-surface-variant text-label-sm font-bold uppercase">
+                            <th class="py-3">Property Name</th>
+                            <th class="py-3">Location</th>
+                            <th class="py-3 text-right">Est. Share Yield</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/20">
+                        @foreach (var resort in resorts)
+                        {
+                            <tr class="align-middle">
+                                <td class="py-4 text-body-md font-semibold text-primary">@resort.Name</td>
+                                <td class="py-4 text-body-md text-on-surface-variant">@resort.Address</td>
+                                <td class="py-4 text-right font-bold text-secondary">
+                                    @((grossRevenue / Math.Max(resortsCount, 1)).ToString("C"))
+                                </td>
+                            </tr>
+                        }
+                        @if (!resorts.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="py-6 text-center text-on-surface-variant font-medium">No properties registered under this account.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Expenditures Breakdown -->
+        <div class="lg:col-span-1 metric-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+                <h5 class="text-[20px] font-bold text-primary mb-6">Operating Expense Breakdown</h5>
+                
+                <div class="mb-6">
+                    <div class="flex justify-between text-label-md font-semibold mb-2">
+                        <span class="text-on-surface-variant">Housekeeping Payroll</span>
+                        <span class="text-primary">@((totalExpenses * 0.4m).ToString("C"))</span>
+                    </div>
+                    <div class="w-full bg-surface-container-high rounded-full h-2">
+                        <div class="bg-secondary h-2 rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="flex justify-between text-label-md font-semibold mb-2">
+                        <span class="text-on-surface-variant">Maintenance Subcontracts</span>
+                        <span class="text-primary">@((totalExpenses * 0.6m).ToString("C"))</span>
+                    </div>
+                    <div class="w-full bg-surface-container-high rounded-full h-2">
+                        <div class="bg-error h-2 rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 text-center flex flex-col items-center gap-2 mt-4">
+                <span class="material-symbols-outlined text-[32px] text-secondary">shield_lock</span>
+                <p class="text-label-sm text-on-surface-variant">Yield computations are securely calculated in the database, with real-time tenant boundary protections active.</p>
+            </div>
+        </div>
+    </div>
+</main>

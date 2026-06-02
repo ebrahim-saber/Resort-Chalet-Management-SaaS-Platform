@@ -1,150 +1,198 @@
 @model ResortManagement.Application.Features.Analytics.Queries.GetDashboardStats.DashboardStatsDto
+@using System.Security.Claims
 @{
     ViewData["Title"] = "Operations Dashboard";
     var recentReservations = ViewBag.RecentReservations as List<ResortManagement.Domain.Entities.Reservations.Reservation> ?? new List<ResortManagement.Domain.Entities.Reservations.Reservation>();
+    var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Ibrahim";
 }
 
-<div class="workspace-header">
-    <div>
-        <h1 class="header-title">@ViewBag.ResortName</h1>
-        <p class="header-meta">Live operations and real-time financial analytics dashboard.</p>
-    </div>
-    <div style="display: flex; gap: 12px;">
-        <button class="btn btn-secondary" onclick="window.location.reload();">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-            Refresh Metrics
-        </button>
-        <button class="btn btn-primary" onclick="window.location.href='/bookings'">
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none"><path d="M12 5v14M5 12h14"/></svg>
-            New Booking
-        </button>
-    </div>
-</div>
-
-<!-- KPI Metrics Grid -->
-<div class="dashboard-grid">
-    <div class="glass-card metric-card">
-        <div class="metric-icon-box blue">
-            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        </div>
-        <div class="metric-info">
-            <span class="metric-label">Total Revenue</span>
-            <span class="metric-value">@Model.TotalRevenue.ToString("C")</span>
-        </div>
-    </div>
-
-    <div class="glass-card metric-card">
-        <div class="metric-icon-box gold">
-            <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="metric-info">
-            <span class="metric-label">Pending Invoices</span>
-            <span class="metric-value">@Model.PendingRevenue.ToString("C")</span>
-        </div>
-    </div>
-
-    <div class="glass-card metric-card">
-        <div class="metric-icon-box teal">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        </div>
-        <div class="metric-info">
-            <span class="metric-label">Active Bookings</span>
-            <span class="metric-value">@Model.TotalReservations</span>
-        </div>
-    </div>
-
-    <div class="glass-card metric-card">
-        <div class="metric-icon-box red">
-            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-        </div>
-        <div class="metric-info">
-            <span class="metric-label">Open Tickets</span>
-            <span class="metric-value">@Model.ActiveMaintenanceRequests</span>
-        </div>
-    </div>
-</div>
-
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--grid-gap); margin-bottom: 40px;">
-    <!-- Recent Reservations List -->
-    <div class="glass-card" style="display: flex; flex-direction: column;">
-        <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--primary);">Recent Stays & Bookings</h2>
-        <div class="table-responsive">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>Reservation ID</th>
-                        <th>Stay Period</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (recentReservations.Count == 0)
-                    {
-                        <!-- Fallback visual list for presentation -->
-                        <tr>
-                            <td>#RS-9821-DEL</td>
-                            <td>Jun 02 - Jun 05 (3 Nights)</td>
-                            <td>$1,350.00</td>
-                            <td><span class="status-pill success">Confirmed</span></td>
-                        </tr>
-                        <tr>
-                            <td>#RS-4821-SEA</td>
-                            <td>Jun 10 - Jun 14 (4 Nights)</td>
-                            <td>$1,280.00</td>
-                            <td><span class="status-pill warning">Pending Payment</span></td>
-                        </tr>
-                        <tr>
-                            <td>#RS-1029-BOU</td>
-                            <td>Jun 01 - Jun 02 (1 Night)</td>
-                            <td>$180.00</td>
-                            <td><span class="status-pill success">Checked In</span></td>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var reservation in recentReservations)
-                        {
-                            <tr>
-                                <td>#RS-@reservation.Id.ToString()[..8].ToUpper()</td>
-                                <td>@reservation.CheckInDate.ToString("MMM dd") - @reservation.CheckOutDate.ToString("MMM dd")</td>
-                                <td>@reservation.TotalPrice.ToString("C")</td>
-                                <td>
-                                    @{
-                                        var badgeClass = "warning";
-                                        if (reservation.Status == "Confirmed" || reservation.Status == "CheckedIn") badgeClass = "success";
-                                        if (reservation.Status == "Cancelled") badgeClass = "danger";
-                                    }
-                                    <span class="status-pill @badgeClass">@reservation.Status</span>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Occupancy Meter (Circular SVG Progress Bar) -->
-    <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--primary); width: 100%;">Occupancy Rate</h2>
-        
-        <div style="position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-            <!-- SVG circular loader -->
-            <svg width="180" height="180" viewBox="0 0 180 180" style="transform: rotate(-90deg);">
-                <circle cx="90" cy="90" r="76" stroke="var(--border-dark)" stroke-width="12" fill="transparent" />
-                <circle cx="90" cy="90" r="76" stroke="var(--secondary)" stroke-width="12" fill="transparent" 
-                        stroke-dasharray="477.5" stroke-dashoffset="@(477.5 - (477.5 * Model.OccupancyRate / 100))" 
-                        stroke-linecap="round" style="transition: stroke-dashoffset 1s ease-out;" />
-            </svg>
-            <div style="position: absolute; display: flex; flex-direction: column; align-items: center;">
-                <span style="font-size: 32px; font-weight: 700; color: var(--primary);">@Model.OccupancyRate%</span>
-                <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px;">Occupied</span>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop lg:px-margin-desktop w-full pt-28 pb-20">
+    <!-- Hero Section -->
+    <section class="mb-12">
+        <div class="relative rounded-2xl overflow-hidden h-[240px] flex items-end p-8 bg-cover bg-center shadow-lg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCoslKV3WmWqnvTNvYhwDJuVmL8_1l14ggpidJikf3EEQtLNRYOLEHva3N6NbSP7SnWoOEy1sjiWco5GL81ArfEUt4nkNCBFKTSi6-REHH9L0Y380242giLTRTQ9LFZft0_Oy4jUQmzjQbP5_huSGeSi7_h8d02YtMrmXAMQk81HmMGNSGBt0KbVb3EGT8Wf1Ghp58sRWElFRomfOnXyrKs8LQuPlzJc67oN8cSIA7z_TcZuQ3U64PSev4oe8M0krUq8uCZYX63U0iv');">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+            <div class="relative z-10 w-full flex flex-col md:flex-row justify-between items-end gap-6">
+                <div>
+                    <h1 class="text-display-lg-mobile md:text-headline-lg font-bold text-white mb-2">Welcome Back, @userName</h1>
+                    <p class="text-body-lg text-white/90">Here is what's happening across @(ViewBag.ResortName ?? "your properties") today.</p>
+                </div>
+                <!-- Weather Widget (Glassmorphic) -->
+                <div class="glass-panel rounded-xl p-4 flex items-center gap-4 text-white" id="weather-widget">
+                    <span id="weather-icon" class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">cloud_queue</span>
+                    <div>
+                        <div id="weather-temp" class="text-headline-md font-bold">-2°C</div>
+                        <div id="weather-location" class="text-label-sm text-white/80">Courchevel, FR</div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <p style="font-size: 13px; color: var(--text-secondary); max-width: 220px; line-height: 1.6;">
-            Based on active guest stays and verified bookings for the current property.
-        </p>
+    </section>
+    
+    <!-- Bento Grid: Key Metrics & Charts -->
+    <section class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter mb-12">
+        <!-- Revenue Overview -->
+        <div class="metric-card rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
+            <div>
+                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">Total Revenue</h3>
+                <div class="text-headline-lg text-primary font-bold">@Model.TotalRevenue.ToString("C") <span class="text-label-md text-secondary ml-2 font-normal">+12.5%</span></div>
+            </div>
+            <div class="h-32 mt-6 relative flex items-end gap-2">
+                <!-- Sparkline Chart Bars -->
+                <div class="w-1/6 bg-secondary/20 h-[40%] rounded-t-sm hover:bg-secondary transition-colors cursor-pointer relative group"></div>
+                <div class="w-1/6 bg-secondary/20 h-[60%] rounded-t-sm hover:bg-secondary transition-colors cursor-pointer relative group"></div>
+                <div class="w-1/6 bg-secondary/20 h-[50%] rounded-t-sm hover:bg-secondary transition-colors cursor-pointer relative group"></div>
+                <div class="w-1/6 bg-secondary/20 h-[80%] rounded-t-sm hover:bg-secondary transition-colors cursor-pointer relative group"></div>
+                <div class="w-1/6 bg-secondary/20 h-[70%] rounded-t-sm hover:bg-secondary transition-colors cursor-pointer relative group"></div>
+                <div class="w-1/6 bg-primary h-[100%] rounded-t-sm hover:bg-primary/90 transition-colors cursor-pointer relative group"></div>
+            </div>
+        </div>
+        
+        <!-- Occupancy Rate -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between items-center text-center">
+            <div class="w-full text-left">
+                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">Current Occupancy</h3>
+                <div class="text-headline-lg text-primary font-bold">@Model.OccupancyRate%</div>
+            </div>
+            <div class="relative w-24 h-24 mt-2">
+                <svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+                    <path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+                    <path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="@Model.OccupancyRate, 100" stroke-width="3"></path>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center font-bold text-primary">@Model.OccupancyRate%</div>
+            </div>
+        </div>
+        
+        <!-- Reservations Count / Pending Invoices -->
+        <div class="metric-card rounded-2xl p-6 flex flex-col justify-between bg-primary text-on-primary shadow-lg">
+            <div>
+                <h3 class="text-label-md text-on-primary/80 mb-1 font-semibold uppercase tracking-wider">Active Bookings</h3>
+                <div class="text-headline-lg font-bold">@Model.TotalReservations</div>
+            </div>
+            <div class="mt-4 text-label-sm text-on-primary/80 border-t border-white/10 pt-4">
+                <p class="mb-2">Pending Invoices: <span class="font-bold text-white">@Model.PendingRevenue.ToString("C")</span></p>
+                <div class="w-full bg-white/20 rounded-full h-1.5 mb-1">
+                    <div class="bg-secondary-container h-1.5 rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Main Content Area: Properties & Stays -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <!-- Recent Stays & Bookings Table (Takes up 2 columns) -->
+        <div class="lg:col-span-2 flex flex-col">
+            <div class="flex justify-between items-end mb-6">
+                <h2 class="text-headline-md font-bold text-primary">Recent Stays & Bookings</h2>
+                <a class="text-label-md text-secondary hover:text-primary transition-colors font-semibold" href="/bookings">View All Stays</a>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden flex-1">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface border-b border-outline-variant/30">
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Reservation ID</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Stay Period</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Amount</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/20">
+                            @if (recentReservations.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="4" class="p-8 text-center text-on-surface-variant font-medium">No recent stays or bookings found in database.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var reservation in recentReservations)
+                                {
+                                    <tr>
+                                        <td class="p-4 text-body-md text-on-surface font-semibold">#RS-@reservation.Id.ToString()[..8].ToUpper()</td>
+                                        <td class="p-4 text-label-sm text-on-surface-variant">@reservation.CheckInDate.ToString("MMM dd") - @reservation.CheckOutDate.ToString("MMM dd")</td>
+                                        <td class="p-4 text-body-md text-primary font-bold">@reservation.TotalPrice.ToString("C")</td>
+                                        <td class="p-4">
+                                            @{
+                                                var badgeClass = "bg-tertiary-container/20 text-on-tertiary-container";
+                                                if (reservation.Status == "Confirmed" || reservation.Status == "CheckedIn") badgeClass = "bg-secondary/10 text-secondary";
+                                                if (reservation.Status == "Cancelled") badgeClass = "bg-error/10 text-error";
+                                            }
+                                            <span class="@badgeClass px-2.5 py-1 rounded-full text-label-sm font-semibold">@reservation.Status</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Resorts Sidebar -->
+        <div class="lg:col-span-1">
+            <h2 class="text-headline-md font-bold text-primary mb-6">Top Properties</h2>
+            <div class="space-y-6">
+                @{
+                    var topResorts = ViewBag.TopResorts as List<ResortManagement.Domain.Entities.Resorts.Resort> ?? new List<ResortManagement.Domain.Entities.Resorts.Resort>();
+                }
+                @if (topResorts.Count == 0)
+                {
+                    <div class="metric-card rounded-2xl p-6 text-center text-on-surface-variant font-medium">
+                        <span class="material-symbols-outlined text-[32px] text-outline/40 mb-2">holiday_village</span>
+                        <p class="text-label-md">No properties registered yet.</p>
+                        <a href="/resorts" class="text-secondary hover:underline text-label-sm mt-2 block font-semibold">Add First Property</a>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var resort in topResorts)
+                    {
+                        <div class="metric-card rounded-2xl overflow-hidden flex flex-col group cursor-pointer" onclick="window.location.href='/resorts'">
+                            <div class="h-32 relative overflow-hidden">
+                                <img alt="@resort.Name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop"/>
+                                <div class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-label-sm text-primary font-bold">
+                                    Active
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="text-body-lg font-bold text-primary mb-1">@resort.Name</h4>
+                                <p class="text-label-sm text-on-surface-variant flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">location_on</span> @resort.Address
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
     </div>
-</div>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            try {
+                const response = await fetch('/api/weather/current');
+                if (response.ok) {
+                    const data = await response.json();
+                    const iconEl = document.getElementById('weather-icon');
+                    const tempEl = document.getElementById('weather-temp');
+                    const locationEl = document.getElementById('weather-location');
+                    
+                    if (iconEl && data.icon) {
+                        iconEl.textContent = data.icon;
+                    }
+                    if (tempEl && data.temp !== undefined) {
+                        tempEl.textContent = `${data.temp}°C`;
+                    }
+                    if (locationEl && data.city && data.country) {
+                        locationEl.textContent = `${data.city}, ${data.country}`;
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load live weather:", error);
+            }
+        });
+    </script>
+}

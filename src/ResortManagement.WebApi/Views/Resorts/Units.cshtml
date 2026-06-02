@@ -1,175 +1,318 @@
 @{
-    ViewData["Title"] = "Units Inventory Catalog";
-    var units = ViewBag.Units as List<dynamic>;
+    ViewData["Title"] = "Units Catalog Inventory";
+    var units = ViewBag.Units as List<dynamic> ?? new List<dynamic>();
+    var locations = ViewBag.Locations as List<string> ?? new List<string>();
+    
+    var availCount = units.Count(u => u.Status == "Available");
+    var occupCount = units.Count(u => u.Status == "Occupied");
+    var maintCount = units.Count(u => u.Status == "Maintenance");
+    
+    var minBeds = units.Any() ? units.Min(u => u.MaxOccupancy) : 1;
+    var maxBeds = units.Any() ? units.Max(u => u.MaxOccupancy) : 8;
 }
 
-<div class="workspace-header">
-    <div>
-        <h1 class="header-title">Portfolio Management</h1>
-        <p class="header-meta">Monitor real-time unit availability, block dynamic stay dates, and dispatch cleaning requests.</p>
-    </div>
-    <div style="display: flex; gap: 16px;">
-        <div class="glass-card" style="padding: 12px 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-soft);">
-            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Total Units</span>
-            <p style="font-size: 24px; font-weight: 700; color: var(--primary); margin-top: 2px;">24</p>
+<main class="flex-1 pt-32 pb-20 px-margin-mobile md:px-margin-tablet lg:px-margin-desktop w-full max-w-container-max mx-auto">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+        <div>
+            <h1 class="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-2">Portfolio Management</h1>
+            <p class="text-body-lg text-on-surface-variant max-w-2xl mb-4">Monitor availability, coordinate housekeeping, and manage your luxury chalets across all alpine destinations.</p>
+            <div class="flex gap-2">
+                <button onclick="window.location.href='/resorts/units/create'" class="text-label-sm text-on-primary bg-primary px-4 py-2 rounded-full hover:bg-primary/95 transition-colors font-semibold flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">add</span> Register Unit
+                </button>
+                <button onclick="window.location.href='/resorts/unit-types/create'" class="text-label-sm text-secondary border border-secondary px-4 py-2 rounded-full hover:bg-secondary/5 transition-colors font-semibold flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">add_home</span> Add Room Type
+                </button>
+            </div>
         </div>
-        <div class="glass-card" style="padding: 12px 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-soft);">
-            <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Average Occupancy</span>
-            <p style="font-size: 24px; font-weight: 700; color: var(--secondary); margin-top: 2px;">82%</p>
-        </div>
-    </div>
-</div>
-
-<div style="display: grid; grid-template-columns: 280px 1fr; gap: var(--grid-gap); margin-bottom: 40px;">
-    <!-- Advanced Sidebar Filters -->
-    <div>
-        <div class="glass-card" style="position: sticky; top: 40px; padding: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark); padding-bottom: 16px; margin-bottom: 24px;">
-                <h2 style="font-size: 16px; font-weight: 700; color: var(--primary); margin: 0;">Filters</h2>
-                <button class="btn btn-ghost" style="padding: 0; font-size: 13px; text-decoration: underline;" onclick="resetFilters();">Reset</button>
+        <div class="flex gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-outline-variant/30 min-w-[120px]">
+                <p class="text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Total Units</p>
+                <p class="text-headline-lg text-primary font-bold">@ViewBag.TotalUnits</p>
             </div>
-            
-            <div style="margin-bottom: 24px;">
-                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Status</h3>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" checked id="filter-avail" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Available
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" checked id="filter-occup" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Occupied
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" checked id="filter-maint" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> Maintenance
-                    </label>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 24px; border-top: 1px solid var(--border-dark); padding-top: 20px;">
-                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Location</h3>
-                <div style="position: relative;">
-                    <input class="form-control" type="text" placeholder="Search destinations..." style="padding-left: 36px;" />
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-disabled);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                    <span style="font-size: 11px; font-weight: 600; background: var(--primary); color: #ffffff; padding: 4px 10px; border-radius: 999px; display: flex; align-items: center; gap: 4px;">Chamonix <span style="cursor: pointer;">×</span></span>
-                    <span style="font-size: 11px; font-weight: 600; background: var(--border-dark); color: var(--text-primary); padding: 4px 10px; border-radius: 999px; cursor: pointer;">Zermatt</span>
-                </div>
-            </div>
-
-            <div style="border-top: 1px solid var(--border-dark); padding-top: 20px;">
-                <h3 style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">Bedrooms</h3>
-                <input type="range" min="1" max="8" value="3" style="width: 100%; accent-color: var(--secondary);" />
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
-                    <span>1+ Beds</span>
-                    <span>8+ Beds</span>
-                </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-outline-variant/30 min-w-[120px]">
+                <p class="text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Occupancy</p>
+                <p class="text-headline-lg text-secondary font-bold">@ViewBag.Occupancy%</p>
             </div>
         </div>
     </div>
+    
+    <!-- Layout Grid: Sidebar + Main Grid -->
+    <div class="flex flex-col lg:flex-row gap-gutter">
+        <!-- Advanced Filtering Sidebar (Glassmorphic) -->
+        <aside class="w-full lg:w-72 shrink-0">
+            <div class="sticky top-28 bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm rounded-xl p-6">
+                <div class="flex justify-between items-center mb-6 border-b border-outline-variant/30 pb-4">
+                    <h2 class="text-headline-md text-primary font-bold">Filters</h2>
+                    <button onclick="resetFilters();" class="text-label-sm text-secondary hover:text-primary transition-colors font-semibold">Reset All</button>
+                </div>
+                
+                <!-- Filter Section: Status -->
+                <div class="mb-6">
+                    <h3 class="text-label-md text-on-surface mb-3 uppercase tracking-wider font-semibold">Status</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input checked id="filter-avail" class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+                            <span class="text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Available</span>
+                            <span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm px-2 py-0.5 rounded-full font-semibold">@availCount</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input checked id="filter-occup" class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+                            <span class="text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Occupied</span>
+                            <span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm px-2 py-0.5 rounded-full font-semibold">@occupCount</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input checked id="filter-maint" class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+                            <span class="text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Maintenance</span>
+                            <span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm px-2 py-0.5 rounded-full font-semibold">@maintCount</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Filter Section: Location -->
+                <div class="mb-6 border-t border-outline-variant/20 pt-4">
+                    <h3 class="text-label-md text-on-surface mb-3 uppercase tracking-wider font-semibold">Location</h3>
+                    <div class="relative mb-3">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-[20px]">search</span>
+                        <input id="search-input" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg pl-10 pr-4 py-2 text-body-md focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition-all outline-none" placeholder="Search destinations..." type="text"/>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="location-tags-container">
+                        @foreach (var loc in locations)
+                        {
+                            var cleanLoc = loc.Replace(" Resort", "").Replace(" Retreat", "").Replace(" Estate", "");
+                            <span onclick="toggleLocationTag(this, '@loc')" class="location-tag px-3 py-1 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-full text-label-sm cursor-pointer transition-all duration-200">@cleanLoc</span>
+                        }
+                    </div>
+                </div>
+                
+                <!-- Filter Section: Capacity -->
+                <div class="border-t border-outline-variant/20 pt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-label-md text-on-surface uppercase tracking-wider font-semibold">Bedrooms</h3>
+                        <span id="bedrooms-value" class="text-label-sm text-secondary font-bold">@minBeds+ Beds</span>
+                    </div>
+                    <input id="bedrooms-slider" class="w-full accent-secondary cursor-pointer" max="@maxBeds" min="@minBeds" type="range" value="@minBeds"/>
+                    <div class="flex justify-between text-label-sm text-on-surface-variant mt-2 font-medium">
+                        <span>@minBeds+ Beds</span>
+                        <span>@maxBeds+ Beds</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Unit Grid -->
+        <div class="flex-1">
+            <!-- Client-side filter Empty State (Hidden by default) -->
+            <div id="empty-state" style="display: none;" class="bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-12 text-center text-on-surface-variant flex flex-col items-center justify-center shadow-sm w-full transition-all duration-300">
+                <span class="material-symbols-outlined text-[48px] text-outline/40 mb-4">filter_list_off</span>
+                <h3 class="text-headline-md font-bold text-primary mb-2">No Matching Units</h3>
+                <p class="text-body-md text-on-surface-variant max-w-md">No luxury chalets match your active filters. Try resetting filters or adjust sliders to broaden your search.</p>
+            </div>
 
-    <!-- Active Unit Cards Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--grid-gap); align-content: start;">
-        <!-- Unit Card 1 -->
-        <div class="property-card">
-            <div class="property-img-box" style="position: relative; height: 180px;">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBtmfr9S1_kufizmLmq234fYY1dPwq4OceLMKS2V_3jlFjk6bJnoPsmQ6m6fjRtQLNIs1I4g4F2QQ1N6DK49W6EdbS82LrwGVT91_FFy6GgcQ_KKHTKPoFIiov__f1N-rhJiETC2R4KIfn7ibTn7Ob0K5H0P1SNhDYQWytN2MdQ7-wUyHxq22KaYMGESumf0JWJJubfiI-QlG1_0qwhLE6eDerUml3TXy7Va6250uB-1w3mH_VZra1qyvUbkqfrr9kSy7g85h9-Oig" 
-                     style="width: 100%; height: 100%; object-fit: cover;" alt="Alpine Penthouse" />
-                <span class="status-pill success" style="position: absolute; top: 12px; right: 12px; background: rgba(0, 106, 102, 0.95); color: #ffffff; border: 1px solid var(--border);">Available</span>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
-                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Alpine Penthouse</h3>
-                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
-                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-                        Chamonix, France
-                    </span>
-                </div>
-            </div>
-            <div class="property-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
-                        <span style="display: flex; align-items: center; gap: 4px;">🛏 4 Beds</span>
-                        <span style="display: flex; align-items: center; gap: 4px;">🚿 3 Baths</span>
+            <div id="units-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter align-content-start">
+                @if (units.Count == 0)
+                {
+                    <div class="col-span-1 md:col-span-2 xl:col-span-3 bg-white/70 backdrop-blur-xl border border-white rounded-2xl p-12 text-center text-on-surface-variant flex flex-col items-center justify-center shadow-sm w-full">
+                        <span class="material-symbols-outlined text-[48px] text-outline/40 mb-4">bed</span>
+                        <h3 class="text-headline-md font-bold text-primary mb-2">No Units Found</h3>
+                        <p class="text-body-md text-on-surface-variant max-w-md">There are no room units registered yet. Click "Register Unit" above to add your first unit dynamically.</p>
                     </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€1,200</span>
-                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid var(--border-dark); padding-top: 16px;">
-                    <button class="btn btn-secondary" style="padding: 10px; justify-content: center;" onclick="showLuxeAlert('Blocked', 'Alpine Penthouse dates successfully blocked.', 'success')">Block Dates</button>
-                    <button class="btn btn-primary" style="padding: 10px; justify-content: center; background-color: var(--secondary);" onclick="showLuxeAlert('Clean Dispatched', 'Clean request has been scheduled.', 'success')">Request Clean</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Unit Card 2 -->
-        <div class="property-card">
-            <div class="property-img-box" style="position: relative; height: 180px;">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSEiJcQZ0h0A-6npESsAc-pKEmGLPnGsbHLr7bIYGhKYkQCNfHaUkgmTiMTU3z28EMZNBxZ2Q1i7tsIKLbGcyerqmuG8MzgZZhfR5v16x6Wcf9tAiCw75KN39w9o0Tn7Rj2wrZAPGkdLncNlmkWM2qUlJq03krjpis1iQabRiYBPhYHdLn8sFHhp30YEUf4REDYKY2tAGsnKVFp4rUxvpN4gl-QwxVBB2DaejvnGJQTBpuP5j-wghf7MGz1tZZU7HmLb6rEKHf6BDN" 
-                     style="width: 100%; height: 100%; object-fit: cover;" alt="Nordic Retreat" />
-                <span class="status-pill warning" style="position: absolute; top: 12px; right: 12px; background: rgba(15, 61, 94, 0.95); color: #ffffff; border: 1px solid var(--border);">Occupied</span>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
-                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Nordic Retreat</h3>
-                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
-                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-                        Zermatt, Switzerland
-                    </span>
-                </div>
-            </div>
-            <div class="property-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
-                        <span style="display: flex; align-items: center; gap: 4px;">🛏 2 Beds</span>
-                        <span style="display: flex; align-items: center; gap: 4px;">🚿 2 Baths</span>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€850</span>
-                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
-                    </div>
-                </div>
-                <div style="border-top: 1px solid var(--border-dark); padding-top: 16px;">
-                    <button class="btn btn-secondary" style="width: 100%; padding: 10px; justify-content: center;" onclick="window.location.href='/bookings'">View Reservation Log</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Unit Card 3 -->
-        <div class="property-card">
-            <div class="property-img-box" style="position: relative; height: 180px;">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAT0d5yECFJhAWXKmNsyG4QgtMJs0b9nHs5yGcrI9zhk5b-9FqJeDcSWwaC0i2qItirczsm11dO3UsMLMoeZWjw9xN6Z768RH6ok1_fPRrmVFgmHY6N0w_RiZ-Zzn27spspseJiJA0qImIzYnjuvogrS4WNknweyWLtlu2JJFxaNnsdf_FWLlhfD89DzgrJd7YPBrbHzI01WxnwkUTgkNGyVKXSgHesfM4E7CWf1MTq4X8GPor02imvHtA0AbJ8jYz1OMnsaTH3YX3" 
-                     style="width: 100%; height: 100%; object-fit: cover;" alt="Lakeview Suite" />
-                <span class="status-pill danger" style="position: absolute; top: 12px; right: 12px; background: rgba(186, 26, 26, 0.95); color: #ffffff; border: 1px solid var(--border);">Maintenance</span>
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px;">
-                    <h3 style="color: #ffffff; margin: 0; font-size: 16px;">Lakeview Suite</h3>
-                    <span style="font-size: 11px; color: #e5e7eb; display: flex; align-items: center; gap: 4px;">
-                        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-                        St. Moritz, Switzerland
-                    </span>
-                </div>
-            </div>
-            <div class="property-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div style="display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary);">
-                        <span style="display: flex; align-items: center; gap: 4px;">🛏 1 Bed</span>
-                        <span style="display: flex; align-items: center; gap: 4px;">🚿 1.5 Baths</span>
-                    </div>
-                    <div style="text-align: right; opacity: 0.5;">
-                        <span style="font-size: 16px; font-weight: 700; color: var(--primary);">€600</span>
-                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">/ night</span>
-                    </div>
-                </div>
-                <div style="border-top: 1px solid var(--border-dark); padding-top: 16px;">
-                    <button class="btn btn-secondary" style="width: 100%; color: var(--error); border-color: var(--error); padding: 10px; justify-content: center;" onclick="window.location.href='/operations/maintenance'">View Active Repair Ticket</button>
-                </div>
+                }
+                else
+                {
+                    foreach (var u in units)
+                    {
+                        var statusColor = u.Status == "Available" ? "bg-secondary/90 text-on-secondary" : (u.Status == "Occupied" ? "bg-primary-container/90 text-on-primary-container" : "bg-error-container/90 text-on-error-container");
+                        var statusDot = u.Status == "Available" ? "bg-white animate-pulse" : "";
+                        var statusIcon = u.Status == "Available" ? "" : (u.Status == "Occupied" ? "person" : "build");
+                        
+                        var imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBBtmfr9S1_kufizmLmq234fYY1dPwq4OceLMKS2V_3jlFjk6bJnoPsmQ6m6fjRtQLNIs1I4g4F2QQ1N6DK49W6EdbS82LrwGVT91_FFy6GgcQ_KKHTKPoFIiov__f1N-rhJiETC2R4KIfn7ibTn7Ob0K5H0P1SNhDYQWytN2MdQ7-wUyHxq22KaYMGESumf0JWJJubfiI-QlG1_0qwhLE6eDerUml3TXy7Va6250uB-1w3mH_VZra1qyvUbkqfrr9kSy7g85h9-Oig";
+                        if (u.UnitTypeName.Contains("Villa")) imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBSEiJcQZ0h0A-6npESsAc-pKEmGLPnGsbHLr7bIYGhKYkQCNfHaUkgmTiMTU3z28EMZNBxZ2Q1i7tsIKLbGcyerqmuG8MzgZZhfR5v16x6Wcf9tAiCw75KN39w9o0Tn7Rj2wrZAPGkdLncNlmkWM2qUlJq03krjpis1iQabRiYBPhYHdLn8sFHhp30YEUf4REDYKY2tAGsnKVFp4rUxvpN4gl-QwxVBB2DaejvnGJQTBpuP5j-wghf7MGz1tZZU7HmLb6rEKHf6BDN";
+                        if (u.UnitTypeName.Contains("Suite")) imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuCAT0d5yECFJhAWXKmNsyG4QgtMJs0b9nHs5yGcrI9zhk5b-9FqJeDcSWwaC0i2qItirczsm11dO3UsMLMoeZWjw9xN6Z768RH6ok1_fPRrmVFgmHY6N0w_RiZ-Zzn27spspseJiJA0qImIzYnjuvogrS4WNknweyWLtlu2JJFxaNnsdf_FWLlhfD89DzgrJd7YPBrbHzI01WxnwkUTgkNGyVKXSgHesfM4E7CWf1MTq4X8GPor02imvHtA0AbJ8jYz1OMnsaTH3YX3";
+    
+                        <article class="unit-card bg-white rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col"
+                                 data-status="@u.Status"
+                                 data-location="@u.ResortName"
+                                 data-beds="@u.MaxOccupancy"
+                                 data-number="@u.Number"
+                                 data-type="@u.UnitTypeName">
+                            <div class="h-64 relative overflow-hidden">
+                                <img alt="@u.UnitTypeName interior" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="@imageUrl"/>
+                                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
+                                <div class="absolute top-4 right-4 @statusColor backdrop-blur-md px-3 py-1 rounded-full text-label-sm flex items-center gap-1 shadow-sm font-semibold">
+                                    @if (!string.IsNullOrEmpty(statusIcon))
+                                    {
+                                        <span class="material-symbols-outlined text-[14px]">@statusIcon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="w-2 h-2 rounded-full @statusDot"></span>
+                                    }
+                                    @u.Status
+                                </div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <h3 class="text-headline-md font-bold text-white drop-shadow">Unit @u.Number</h3>
+                                    <p class="text-label-md text-white/90 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">home</span> @u.UnitTypeName</p>
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-1">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-center gap-1 text-on-surface-variant text-label-md font-medium"><span class="material-symbols-outlined text-[18px]">king_bed</span> @u.MaxOccupancy Guests</div>
+                                        <div class="flex items-center gap-1 text-on-surface-variant/80 text-label-sm"><span class="material-symbols-outlined text-[14px] text-secondary">location_on</span> @u.ResortName</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-headline-md text-primary font-bold">€@u.BasePrice.ToString("N2")</p>
+                                        <p class="text-label-sm text-on-surface-variant font-medium">/ night</p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-outline-variant/20">
+                                    @if (u.Status == "Available")
+                                    {
+                                        <button onclick="alert('Stay dates successfully blocked for Unit @u.Number.');" class="bg-surface-container text-primary hover:bg-surface-container-high rounded-lg py-2 text-label-md font-semibold transition-colors flex items-center justify-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px]">calendar_month</span> Block Dates
+                                        </button>
+                                        <button onclick="alert('Housekeeping request has been dispatched.');" class="border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg py-2 text-label-md font-semibold transition-colors flex items-center justify-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px]">cleaning_services</span> Request Clean
+                                        </button>
+                                    }
+                                    else if (u.Status == "Occupied")
+                                    {
+                                        <button onclick="window.location.href='/bookings'" class="col-span-2 bg-surface-container text-primary hover:bg-surface-container-high rounded-lg py-2 text-label-md font-semibold transition-colors flex items-center justify-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px]">receipt_long</span> View Booking
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button onclick="window.location.href='/operations/maintenance'" class="col-span-2 bg-surface-container text-error hover:bg-error-container/50 rounded-lg py-2 text-label-md font-semibold transition-colors flex items-center justify-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px]">engineering</span> View Work Order
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </article>
+                    }
+                }
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <script>
+    let activeLocation = "";
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Wire filters
+        document.getElementById("filter-avail").addEventListener("change", applyFilters);
+        document.getElementById("filter-occup").addEventListener("change", applyFilters);
+        document.getElementById("filter-maint").addEventListener("change", applyFilters);
+        
+        document.getElementById("search-input").addEventListener("input", applyFilters);
+        
+        const slider = document.getElementById("bedrooms-slider");
+        slider.addEventListener("input", function () {
+            document.getElementById("bedrooms-value").textContent = this.value + "+ Beds";
+            applyFilters();
+        });
+        
+        applyFilters();
+    });
+
+    function toggleLocationTag(element, locationName) {
+        const tags = document.querySelectorAll(".location-tag");
+        
+        if (activeLocation === locationName) {
+            activeLocation = "";
+            element.classList.remove("bg-primary", "text-on-primary");
+            element.classList.add("bg-surface-container", "text-on-surface-variant");
+        } else {
+            activeLocation = locationName;
+            tags.forEach(t => {
+                t.classList.remove("bg-primary", "text-on-primary");
+                t.classList.add("bg-surface-container", "text-on-surface-variant");
+            });
+            element.classList.remove("bg-surface-container", "text-on-surface-variant");
+            element.classList.add("bg-primary", "text-on-primary");
+        }
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const showAvail = document.getElementById("filter-avail").checked;
+        const showOccup = document.getElementById("filter-occup").checked;
+        const showMaint = document.getElementById("filter-maint").checked;
+        
+        const searchQuery = document.getElementById("search-input").value.toLowerCase().trim();
+        const minBeds = parseInt(document.getElementById("bedrooms-slider").value);
+        
+        const cards = document.querySelectorAll(".unit-card");
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const status = card.getAttribute("data-status");
+            const location = card.getAttribute("data-location");
+            const beds = parseInt(card.getAttribute("data-beds"));
+            const number = card.getAttribute("data-number").toLowerCase();
+            const type = card.getAttribute("data-type").toLowerCase();
+
+            // Status Match
+            let statusMatch = false;
+            if (status === "Available" && showAvail) statusMatch = true;
+            if (status === "Occupied" && showOccup) statusMatch = true;
+            if (status === "Maintenance" && showMaint) statusMatch = true;
+
+            // Location Match
+            let locationMatch = true;
+            if (activeLocation !== "" && location !== activeLocation) {
+                locationMatch = false;
+            }
+
+            // Beds Match
+            let bedsMatch = (beds >= minBeds);
+
+            // Search Query Match
+            let searchMatch = true;
+            if (searchQuery !== "") {
+                searchMatch = number.includes(searchQuery) || type.includes(searchQuery) || location.toLowerCase().includes(searchQuery);
+            }
+
+            if (statusMatch && locationMatch && bedsMatch && searchMatch) {
+                card.style.display = "flex";
+                setTimeout(() => { card.style.opacity = "1"; }, 10);
+                visibleCount++;
+            } else {
+                card.style.opacity = "0";
+                card.style.display = "none";
+            }
+        });
+
+        // Show/Hide Empty State
+        const emptyState = document.getElementById("empty-state");
+        if (visibleCount === 0) {
+            if (emptyState) emptyState.style.display = "flex";
+        } else {
+            if (emptyState) emptyState.style.display = "none";
+        }
+    }
+
     function resetFilters() {
         document.getElementById("filter-avail").checked = true;
         document.getElementById("filter-occup").checked = true;
         document.getElementById("filter-maint").checked = true;
-        showLuxeAlert("Filters Reset", "Filters have been successfully restored.", "success");
+        document.getElementById("search-input").value = "";
+        
+        const slider = document.getElementById("bedrooms-slider");
+        slider.value = slider.getAttribute("min");
+        document.getElementById("bedrooms-value").textContent = slider.value + "+ Beds";
+        
+        activeLocation = "";
+        const tags = document.querySelectorAll(".location-tag");
+        tags.forEach(t => {
+            t.classList.remove("bg-primary", "text-on-primary");
+            t.classList.add("bg-surface-container", "text-on-surface-variant");
+        });
+        
+        applyFilters();
     }
 </script>

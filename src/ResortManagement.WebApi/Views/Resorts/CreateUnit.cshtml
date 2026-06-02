@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "Register Room Unit Inventory";
+    var resorts = ViewBag.Resorts as List<ResortManagement.Domain.Entities.Resorts.Resort> ?? new List<ResortManagement.Domain.Entities.Resorts.Resort>();
+    var unitTypes = ViewBag.UnitTypes as List<ResortManagement.Domain.Entities.Resorts.UnitType> ?? new List<ResortManagement.Domain.Entities.Resorts.UnitType>();
+}
+
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPGfFfqT3mYKMsvDo9zy1LR5mHCKWw-xEARPEpVuVmfOyiXaeqlqfha76jKPKofIMeeJP2Eyct0sp5UHmnC0g6QqRh5ZA4F-yZf8sbaDYI5YSIQEWr7mdZ0D9BIIWKEyH2pthmBAEWrH0pNw28lbHh0ns5mEuxHmxksskPQLYlMkUBZi8FuAJfX6rWid6pBlh4FJ8BhELp_re80LNoQbePpA2RhctmceyPniSMzFTx71EdQlB3i9KBPjWnEImD6ajNPg5Y131q7RGi'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-surface-container-lowest/95 via-surface/90 to-surface-container-low/95 backdrop-blur-[6px]"></div>
+</div>
+
+<main class="max-w-xl mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop pt-32 pb-20 flex flex-col justify-center min-h-screen w-full relative">
+    <div class="bg-white/80 backdrop-blur-2xl border border-white/60 rounded-3xl p-8 md:p-10 shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
+        <header class="mb-8 text-center relative">
+            <div class="inline-flex items-center justify-center bg-gradient-to-br from-primary to-primary-container p-4 rounded-3xl shadow-lg mb-4 text-white hover:scale-105 transition-transform duration-300">
+                <span class="material-symbols-outlined text-[36px]">meeting_room</span>
+            </div>
+            <h1 class="text-display-sm-mobile md:text-headline-lg font-bold text-primary tracking-tight">Register Room Unit</h1>
+            <p class="text-body-md text-on-surface-variant max-w-sm mx-auto mt-2">Map physical units (suites, chalets, cabins) associated with a resort property layout.</p>
+        </header>
+
+        <form action="/resorts/units/create" method="POST" class="space-y-6">
+            <!-- Target Resort Select -->
+            <div class="space-y-2">
+                <label for="resortId" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">business</span>
+                    Target Property Resort
+                </label>
+                <select id="resortId" name="resortId" required 
+                        class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl px-4 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold">
+                    <option value="">Choose resort location...</option>
+                    @foreach (var resort in resorts)
+                    {
+                        <option value="@resort.Id">@resort.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Room Type Template -->
+            <div class="space-y-2">
+                <label for="unitTypeId" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">meeting_room</span>
+                    Room Type Template
+                </label>
+                <select id="unitTypeId" name="unitTypeId" required 
+                        class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl px-4 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold">
+                    <option value="">Select room type template...</option>
+                    @foreach (var ut in unitTypes)
+                    {
+                        <option value="@ut.Id" data-resort-id="@ut.ResortId" data-price="@ut.BasePrice" data-occupancy="@ut.MaxOccupancy">@ut.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Template Live Preview Card -->
+            <div id="template-preview-card" class="bg-gradient-to-r from-secondary/5 to-primary/5 border border-outline-variant/20 rounded-2xl p-4 flex gap-4 items-center hidden transition-all duration-300">
+                <span class="material-symbols-outlined text-secondary text-[28px]">info</span>
+                <div class="flex-grow text-body-sm text-on-surface-variant leading-relaxed">
+                    <h5 class="font-bold text-primary text-label-md mb-0.5">Template Pricing</h5>
+                    <p>Base Pricing: <strong class="text-primary font-bold" id="preview-price">€0.00</strong> per stay night. Accommodates up to <strong class="text-secondary font-bold" id="preview-occupancy">0</strong> guests maximum.</p>
+                </div>
+            </div>
+
+            <!-- Room Number -->
+            <div class="space-y-2">
+                <label for="unitNumber" class="flex items-center gap-2 text-label-md text-primary font-bold">
+                    <span class="material-symbols-outlined text-[18px]">label</span>
+                    Unit / Room Number
+                </label>
+                <input type="text" id="unitNumber" name="unitNumber" required 
+                       class="w-full bg-white/80 border border-outline-variant/50 rounded-2xl pl-4 pr-10 py-3.5 text-body-md focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all text-primary font-semibold placeholder:text-outline/65" 
+                       placeholder="e.g. Chalet 101, Suite 305" />
+            </div>
+
+            <div class="pt-4 flex gap-4">
+                <button type="button" onclick="window.location.href='/resorts/units'" 
+                        class="w-1/2 py-3.5 border border-outline-variant/60 text-primary text-label-md rounded-2xl font-bold hover:bg-surface-container-low transition-all active:scale-[0.98]">
+                    Cancel
+                </button>
+                <button type="submit" 
+                        class="w-1/2 py-3.5 bg-primary hover:bg-primary-container text-on-primary text-label-md rounded-2xl font-bold shadow-lg shadow-primary/10 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-[0.98]">
+                    Register Room
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const resortSelect = document.getElementById("resortId");
+        const typeSelect = document.getElementById("unitTypeId");
+        const previewCard = document.getElementById("template-preview-card");
+        const previewPrice = document.getElementById("preview-price");
+        const previewOccupancy = document.getElementById("preview-occupancy");
+        const allOptions = Array.from(typeSelect.querySelectorAll("option"));
+
+        resortSelect.addEventListener("change", function() {
+            const selectedResortId = this.value;
+            typeSelect.value = ""; // Reset room type selection
+            previewCard.classList.add("hidden"); // Hide preview
+
+            // Show/hide based on data-resort-id
+            allOptions.forEach(opt => {
+                if (opt.value === "") {
+                    opt.style.display = "block";
+                    return;
+                }
+                const optResortId = opt.getAttribute("data-resort-id");
+                if (optResortId === selectedResortId) {
+                    opt.style.display = "block";
+                } else {
+                    opt.style.display = "none";
+                }
+            });
+        });
+
+        typeSelect.addEventListener("change", function() {
+            const selectedOpt = this.options[this.selectedIndex];
+            if (this.value === "") {
+                previewCard.classList.add("hidden");
+                return;
+            }
+
+            const price = parseFloat(selectedOpt.getAttribute("data-price") || 0);
+            const occupancy = selectedOpt.getAttribute("data-occupancy") || 0;
+
+            previewPrice.textContent = `€${price.toFixed(2)}`;
+            previewOccupancy.textContent = occupancy;
+            previewCard.classList.remove("hidden");
+        });
+    });
+</script>

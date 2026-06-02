@@ -20,7 +20,7 @@ public class JwtProvider : IJwtProvider
         _configuration = configuration;
     }
 
-    public string GenerateToken(User user, List<string> permissions)
+    public string GenerateToken(User user, List<string> permissions, List<string> roles)
     {
         var secretKey = _configuration["Jwt:SecretKey"] ?? "super_secret_resort_management_saas_key_12345!";
         var issuer = _configuration["Jwt:Issuer"] ?? "ResortManagementSaaS";
@@ -42,6 +42,12 @@ public class JwtProvider : IJwtProvider
         foreach (var permission in permissions)
         {
             claims.Add(new Claim("Permission", permission));
+        }
+
+        // Inject roles as standard claims
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
         var token = new JwtSecurityToken(

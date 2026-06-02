@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Units Management - ChaletElite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1e",
+                        "on-secondary-container": "#00716c",
+                        "secondary-fixed-dim": "#51dad3",
+                        "on-primary-fixed-variant": "#204a6b",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#0f3d5e",
+                        "on-error-container": "#93000a",
+                        "surface": "#f9f9fc",
+                        "surface-container-high": "#e8e8eb",
+                        "surface-tint": "#3a6285",
+                        "on-primary-fixed": "#001d33",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#cd9a5f",
+                        "surface-dim": "#dadadd",
+                        "background": "#f9f9fc",
+                        "tertiary-container": "#553200",
+                        "on-secondary-fixed": "#00201e",
+                        "inverse-on-surface": "#f1f0f4",
+                        "primary": "#002741",
+                        "inverse-primary": "#a3caf2",
+                        "inverse-surface": "#2f3033",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#2b1700",
+                        "tertiary-fixed-dim": "#f4bc7e",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#72f7ef",
+                        "tertiary": "#371f00",
+                        "secondary": "#006a66",
+                        "on-primary-container": "#81a8ce",
+                        "surface-container-highest": "#e2e2e5",
+                        "surface-bright": "#f9f9fc",
+                        "surface-variant": "#e2e2e5",
+                        "surface-container-low": "#f3f3f6",
+                        "tertiary-fixed": "#ffddba",
+                        "secondary-container": "#72f7ef",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c2c7ce",
+                        "outline": "#72777e",
+                        "primary-fixed": "#cee5ff",
+                        "primary-fixed-dim": "#a3caf2",
+                        "surface-container": "#eeedf1",
+                        "on-secondary-fixed-variant": "#00504c",
+                        "on-surface-variant": "#42474e",
+                        "on-tertiary-fixed-variant": "#643f0b",
+                        "on-background": "#1a1c1e",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "section-gap": "80px",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-tablet": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f9f9fc; /* background */
+            color: #1a1c1e; /* on-surface */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- TopNavBar (Shared Component) -->
+<!-- Applying style_ component keys literally as requested -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/40 dark:border-white/10 bg-white/70 dark:bg-on-surface/70 backdrop-blur-xl shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] backdrop-blur-xl shadow-2xl shadow-primary/5 flex justify-between items-center px-8 h-16 z-50">
+<!-- Brand -->
+<div class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">
+            ChaletElite
+        </div>
+<!-- Navigation Links -->
+<div class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md flex items-center h-16 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4" href="#">Dashboard</a>
+<!-- Active State -->
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md flex items-center h-16 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4 active:scale-95 transition-transform duration-200" href="#">Resorts</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md flex items-center h-16 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4" href="#">Reservations</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md flex items-center h-16 hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300 px-4" href="#">Analytics</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="hidden lg:block text-secondary border border-secondary rounded-full px-6 py-2 text-label-md font-label-md hover:bg-secondary/5 transition-colors">Quick Actions</button>
+<button class="bg-primary text-on-primary rounded-full px-6 py-2 text-label-md font-label-md hover:bg-primary/90 transition-colors shadow-sm">New Booking</button>
+<div class="flex items-center gap-2 ml-2">
+<button class="p-2 text-primary dark:text-primary-fixed hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-primary dark:text-primary-fixed hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-32 pb-section-gap px-margin-mobile md:px-margin-tablet lg:px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+<div>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-2">Portfolio Management</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl">Monitor availability, coordinate housekeeping, and manage your luxury chalets across all alpine destinations.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] border border-outline-variant/30 min-w-[120px]">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Total Units</p>
+<p class="text-headline-lg font-headline-lg text-primary">24</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] border border-outline-variant/30 min-w-[120px]">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Occupancy</p>
+<p class="text-headline-lg font-headline-lg text-secondary">82%</p>
+</div>
+</div>
+</div>
+<!-- Layout Grid: Sidebar + Main Grid -->
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Advanced Filtering Sidebar (Glassmorphic) -->
+<aside class="w-full lg:w-72 shrink-0">
+<div class="sticky top-28 bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] rounded-xl p-6">
+<div class="flex justify-between items-center mb-6 border-b border-outline-variant/30 pb-4">
+<h2 class="text-headline-md font-headline-md text-primary">Filters</h2>
+<button class="text-label-sm font-label-sm text-secondary hover:text-primary transition-colors">Reset All</button>
+</div>
+<!-- Filter Section: Status -->
+<div class="mb-6">
+<h3 class="text-label-md font-label-md text-on-surface mb-3 uppercase tracking-wider">Status</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+<span class="text-body-md font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Available</span>
+<span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm font-label-sm px-2 py-0.5 rounded-full">12</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+<span class="text-body-md font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Occupied</span>
+<span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm font-label-sm px-2 py-0.5 rounded-full">10</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary/20 bg-surface-container-lowest w-5 h-5 transition-all" type="checkbox"/>
+<span class="text-body-md font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Maintenance</span>
+<span class="ml-auto bg-surface-container text-on-surface-variant text-label-sm font-label-sm px-2 py-0.5 rounded-full">2</span>
+</label>
+</div>
+</div>
+<!-- Filter Section: Location -->
+<div class="mb-6">
+<h3 class="text-label-md font-label-md text-on-surface mb-3 uppercase tracking-wider">Location</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg pl-10 pr-4 py-2 text-body-md font-body-md focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition-all outline-none" placeholder="Search destinations..." type="text"/>
+</div>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary text-on-primary rounded-full text-label-sm font-label-sm cursor-pointer flex items-center gap-1">Chamonix <span class="material-symbols-outlined text-[14px]">close</span></span>
+<span class="px-3 py-1 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-full text-label-sm font-label-sm cursor-pointer transition-colors">Zermatt</span>
+<span class="px-3 py-1 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-full text-label-sm font-label-sm cursor-pointer transition-colors">Aspen</span>
+</div>
+</div>
+<!-- Filter Section: Capacity -->
+<div>
+<h3 class="text-label-md font-label-md text-on-surface mb-3 uppercase tracking-wider">Bedrooms</h3>
+<input class="w-full accent-secondary" max="8" min="1" type="range" value="3"/>
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant mt-2">
+<span>1+</span>
+<span>8+</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Unit Grid -->
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Unit Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] hover:shadow-lg transition-all duration-300 group flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img alt="Alpine Penthouse interior" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A breathtaking high-resolution photograph of a luxury ski chalet living room in Chamonix. The scene is bathed in bright, natural light reflecting off the snow outside, emphasizing the pristine white and deep ocean blue interior accents. The aesthetic is modern, minimalistic, and high-end, fitting a premium digital travel platform. Large floor-to-ceiling windows showcase a snowy mountain peak." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBtmfr9S1_kufizmLmq234fYY1dPwq4OceLMKS2V_3jlFjk6bJnoPsmQ6m6fjRtQLNIs1I4g4F2QQ1N6DK49W6EdbS82LrwGVT91_FFy6GgcQ_KKHTKPoFIiov__f1N-rhJiETC2R4KIfn7ibTn7Ob0K5H0P1SNhDYQWytN2MdQ7-wUyHxq22KaYMGESumf0JWJJubfiI-QlG1_0qwhLE6eDerUml3TXy7Va6250uB-1w3mH_VZra1qyvUbkqfrr9kSy7g85h9-Oig"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
+<!-- Status Chip -->
+<div class="absolute top-4 right-4 bg-secondary/90 backdrop-blur-md text-on-secondary px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                            Available
+                        </div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-headline-md font-headline-md text-white drop-shadow-md">Alpine Penthouse</h3>
+<p class="text-label-md font-label-md text-white/90 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Chamonix, France</p>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 text-on-surface-variant text-label-md font-label-md">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">king_bed</span> 4 Beds</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">shower</span> 3 Baths</div>
+</div>
+<div class="text-right">
+<p class="text-headline-md font-headline-md text-primary">€1,200</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">/ night</p>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-outline-variant/20">
+<button class="bg-surface-container text-primary hover:bg-surface-container-high rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span> Block Dates
+                            </button>
+<button class="border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">cleaning_services</span> Request Clean
+                            </button>
+</div>
+</div>
+</article>
+<!-- Unit Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] hover:shadow-lg transition-all duration-300 group flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img alt="Nordic Cabin exterior" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An expansive architectural exterior shot of a modern, geometric cabin nestled in a snowy alpine forest. The light is a crisp, bright morning sun that casts soft shadows, creating a pristine light-mode atmosphere. The structural materials emphasize warm wood and sleek dark metals, contrasting beautifully with the bright white snow. The overall mood is secluded, serene, and exquisitely luxurious." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSEiJcQZ0h0A-6npESsAc-pKEmGLPnGsbHLr7bIYGhKYkQCNfHaUkgmTiMTU3z28EMZNBxZ2Q1i7tsIKLbGcyerqmuG8MzgZZhfR5v16x6Wcf9tAiCw75KN39w9o0Tn7Rj2wrZAPGkdLncNlmkWM2qUlJq03krjpis1iQabRiYBPhYHdLn8sFHhp30YEUf4REDYKY2tAGsnKVFp4rUxvpN4gl-QwxVBB2DaejvnGJQTBpuP5j-wghf7MGz1tZZU7HmLb6rEKHf6BDN"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
+<!-- Status Chip -->
+<div class="absolute top-4 right-4 bg-primary-container/90 backdrop-blur-md text-on-primary-container px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">person</span>
+                            Occupied
+                        </div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-headline-md font-headline-md text-white drop-shadow-md">Nordic Retreat</h3>
+<p class="text-label-md font-label-md text-white/90 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Zermatt, Switzerland</p>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 text-on-surface-variant text-label-md font-label-md">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">king_bed</span> 2 Beds</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">shower</span> 2 Baths</div>
+</div>
+<div class="text-right">
+<p class="text-headline-md font-headline-md text-primary">€850</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">/ night</p>
+</div>
+</div>
+<div class="mt-auto flex gap-3 pt-4 border-t border-outline-variant/20">
+<button class="flex-1 bg-surface-container text-primary hover:bg-surface-container-high rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span> View Booking
+                            </button>
+</div>
+</div>
+</article>
+<!-- Unit Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] hover:shadow-lg transition-all duration-300 group flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img alt="Lakeview Suite bedroom" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale-[30%]" data-alt="A pristine, light-filled master bedroom in a high-end mountain resort suite. The interior design features minimalist white linens, soft ivory walls, and subtle warm gold accents. Wide panoramic windows offer a stunning, slightly overcast view of an alpine lake. The lighting is diffused and soft, emphasizing a clean, contemporary hospitality aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAT0d5yECFJhAWXKmNsyG4QgtMJs0b9nHs5yGcrI9zhk5b-9FqJeDcSWwaC0i2qItirczsm11dO3UsMLMoeZWjw9xN6Z768RH6ok1_fPRrmVFgmHY6N0w_RiZ-Zzn27spspseJiJA0qImIzYnjuvogrS4WNknweyWLtlu2JJFxaNnsdf_FWLlhfD89DzgrJd7YPBrbHzI01WxnwkUTgkNGyVKXSgHesfM4E7CWf1MTq4X8GPor02imvHtA0AbJ8jYz1OMnsaTH3YX3"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
+<!-- Status Chip -->
+<div class="absolute top-4 right-4 bg-error-container/90 backdrop-blur-md text-on-error-container px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">build</span>
+                            Maintenance
+                        </div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-headline-md font-headline-md text-white drop-shadow-md">Lakeview Suite</h3>
+<p class="text-label-md font-label-md text-white/90 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> St. Moritz, Switzerland</p>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 text-on-surface-variant text-label-md font-label-md">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">king_bed</span> 1 Bed</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">shower</span> 1.5 Baths</div>
+</div>
+<div class="text-right">
+<p class="text-headline-md font-headline-md text-primary opacity-50">€600</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant opacity-50">/ night</p>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-1 pt-4 border-t border-outline-variant/20">
+<button class="bg-surface-container text-error hover:bg-error-container/50 rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">engineering</span> View Work Order
+                            </button>
+</div>
+</div>
+</article>
+<!-- Unit Card 4 (Duplicate for grid filling) -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] hover:shadow-lg transition-all duration-300 group flex flex-col">
+<div class="h-64 relative overflow-hidden">
+<img alt="Summit Lodge interior" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An expansive, open-plan kitchen and dining area in a luxury chalet, featuring sleek marble countertops and dark wood cabinetry. The room is flooded with bright daylight from expansive glass doors leading to a snowy terrace. The color palette relies heavily on pure whites, deep ocean blues, and warm ivory, creating a sophisticated and inviting digital concierge environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkV5ye0sK_xSLAAqWFtK_9y0XEsaCKn9S7uIgSBeSmYiVG4B1ylijqGszz6Q2Lwj3aAa_rhSauzNg-qV8DKj7l_WdmZ_ZhMjjwEgM2nnHwXuSTIz57fa-sqqDgyC-xq4K2q9m5l09LnWHhycnVoIAUyWWaXYOUmtLFvibjCuJN3U_ycMtZ8fV5PGHFNjDq40BPqhUP-cWPYplkWfNnrFfMksJGBYX43T8rhW3m285rS7OlBGOH-CuYL1sEPofjgqn6SaSNZdQx0Xa-"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
+<!-- Status Chip -->
+<div class="absolute top-4 right-4 bg-secondary/90 backdrop-blur-md text-on-secondary px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                            Available
+                        </div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-headline-md font-headline-md text-white drop-shadow-md">Summit Lodge</h3>
+<p class="text-label-md font-label-md text-white/90 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">location_on</span> Verbier, Switzerland</p>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4 text-on-surface-variant text-label-md font-label-md">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">king_bed</span> 6 Beds</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">shower</span> 5 Baths</div>
+</div>
+<div class="text-right">
+<p class="text-headline-md font-headline-md text-primary">€2,400</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">/ night</p>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-outline-variant/20">
+<button class="bg-surface-container text-primary hover:bg-surface-container-high rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span> Block Dates
+                            </button>
+<button class="border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary rounded-lg py-2 text-label-md font-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">cleaning_services</span> Request Clean
+                            </button>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full border-t border-outline-variant/30 bg-surface-container-lowest dark:bg-on-surface flex flex-col md:flex-row justify-between items-center py-12 px-margin-desktop mt-section-gap">
+<div class="text-headline-sm font-headline-sm text-primary mb-4 md:mb-0">
+            ChaletElite
+        </div>
+<div class="flex flex-wrap justify-center gap-6 mb-4 md:mb-0">
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">API Docs</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors text-label-sm font-label-sm" href="#">Concierge Support</a>
+</div>
+<div class="text-tertiary dark:text-tertiary-fixed text-body-md font-body-md text-center md:text-right">
+            © 2024 ChaletElite Luxury Management. All rights reserved.
+        </div>
+</footer>
+</body></html>

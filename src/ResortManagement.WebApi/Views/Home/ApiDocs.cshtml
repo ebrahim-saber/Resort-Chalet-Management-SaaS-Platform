@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Developer API Documentation - ChaletElite";
+}
+
+<!-- Ambient Background Image with Glass Overlay -->
+<div class="fixed inset-0 z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPGfFfqT3mYKMsvDo9zy1LR5mHCKWw-xEARPEpVuVmfOyiXaeqlqfha76jKPKofIMeeJP2Eyct0sp5UHmnC0g6QqRh5ZA4F-yZf8sbaDYI5YSIQEWr7mdZ0D9BIIWKEyH2pthmBAEWrH0pNw28lbHh0ns5mEuxHmxksskPQLYlMkUBZi8FuAJfX6rWid6pBlh4FJ8BhELp_re80LNoQbePpA2RhctmceyPniSMzFTx71EdQlB3i9KBPjWnEImD6ajNPg5Y131q7RGi'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/90 to-slate-950/95 backdrop-blur-[6px]"></div>
+</div>
+
+<main class="flex-1 pt-32 pb-20 px-margin-mobile md:px-margin-tablet lg:px-margin-desktop w-full max-w-[1000px] mx-auto relative text-slate-100">
+    <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl">
+        <header class="mb-12 text-center border-b border-slate-800 pb-8">
+            <span class="material-symbols-outlined text-[48px] text-teal-400 bg-teal-950/40 p-4 rounded-full mb-4">terminal</span>
+            <h1 class="text-display-md font-bold text-white mb-2 font-mono">Developer API Reference</h1>
+            <p class="text-body-md text-slate-400">Build custom check-in panels, smart locks sync, or custom storefronts with our secure REST API endpoints.</p>
+        </header>
+
+        <!-- API Layout Grid -->
+        <div class="space-y-12">
+            <!-- 1. Authentication -->
+            <section class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-1 bg-teal-500/10 text-teal-400 rounded-md text-label-xs font-semibold uppercase tracking-wider font-mono">POST</span>
+                    <h2 class="text-headline-md font-bold text-white font-mono">/api/v1/auth/login</h2>
+                </div>
+                <p class="text-body-md text-slate-300">
+                    Exchange administrative or staff credentials for a high-security claims-based JWT Access Token.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-label-sm text-slate-400 uppercase mb-2 font-mono">Request Headers & Body</p>
+                        <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-body-sm font-mono overflow-x-auto text-teal-300">
+Content-Type: application/json
+
+{
+  "email": "manager@@chaletelite.com",
+  "password": "manager123"
+}</pre>
+                    </div>
+                    <div>
+                        <p class="text-label-sm text-slate-400 uppercase mb-2 font-mono">Success Response (200 OK)</p>
+                        <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-body-sm font-mono overflow-x-auto text-emerald-400">
+{
+  "token": "eyJhbGciOiJIUzI1NiIsIn...",
+  "refreshToken": "tXN-908123-EH...",
+  "expiration": "2026-06-02T12:11:13Z"
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Get Resorts -->
+            <section class="space-y-4 border-t border-slate-800/60 pt-10">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-1 bg-sky-500/10 text-sky-400 rounded-md text-label-xs font-semibold uppercase tracking-wider font-mono">GET</span>
+                    <h2 class="text-headline-md font-bold text-white font-mono">/api/v1/resorts</h2>
+                </div>
+                <p class="text-body-md text-slate-300">
+                    Query the live catalog of active alpine destinations. Supports tenant boundary filtering in background automatically.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-label-sm text-slate-400 uppercase mb-2 font-mono">Query Parameters & Headers</p>
+                        <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-body-sm font-mono overflow-x-auto text-teal-300">
+Authorization: Bearer [JWT_TOKEN]
+Accept: application/json</pre>
+                    </div>
+                    <div>
+                        <p class="text-label-sm text-slate-400 uppercase mb-2 font-mono">Sample JSON Output</p>
+                        <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-body-sm font-mono overflow-x-auto text-emerald-400">
+[
+  {
+    "id": "e0bfa908-1234...",
+    "name": "Alpine Peak Resort",
+    "address": "Zermatt, Swiss Alps",
+    "contactNumber": "+41 27 966 81 00"
+  }
+]</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Smart Locks webhook Integration -->
+            <section class="space-y-4 border-t border-slate-800/60 pt-10">
+                <h2 class="text-headline-md font-bold text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[24px] text-teal-400">integration_instructions</span>
+                    Webhook Integration (Smart Locks Sync)
+                </h2>
+                <p class="text-body-md text-slate-300">
+                    Sync smart lock keypads automatically. Subscribe to our Webhook Event Grid to receive instant JSON payloads when a reservation transitions to `CheckedIn` or `CheckedOut`.
+                </p>
+                <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-body-sm font-mono overflow-x-auto text-teal-300">
+// Webhook Event Payload: Reservation.CheckedIn
+{
+  "eventId": "evt_73a98f12c8b",
+  "eventType": "Reservation.CheckedIn",
+  "timestamp": "2026-06-02T11:11:13Z",
+  "data": {
+    "unitNumber": "Chalet 104",
+    "customer": "Elena Higgins",
+    "checkOutDate": "2026-06-06T12:00:00Z",
+    "temporaryPinCode": "4892*"
+  }
+}</pre>
+            </section>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-slate-800 flex justify-center">
+            <button onclick="window.history.back();" class="text-label-md text-slate-950 bg-teal-400 px-8 py-3 rounded-full hover:bg-teal-350 transition-all font-semibold font-mono shadow-md hover:shadow-teal-400/20">
+                Back to Dashboard
+            </button>
+        </div>
+    </div>
+</main>

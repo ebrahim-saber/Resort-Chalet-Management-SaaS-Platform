@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChaletElite - Resort Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1e",
+                        "on-secondary-container": "#00716c",
+                        "secondary-fixed-dim": "#51dad3",
+                        "on-primary-fixed-variant": "#204a6b",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#0f3d5e",
+                        "on-error-container": "#93000a",
+                        "surface": "#f9f9fc",
+                        "surface-container-high": "#e8e8eb",
+                        "surface-tint": "#3a6285",
+                        "on-primary-fixed": "#001d33",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#cd9a5f",
+                        "surface-dim": "#dadadd",
+                        "background": "#f9f9fc",
+                        "tertiary-container": "#553200",
+                        "on-secondary-fixed": "#00201e",
+                        "inverse-on-surface": "#f1f0f4",
+                        "primary": "#002741",
+                        "inverse-primary": "#a3caf2",
+                        "inverse-surface": "#2f3033",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#2b1700",
+                        "tertiary-fixed-dim": "#f4bc7e",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#72f7ef",
+                        "tertiary": "#371f00",
+                        "secondary": "#006a66",
+                        "on-primary-container": "#81a8ce",
+                        "surface-container-highest": "#e2e2e5",
+                        "surface-bright": "#f9f9fc",
+                        "surface-variant": "#e2e2e5",
+                        "surface-container-low": "#f3f3f6",
+                        "tertiary-fixed": "#ffddba",
+                        "secondary-container": "#72f7ef",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c2c7ce",
+                        "outline": "#72777e",
+                        "primary-fixed": "#cee5ff",
+                        "primary-fixed-dim": "#a3caf2",
+                        "surface-container": "#eeedf1",
+                        "on-secondary-fixed-variant": "#00504c",
+                        "on-surface-variant": "#42474e",
+                        "on-tertiary-fixed-variant": "#643f0b",
+                        "on-background": "#1a1c1e",
+                        "on-tertiary": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "margin-mobile": "20px",
+                        "section-gap": "80px",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-tablet": "32px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "500" }],
+                        "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f9f9fc;
+            color: #1a1c1e;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .luxury-shadow {
+            box-shadow: 0 4px 20px 0 rgba(0, 39, 65, 0.05);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px 0 rgba(0, 39, 65, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative font-body-md text-body-md overflow-x-hidden">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/40 dark:border-white/10 bg-white/70 dark:bg-on-surface/70 backdrop-blur-xl shadow-2xl shadow-primary/5 flex justify-between items-center px-8 h-16 z-50 transition-all duration-300">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">ChaletElite</span>
+<div class="hidden md:flex gap-6 items-center h-full">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full px-3 py-1" href="#">Dashboard</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md px-3 py-1 scale-95 transition-transform duration-200" href="#">Resorts</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full px-3 py-1" href="#">Reservations</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full px-3 py-1" href="#">Analytics</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex items-center gap-2 border border-secondary text-secondary text-label-md font-label-md px-4 py-2 rounded-full hover:bg-secondary hover:text-on-secondary transition-colors">
+                Quick Actions
+            </button>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-5 py-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-[0_4px_20px_0_rgba(0,39,65,0.05)]">
+                New Booking
+            </button>
+<div class="flex gap-2 ml-2 border-l border-outline-variant/30 pl-4">
+<button aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 rounded-full p-1">
+<span class="material-symbols-outlined text-headline-md" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button aria-label="account_circle" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 rounded-full p-1">
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border border-white/50" data-alt="A close-up portrait of a professional individual serving as a user profile avatar. The subject is well-lit with soft, natural light in a bright, modern setting consistent with a high-end luxury hospitality app. The background is slightly blurred to keep focus on the subject." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArhXmVyI6helpiV60Blwi7aKSeqxeimu1Bs3n8WokkGSl45pMC8rEgka-ds6Vf2C9TYcimFWyOLWapHWJHrsmwbaMQE6y7M0VG9fwDUTzEqfoxMHX-1nwD4MBdyzwOZkmYgiTzaB5eAHXvUpCjJ8qoieB7VIFd4WAWq6Nz2R3AQ7OyGIrbU9gHeCSZ4gk02VQne5q2-8-vwxPNhrlsOWeu0Ez_XPi0mwoDXMv9trhPVWDln2gYi-h7Au3xavn2pIVR7ppQgRmjWYxo"/>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="pt-[120px] pb-section-gap px-margin-mobile md:px-margin-tablet lg:px-margin-desktop max-w-container-max mx-auto">
+<!-- Header Section -->
+<header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-2">Resort Portfolio</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Manage and monitor your luxury properties.</p>
+</div>
+<div class="flex gap-4">
+<div class="glass-panel luxury-shadow rounded-full px-6 py-3 flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Total Occupancy</span>
+<span class="text-headline-md font-headline-md text-primary font-bold">84%</span>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Active Units</span>
+<span class="text-headline-md font-headline-md text-primary font-bold">142</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-section-gap">
+<!-- Map View (Takes up 8 columns on large screens) -->
+<div class="lg:col-span-8 rounded-xl overflow-hidden glass-panel luxury-shadow relative h-[400px]">
+<div class="absolute top-4 left-4 z-10 bg-surface-container-lowest/90 backdrop-blur-md rounded-lg p-3 shadow-lg border border-white/50">
+<h3 class="text-label-md font-label-md text-primary font-bold mb-1">Regional Distribution</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Alpine Region</p>
+</div>
+<div class="absolute bottom-4 right-4 z-10 flex gap-2">
+<button class="w-10 h-10 bg-surface-container-lowest text-primary rounded-full shadow-md flex items-center justify-center hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-lowest text-primary rounded-full shadow-md flex items-center justify-center hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<!-- Placeholder for map -->
+<img alt="Map View" class="w-full h-full object-cover opacity-80" data-alt="A stylized, high-end topographical map view of the Swiss Alps region, rendered in a clean, minimalist aesthetic. The map features soft, muted topographical lines with subtle shading to indicate elevation. The color palette aligns with a luxury digital interface: predominantly soft ivory and pristine white with subtle deep ocean blue accents marking specific resort locations. The overall mood is sophisticated and informative, suitable for a premium property management dashboard." data-location="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA9bObV7O6lM6X1lcMNhDw8i1KO46UrdxAFLs_Cy-UBj7YbWvfVJq2PwSgfkyaJlQU8L04aIz5t81wrjTuf-82L09iS95juj3WIMg_NfJw6Vp8hzyIcyzj0Z4hBszYBu3XDFJl-3wf78NxfLrs3ROBmXUS_xaIC6yd1lY34qIsgLPRGV7_zGv6zooOJ8w4rsusawvA2dBWCtb_Ea5kJTmu6je0I8BHfxRS4_HYoPTW_b_1dn8BC2j2kBzKrh2KEL6vvuQcMSUQvlmk"/>
+</div>
+<!-- Stats/Distribution (Takes up 4 columns on large screens) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Unit Distribution -->
+<div class="glass-panel luxury-shadow rounded-xl p-6 flex-1 flex flex-col">
+<h3 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-6">Unit Distribution</h3>
+<div class="flex-1 flex flex-col justify-center gap-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-body-md font-body-md text-on-surface">Luxury Chalets</span>
+</div>
+<span class="text-label-md font-label-md font-bold text-primary">68</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 48%"></div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-body-md font-body-md text-on-surface">Private Villas</span>
+</div>
+<span class="text-label-md font-label-md font-bold text-primary">42</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 30%"></div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="text-body-md font-body-md text-on-surface">Penthouses</span>
+</div>
+<span class="text-label-md font-label-md font-bold text-primary">32</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1.5">
+<div class="bg-tertiary-container h-1.5 rounded-full" style="width: 22%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Resort Gallery -->
+<div>
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-headline-md font-headline-md text-primary">Featured Properties</h2>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">sort</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Resort Card 1 -->
+<div class="glass-panel luxury-shadow rounded-xl overflow-hidden hover-lift flex flex-col group cursor-pointer">
+<div class="h-64 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Resort Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A breathtaking exterior shot of a luxury alpine chalet nestled in a snowy mountain landscape during twilight. Warm, inviting golden light spills from the large glass windows, contrasting beautifully with the cool, deep blue snow and evening sky. The architectural style is modern yet rustic, featuring natural wood and stone. The mood is serene, exclusive, and highly premium, fitting for a top-tier resort portfolio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb2fiu2TJHpYSCspoxkOY2AmtBmxXjpVWvF0GMoECIP5cDA-x8eYdBoYMswtzelsS358RduM_PFTv2TLB4V1CKkHGn633MrOCcyuDIRHrQKn-liYPJ9o2J2eaG346cYpys9U6qO0HnUEOqp6z_ZrX-2lIHFGzq4yGQR6FTetDnxhRQAT7iWIHH3E9bZ-9Jp0rOA9YK0QtibDO78CP8rkz2Oy6UTK3tS1BV6Mogus2WEbSkY51xCzeV9FEmIMEIGLBiUTIESZuUr5Y4"/>
+<div class="absolute top-4 right-4 z-20">
+<span class="bg-surface-container-lowest/90 backdrop-blur-sm text-primary text-label-sm font-label-sm px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">star</span> 9.8
+                            </span>
+</div>
+<div class="absolute bottom-4 left-4 z-20">
+<h3 class="text-headline-md font-headline-md text-on-primary mb-1">Alpine Peak Resort</h3>
+<p class="text-label-md font-label-md text-on-primary/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Zermatt, Switzerland
+                            </p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest flex-1 flex flex-col justify-between">
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Units</p>
+<p class="text-label-md font-label-md text-primary font-bold">24</p>
+</div>
+<div class="text-center border-l border-r border-outline-variant/30">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Occupancy</p>
+<p class="text-label-md font-label-md text-secondary font-bold">92%</p>
+</div>
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">RevPAR</p>
+<p class="text-label-md font-label-md text-primary font-bold">$850</p>
+</div>
+</div>
+<button class="w-full py-2 border border-outline text-primary text-label-md font-label-md rounded-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                            Manage Property
+                        </button>
+</div>
+</div>
+<!-- Resort Card 2 -->
+<div class="glass-panel luxury-shadow rounded-xl overflow-hidden hover-lift flex flex-col group cursor-pointer">
+<div class="h-64 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Resort Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A stunning view of a minimalist, modern luxury villa overlooking a serene alpine lake. The lighting is crisp and bright, suggesting early morning sunshine. The villa features extensive use of glass and clean, white architectural lines that stand out against the lush green pine forest in the background. The scene conveys a sense of peaceful isolation and ultra-modern luxury within nature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVd9qZWAU37goVbZU_w7FHZQ7kWCJUGltR1CttxVgfhVQslI4jt5O8VR4IsmnQmxzT2QyhTQALH5MP7YrGAKn0TUmRdFj9af0KmJkwylCLfhPZhCnfThMgWMpb4VbGR1zyYbRChiSH-ps7K2C4s-567FoZCkm28NSp3hhN2nbHoUtnziFBcuLSAHtf06NBWpe2D1B6ZfWCtk0PLSWs5d3QdqqnwNoicF1XOLLCgf5lLv7ppqNulrfa_We1X1y_5plpNDgs-Bq9qkqF"/>
+<div class="absolute top-4 right-4 z-20">
+<span class="bg-surface-container-lowest/90 backdrop-blur-sm text-primary text-label-sm font-label-sm px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">star</span> 9.5
+                            </span>
+</div>
+<div class="absolute bottom-4 left-4 z-20">
+<h3 class="text-headline-md font-headline-md text-on-primary mb-1">Lakeside Retreat</h3>
+<p class="text-label-md font-label-md text-on-primary/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span> St. Moritz, Switzerland
+                            </p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest flex-1 flex flex-col justify-between">
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Units</p>
+<p class="text-label-md font-label-md text-primary font-bold">18</p>
+</div>
+<div class="text-center border-l border-r border-outline-variant/30">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Occupancy</p>
+<p class="text-label-md font-label-md text-secondary font-bold">78%</p>
+</div>
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">RevPAR</p>
+<p class="text-label-md font-label-md text-primary font-bold">$1,200</p>
+</div>
+</div>
+<button class="w-full py-2 border border-outline text-primary text-label-md font-label-md rounded-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                            Manage Property
+                        </button>
+</div>
+</div>
+<!-- Resort Card 3 -->
+<div class="glass-panel luxury-shadow rounded-xl overflow-hidden hover-lift flex flex-col group cursor-pointer">
+<div class="h-64 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Resort Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An expansive, high-end mountain lodge estate viewed during a bright, sunny winter day. The architecture blends classic alpine timber styling with contemporary grand proportions. The surrounding landscape is blanketed in pristine white snow under a clear, vibrant blue sky. The image should evoke a sense of heritage, scale, and uncompromising quality typical of a flagship luxury property." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrvUL3ZOIGdagSWDiEFU5r6z6sQP9GFOMt3Um-ZBp7sdpmr7q-mgcTsh7x62ws87dTkKr7-wfCaFzXVrO6pDjyn5Eq2fTUc_Ce0qs1YeciXE15cDgo3SNrKzOq8KknQXh3wAbjJBCs0NB6ownmN8W6ClFKGe-tB5vawX7aQ-3Ac6whAjS8mII03htojM3mbm4T_VbKxHB3VLCCPhT1JipG7DnmBfhbZ6QhmL5UFKA2FQ6WiGaaAVU-_N1inp9kqAw3oZRqAFsZwP2p"/>
+<div class="absolute top-4 right-4 z-20">
+<span class="bg-surface-container-lowest/90 backdrop-blur-sm text-primary text-label-sm font-label-sm px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">star</span> 9.9
+                            </span>
+</div>
+<div class="absolute bottom-4 left-4 z-20">
+<h3 class="text-headline-md font-headline-md text-on-primary mb-1">The Grand Estate</h3>
+<p class="text-label-md font-label-md text-on-primary/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Courchevel, France
+                            </p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest flex-1 flex flex-col justify-between">
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Units</p>
+<p class="text-label-md font-label-md text-primary font-bold">45</p>
+</div>
+<div class="text-center border-l border-r border-outline-variant/30">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Occupancy</p>
+<p class="text-label-md font-label-md text-secondary font-bold">88%</p>
+</div>
+<div class="text-center">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">RevPAR</p>
+<p class="text-label-md font-label-md text-primary font-bold">$920</p>
+</div>
+</div>
+<button class="w-full py-2 border border-outline text-primary text-label-md font-label-md rounded-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                            Manage Property
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-lowest dark:bg-on-surface w-full border-t border-outline-variant/30 bg-surface-container-low flex flex-col md:flex-row justify-between items-center py-12 px-margin-desktop mt-section-gap">
+<div class="text-headline-sm font-headline-sm text-primary mb-4 md:mb-0">
+            ChaletElite
+        </div>
+<div class="flex gap-6 mb-4 md:mb-0">
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary transition-colors" href="#">API Docs</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:text-secondary transition-colors" href="#">Concierge Support</a>
+</div>
+<div class="text-label-sm font-label-sm text-tertiary dark:text-tertiary-fixed">
+            © 2024 ChaletElite Luxury Management. All rights reserved.
+        </div>
+</footer>
+</body></html>

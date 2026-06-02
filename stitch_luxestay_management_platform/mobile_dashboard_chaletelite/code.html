@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChaletElite Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1a1c1e",
+                    "on-secondary-container": "#00716c",
+                    "secondary-fixed-dim": "#51dad3",
+                    "on-primary-fixed-variant": "#204a6b",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#0f3d5e",
+                    "on-error-container": "#93000a",
+                    "surface": "#f9f9fc",
+                    "surface-container-high": "#e8e8eb",
+                    "surface-tint": "#3a6285",
+                    "on-primary-fixed": "#001d33",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#cd9a5f",
+                    "surface-dim": "#dadadd",
+                    "background": "#f9f9fc",
+                    "tertiary-container": "#553200",
+                    "on-secondary-fixed": "#00201e",
+                    "inverse-on-surface": "#f1f0f4",
+                    "primary": "#002741",
+                    "inverse-primary": "#a3caf2",
+                    "inverse-surface": "#2f3033",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#2b1700",
+                    "tertiary-fixed-dim": "#f4bc7e",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#72f7ef",
+                    "tertiary": "#371f00",
+                    "secondary": "#006a66",
+                    "on-primary-container": "#81a8ce",
+                    "surface-container-highest": "#e2e2e5",
+                    "surface-bright": "#f9f9fc",
+                    "surface-variant": "#e2e2e5",
+                    "surface-container-low": "#f3f3f6",
+                    "tertiary-fixed": "#ffddba",
+                    "secondary-container": "#72f7ef",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c2c7ce",
+                    "outline": "#72777e",
+                    "primary-fixed": "#cee5ff",
+                    "primary-fixed-dim": "#a3caf2",
+                    "surface-container": "#eeedf1",
+                    "on-secondary-fixed-variant": "#00504c",
+                    "on-surface-variant": "#42474e",
+                    "on-tertiary-fixed-variant": "#643f0b",
+                    "on-background": "#1a1c1e",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "container-max": "1440px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "margin-tablet": "32px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 font-body-md">
+<!-- TopNavBar (Mobile View: Simplified Top Bar) -->
+<header class="sticky top-0 z-50 w-full bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/30 px-margin-mobile py-4 flex justify-between items-center lg:hidden">
+<div class="text-headline-md font-headline-md font-bold tracking-tight text-primary">ChaletElite</div>
+<div class="flex gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant/30 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBry-DcIzNfhgLGM1PXHGAZdaE7yqcG60QeO0yRA9criatvN1Ha3ZvF1ce9U3FPXmuCx4JJDv3bQOC7ujoGo2eEoH2m29AiOJ6SZSg-YILL5ySXOoOLKJ1oMBSH5N1IakxV694MDqmre8xVFAEXHZrGB4bGv12tCeAT6pCKvbJDThXA5NMPMevoSDricL9fzR3M6MvDv5i7hb_6eDdtU8RL1hoqsym4iwihfw2gVyxPS_dow-G8tkJ-bVe0jCBPNf1vqz6fy39KSoID"/>
+</button>
+</div>
+</header>
+<!-- TopNavBar (Desktop/Tablet View: Full Nav) -->
+<nav class="hidden lg:flex justify-between items-center px-8 h-16 w-full z-50 fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/40 dark:border-white/10 bg-white/70 dark:bg-on-surface/70 backdrop-blur-xl shadow-[0_4px_20px_0_rgba(0,39,65,0.05)]">
+<div class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed">ChaletElite</div>
+<div class="flex gap-8">
+<a class="text-secondary dark:text-secondary-fixed-dim font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Resorts</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Reservations</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Analytics</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-on-surface/20 rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+<button class="bg-primary text-on-primary text-label-md font-label-md px-4 py-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                New Booking
+            </button>
+</div>
+</nav>
+<main class="w-full max-w-container-max mx-auto px-margin-mobile lg:px-margin-desktop lg:mt-32 mt-6 flex flex-col gap-8">
+<!-- Welcome Section -->
+<section class="flex flex-col gap-2">
+<h1 class="text-display-lg-mobile lg:text-display-lg font-display-lg-mobile lg:font-display-lg text-primary">Welcome back, Sarah.</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Here is an overview of your properties today.</p>
+</section>
+<!-- Quick Metrics (Horizontal Scroll on Mobile) -->
+<section class="flex overflow-x-auto pb-4 -mx-margin-mobile px-margin-mobile lg:mx-0 lg:px-0 gap-4 snap-x snap-mandatory hide-scrollbar">
+<div class="min-w-[240px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-6 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] snap-start">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">hotel</span>
+<span class="text-secondary bg-secondary/10 px-2 py-1 rounded-full text-label-sm font-label-sm">+12%</span>
+</div>
+<h3 class="text-on-surface-variant text-label-md font-label-md mb-1">Occupancy Rate</h3>
+<p class="text-headline-md font-headline-md text-primary">84%</p>
+</div>
+<div class="min-w-[240px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-6 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] snap-start">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-secondary bg-secondary/10 px-2 py-1 rounded-full text-label-sm font-label-sm">+5.4%</span>
+</div>
+<h3 class="text-on-surface-variant text-label-md font-label-md mb-1">Revenue Today</h3>
+<p class="text-headline-md font-headline-md text-primary">€12,450</p>
+</div>
+<div class="min-w-[240px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-6 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] snap-start">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+<span class="text-outline bg-surface-container-high px-2 py-1 rounded-full text-label-sm font-label-sm">Steady</span>
+</div>
+<h3 class="text-on-surface-variant text-label-md font-label-md mb-1">Pending Arrivals</h3>
+<p class="text-headline-md font-headline-md text-primary">14</p>
+</div>
+</section>
+<!-- Main Content Area: Properties & Arrivals -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Properties Column -->
+<section class="lg:col-span-8 flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md font-headline-md text-primary">Featured Properties</h2>
+<button class="text-secondary text-label-md font-label-md hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Property Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] group cursor-pointer hover:shadow-lg transition-all duration-300">
+<div class="h-48 relative overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A luxurious modern alpine chalet nestled in a snowy mountain landscape at twilight. Warm golden light spills from the expansive floor-to-ceiling windows, contrasting with the cool deep blue of the evening sky and snow. The architectural style is contemporary yet cozy, utilizing natural wood and dark stone. The scene conveys high-end hospitality and serene exclusivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqNDBiH0fOslASUgE06DoNb5aQOnVbjvq425trqqyqZvKjx6y7MbGxWrdXbKbrChMAqmN-5NgnVf7WqQHDbVoNKcV-rUhJrDh0MVdk5LA_nctBo_3z--FrYRs_IZId6syYTDPhUwCa9BOH7pOY0v1nc4CDnVjEgyMgZ4tlcYUyvVtfzOL5A1B8dFVnwZCOVvEegcLqzCUADhDW9iJVlr_RREUZVgvNfXvZ5lI4vFFDnQlvONNc0C-7R8SKS3qQiqSp0RaMRW8vJx8d"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<span class="bg-white/20 backdrop-blur-md text-white text-label-sm font-label-sm px-3 py-1 rounded-full border border-white/40">Available</span>
+<span class="text-white text-label-md font-label-md drop-shadow-md">€1,200/nt</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-body-lg font-body-lg font-bold text-primary mb-1">Villa Alpine Peak</h3>
+<p class="text-on-surface-variant text-body-md font-body-md flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Courchevel, FR
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant/30 pt-4">
+<div class="flex gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[18px]">bed</span> 4</div>
+<div class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[18px]">hot_tub</span> Yes</div>
+</div>
+<button class="text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+</div>
+<!-- Property Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] group cursor-pointer hover:shadow-lg transition-all duration-300">
+<div class="h-48 relative overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An expansive open-concept living room inside a luxury chalet. Features a massive central stone fireplace with a roaring fire. Large minimalist beige sofas surround the hearth. High timber-beamed ceilings and massive windows offer views of a snow-covered pine forest. The lighting is bright and airy, reflecting a sophisticated, serene interior design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjWJ8M2aJOMYYKSyHhV6rBSnO7rRk-JhDauIYG01M8QVeXd128JAtAJ_vIon8DRcpl86CSLibZUlGXkWvSuO7jjgW9QDzsMpFJL0qOIGQRIXDSUIRsLA9u7BlIlAw2zAhGq441hKVaKh8QfkbH6VeYCLrU2wZZutBA-KtkiTC-4R-zlJNdB0lncnSqATM3iUMqAInVzxMtzTLDDnwhWvQ5PTDrDaEC2H5015VLy7bwOEgCVHRMewsKonPbAbOeufzxkoO5PCdxJCi7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<span class="bg-error/80 backdrop-blur-md text-white text-label-sm font-label-sm px-3 py-1 rounded-full border border-white/40">Booked</span>
+<span class="text-white text-label-md font-label-md drop-shadow-md">€850/nt</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-body-lg font-body-lg font-bold text-primary mb-1">Chalet Horizon</h3>
+<p class="text-on-surface-variant text-body-md font-body-md flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Zermatt, CH
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant/30 pt-4">
+<div class="flex gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[18px]">bed</span> 3</div>
+<div class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[18px]">ac_unit</span> Yes</div>
+</div>
+<button class="text-secondary hover:text-primary transition-colors"><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Arrivals Column -->
+<aside class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md font-headline-md text-primary">Today's Arrivals</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-6 shadow-[0_4px_20px_0_rgba(0,39,65,0.05)] flex flex-col gap-4">
+<!-- Arrival Item -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-label-md flex-shrink-0">
+                            JD
+                        </div>
+<div class="flex-1">
+<p class="text-label-md font-label-md text-primary">John Doe Family</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Villa Alpine Peak • 14:00</p>
+</div>
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</div>
+<!-- Arrival Item -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md flex-shrink-0">
+                            MS
+                        </div>
+<div class="flex-1">
+<p class="text-label-md font-label-md text-primary">M. Smith &amp; Guests</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Chalet Horizon • 16:30</p>
+</div>
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</div>
+<!-- Arrival Item -->
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer opacity-60">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-label-md flex-shrink-0">
+                            AK
+                        </div>
+<div class="flex-1">
+<p class="text-label-md font-label-md text-primary line-through">A. Kensington</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Arrived 11:00</p>
+</div>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<button class="w-full mt-2 py-2 border border-outline-variant rounded-lg text-primary text-label-md font-label-md hover:bg-surface-container-low transition-colors">
+                        View Complete Schedule
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Floating) -->
+<div class="fixed bottom-6 left-4 right-4 lg:hidden z-50">
+<div class="bg-surface-container-lowest/90 backdrop-blur-xl rounded-2xl border border-white/40 shadow-2xl shadow-primary/10 flex justify-around items-center p-3">
+<button class="flex flex-col items-center gap-1 w-16 text-secondary p-2 rounded-xl bg-secondary/10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-label-sm font-bold">Overview</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-on-surface-variant hover:text-primary transition-colors p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">holiday_village</span>
+<span class="text-[10px] font-label-sm">Portfolio</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-on-surface-variant hover:text-primary transition-colors p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+<span class="text-[10px] font-label-sm">Bookings</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-on-surface-variant hover:text-primary transition-colors p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">payments</span>
+<span class="text-[10px] font-label-sm">Revenue</span>
+</button>
+</div>
+</div>
+<style>
+        /* Hide scrollbar for horizontal scrolling containers but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</body></html>

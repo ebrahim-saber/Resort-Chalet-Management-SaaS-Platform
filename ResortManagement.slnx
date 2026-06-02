@@ -4,5 +4,6 @@
     <Project Path="src/ResortManagement.Domain/ResortManagement.Domain.csproj" />
     <Project Path="src/ResortManagement.Infrastructure/ResortManagement.Infrastructure.csproj" />
     <Project Path="src/ResortManagement.WebApi/ResortManagement.WebApi.csproj" />
+    <Project Path="src/ResortManagement.Tests/ResortManagement.Tests.csproj" />
   </Folder>
 </Solution>

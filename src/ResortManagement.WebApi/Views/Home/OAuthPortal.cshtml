@@ -1,0 +1,118 @@
+@{
+    Layout = null;
+    string provider = ViewBag.Provider ?? "Google";
+    bool isGoogle = provider.Equals("Google", StringComparison.OrdinalIgnoreCase);
+    string providerColor = isGoogle ? "text-primary" : "text-[#1877f2]";
+    string buttonBg = isGoogle ? "bg-[#4285f4] hover:bg-[#357ae8]" : "bg-[#1877f2] hover:bg-[#166fe5]";
+}
+
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authorize ChaletElite via @provider</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXH3PoTGB1clyJ0mMfFVveuuzfOxZK_IJ0eXZuujz_4erPhUUFf6mtaX4q5SxjS1Nl0aPDTq3tTLyaklKNGzynqYw0Lk67l-NMGwbeQlJLLTEl6LWYJwnxaSXBalLsuKcBYwfWfAponeBUfOE7CJkN0veFuJxt20TL8y_oxEO65_NgnYD6GZW9VDetnJNqiSWugBSlSX1iiHpCTpt1jiQ3I19gK2O_u_hxInVjedjzn54BpcADrykfPcmSsFCBMBurWK_9xVj-Dlrg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 relative">
+    
+    <!-- Glass Backdrop Filter Overlay -->
+    <div class="absolute inset-0 bg-primary/20 backdrop-blur-md z-0"></div>
+    
+    <!-- Concent Card Container -->
+    <div class="bg-white/90 backdrop-blur-2xl border border-white/80 max-w-md w-full p-8 rounded-3xl shadow-2xl relative z-10 transform scale-100 transition-all duration-300">
+        
+        <!-- Header Brand Logo -->
+        <div class="flex justify-center mb-6">
+            <span class="text-headline-md font-bold tracking-tight text-primary">ChaletElite</span>
+        </div>
+        
+        <!-- Social Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto rounded-full bg-surface-container/50 border border-outline-variant/30 flex items-center justify-center shadow-inner mb-4">
+                @if (isGoogle)
+                {
+                    <svg viewBox="0 0 24 24" width="32" height="32" class="w-8 h-8">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" />
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                }
+                else
+                {
+                    <svg fill="#1877f2" viewBox="0 0 24 24" width="36" height="36" class="w-9 h-9">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                }
+            </div>
+            <h2 class="text-headline-md font-bold text-primary">Sign in with @provider</h2>
+            <p class="text-body-md text-on-surface-variant mt-1.5 leading-relaxed">Authorize **ChaletElite Luxury Platforms** to access your public profile and details.</p>
+        </div>
+        
+        <!-- Form Callback -->
+        <form action="/auth/oauth-callback" method="POST" class="space-y-5">
+            <input type="hidden" name="provider" value="@provider" />
+            <input type="hidden" name="avatarUrl" id="social-avatar" value="https://lh3.googleusercontent.com/aida-public/AB6AXuAWny2KZ7gsQDEf3qutkVFj5sssToK9BtHEo6ECPEeVuH-y2lIAyvQY7gdB7Q9uD07-ylNXViqsNu1VMOLJwIf7B7IKlhxNx0FHGmWA1hHu0FWxUmVFOKOr-XCYd0Ds7sA33uCEDDf0meDgXCdPMPpD0anrDRCTeVlXl2d6u9oaFDpfE-607v6Ytd1-vN5Mr5oPGFxmljLa8m1b4IJTRjAzTIYZqfEtZVaJWoinhlbr-7ViVMdsjBVeouFGD-_rWNFLy4KrokHRgPr0" />
+
+            <!-- Profile Info Mock Fields (Allowing edit for interactive fidelity!) -->
+            <div class="bg-surface-container-low/40 rounded-2xl p-5 border border-outline-variant/20 space-y-4">
+                <div class="flex items-center gap-4">
+                    <img id="avatar-preview" alt="Account Avatar" class="w-14 h-14 rounded-full border border-white shadow object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWny2KZ7gsQDEf3qutkVFj5sssToK9BtHEo6ECPEeVuH-y2lIAyvQY7gdB7Q9uD07-ylNXViqsNu1VMOLJwIf7B7IKlhxNx0FHGmWA1hHu0FWxUmVFOKOr-XCYd0Ds7sA33uCEDDf0meDgXCdPMPpD0anrDRCTeVlXl2d6u9oaFDpfE-607v6Ytd1-vN5Mr5oPGFxmljLa8m1b4IJTRjAzTIYZqfEtZVaJWoinhlbr-7ViVMdsjBVeouFGD-_rWNFLy4KrokHRgPr0" />
+                    <div class="flex-grow">
+                        <span class="text-label-sm text-outline font-semibold uppercase tracking-wider">Account Profile</span>
+                        <input class="w-full bg-transparent border-0 p-0 text-body-lg font-bold text-primary focus:ring-0 outline-none mt-0.5" type="text" name="fullName" value="Ebrahim Saber" placeholder="Full Name" required />
+                    </div>
+                </div>
+                
+                <div class="border-t border-outline-variant/15 pt-3">
+                    <label class="block text-label-sm text-outline font-semibold uppercase tracking-wider mb-1">Email Address</label>
+                    <input class="w-full bg-transparent border-0 p-0 text-body-md text-primary font-medium focus:ring-0 outline-none" type="email" name="email" value="ebrahim.saber.social@gmail.com" placeholder="Email" required />
+                </div>
+            </div>
+            
+            <!-- Permissions List Info -->
+            <div class="text-label-sm text-on-surface-variant flex flex-col gap-2.5 px-2">
+                <div class="flex items-center gap-2 font-medium">
+                    <span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+                    <span>Access your personal display name & email</span>
+                </div>
+                <div class="flex items-center gap-2 font-medium">
+                    <span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+                    <span>Access your public profile photo URL</span>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="pt-4 flex flex-col gap-3">
+                <button type="submit" class="w-full py-3.5 rounded-xl text-white font-label-md text-label-md font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all @buttonBg">
+                    Continue & Authorize
+                </button>
+                <a href="/" class="w-full py-3 border border-outline-variant/50 text-center rounded-xl text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-low transition-all">
+                    Cancel
+                </a>
+            </div>
+        </form>
+        
+        <!-- Safety Footer -->
+        <p class="text-center text-[11px] text-outline mt-6">
+            Secured via premium OAuth 2.0 mock consent tunnel.
+        </p>
+    </div>
+</body>
+</html>
