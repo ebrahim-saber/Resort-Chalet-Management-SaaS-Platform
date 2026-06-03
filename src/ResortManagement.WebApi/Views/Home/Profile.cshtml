@@ -83,6 +83,10 @@
                         <span class="material-symbols-outlined">account_circle</span>
                         <span class="text-label-md">Profile & Brand</span>
                     </button>
+                    <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="branding">
+                        <span class="material-symbols-outlined">palette</span>
+                        <span class="text-label-md">Storefront Branding</span>
+                    </button>
                     <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all font-semibold" data-target="billing">
                         <span class="material-symbols-outlined">credit_card</span>
                         <span class="text-label-md">Subscription & Billing</span>
@@ -174,6 +178,77 @@
                         </div>
                     </form>
                 </div>
+            </div>
+
+            <!-- Storefront Branding Tab -->
+            <div class="tab-content hidden" id="branding">
+                <h2 class="text-headline-lg font-bold text-primary mb-6 border-b border-outline-variant/30 pb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">palette</span> Storefront Branding
+                </h2>
+                
+                <form action="/profile/branding/save" method="POST" class="space-y-8">
+                    <p class="text-body-md text-on-surface-variant mb-6 font-semibold">Customize the look, feel, colors, and welcome messages of your public booking storefront.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Primary Color (Luxury Accents)</label>
+                            <div class="flex gap-2">
+                                <input class="w-12 h-12 bg-transparent border-0 cursor-pointer" type="color" id="primaryColorPicker" value="@(tenant?.PrimaryColor ?? "#cd9a5f")" oninput="document.getElementById('primaryColorText').value = this.value" />
+                                <input class="flex-grow bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold font-monospace" type="text" id="primaryColorText" name="primaryColor" value="@(tenant?.PrimaryColor ?? "#cd9a5f")" required />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Secondary Color (Highlight Badges)</label>
+                            <div class="flex gap-2">
+                                <input class="w-12 h-12 bg-transparent border-0 cursor-pointer" type="color" id="secondaryColorPicker" value="@(tenant?.SecondaryColor ?? "#0ea5e9")" oninput="document.getElementById('secondaryColorText').value = this.value" />
+                                <input class="flex-grow bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold font-monospace" type="text" id="secondaryColorText" name="secondaryColor" value="@(tenant?.SecondaryColor ?? "#0ea5e9")" required />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Dark Background Color</label>
+                            <div class="flex gap-2">
+                                <input class="w-12 h-12 bg-transparent border-0 cursor-pointer" type="color" id="darkBgColorPicker" value="@(tenant?.DarkBgColor ?? "#030712")" oninput="document.getElementById('darkBgColorText').value = this.value" />
+                                <input class="flex-grow bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold font-monospace" type="text" id="darkBgColorText" name="darkBgColor" value="@(tenant?.DarkBgColor ?? "#030712")" required />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Surface Color (Card Backgrounds)</label>
+                            <div class="flex gap-2">
+                                <input class="w-12 h-12 bg-transparent border-0 cursor-pointer" type="color" id="surfaceColorPicker" value="@(tenant?.SurfaceColor ?? "#0b0f19")" oninput="document.getElementById('surfaceColorText').value = this.value" />
+                                <input class="flex-grow bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold font-monospace" type="text" id="surfaceColorText" name="surfaceColor" value="@(tenant?.SurfaceColor ?? "#0b0f19")" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 pt-4 border-t border-outline-variant/10">
+                        <div>
+                            <label class="block text-label-md text-primary font-bold mb-2">Hero Banner Image URL</label>
+                            <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="heroBannerUrl" value="@(tenant?.HeroBannerUrl ?? "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop")" required />
+                            <p class="text-label-sm text-outline mt-1 font-medium">High-quality image URL (Unsplash recommended) for the storefront hero section.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Welcome Message (English)</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="welcomeMessageEn" value="@(tenant?.WelcomeMessageEn ?? "Find Your Ultimate Mountain Hideaway")" required />
+                            </div>
+                            
+                            <div>
+                                <label class="block text-label-md text-primary font-bold mb-2">Welcome Message (Arabic / العربية)</label>
+                                <input class="w-full bg-white/80 border border-outline-variant rounded-xl px-4 py-3 text-body-md focus:border-secondary outline-none transition-all text-primary font-semibold" type="text" name="welcomeMessageAr" value="@(tenant?.WelcomeMessageAr ?? "ابحث عن ملاذك الجبلي المثالي")" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-outline-variant/10 flex justify-end">
+                        <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all font-bold">
+                            Save Branding Config
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <!-- Billing Settings -->

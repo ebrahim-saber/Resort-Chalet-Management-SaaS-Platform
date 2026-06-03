@@ -480,6 +480,56 @@ public class HomeController : Controller
         return RedirectToAction("Profile");
     }
 
+    [HttpPost("profile/branding/save")]
+    public async Task<IActionResult> SaveBranding(
+        string primaryColor, 
+        string secondaryColor, 
+        string darkBgColor, 
+        string surfaceColor, 
+        string heroBannerUrl, 
+        string welcomeMessageEn, 
+        string welcomeMessageAr)
+    {
+        if (User.Identity?.IsAuthenticated != true)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdString, out Guid userId))
+        {
+            return RedirectToAction("Index");
+        }
+
+        try
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
+            if (user != null)
+            {
+                var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.Id == user.TenantId);
+                if (tenant != null)
+                {
+                    tenant.PrimaryColor = primaryColor;
+                    tenant.SecondaryColor = secondaryColor;
+                    tenant.DarkBgColor = darkBgColor;
+                    tenant.SurfaceColor = surfaceColor;
+                    tenant.HeroBannerUrl = heroBannerUrl;
+                    tenant.WelcomeMessageEn = welcomeMessageEn;
+                    tenant.WelcomeMessageAr = welcomeMessageAr;
+
+                    await _context.SaveChangesAsync(default);
+                    TempData["Success"] = "Hospitality branding and colors successfully updated.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Branding update failed: {ex.Message}";
+        }
+
+        return Redirect("/profile#branding");
+    }
+
     [HttpPost("profile/team/create")]
     public async Task<IActionResult> CreateTeamMember(string firstName, string lastName, string department, string email, string role)
     {

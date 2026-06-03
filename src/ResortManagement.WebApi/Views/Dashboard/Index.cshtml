@@ -13,8 +13,8 @@
             <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
             <div class="relative z-10 w-full flex flex-col md:flex-row justify-between items-end gap-6">
                 <div>
-                    <h1 class="text-display-lg-mobile md:text-headline-lg font-bold text-white mb-2">Welcome Back, @userName</h1>
-                    <p class="text-body-lg text-white/90">Here is what's happening across @(ViewBag.ResortName ?? "your properties") today.</p>
+                    <h1 class="text-display-lg-mobile md:text-headline-lg font-bold text-white mb-2" data-translate-key="lbl_welcome_back" data-param-name="@userName">Welcome Back, @userName</h1>
+                    <p class="text-body-lg text-white/90" data-translate-key="lbl_dashboard_sub">Here is what's happening across @(ViewBag.ResortName ?? "your properties") today.</p>
                 </div>
                 <!-- Weather Widget (Glassmorphic) -->
                 <div class="glass-panel rounded-xl p-4 flex items-center gap-4 text-white" id="weather-widget">
@@ -33,7 +33,7 @@
         <!-- Revenue Overview -->
         <div class="metric-card rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
             <div>
-                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">Total Revenue</h3>
+                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider" data-translate-key="lbl_total_revenue">Total Revenue</h3>
                 <div class="text-headline-lg text-primary font-bold">@Model.TotalRevenue.ToString("C") <span class="text-label-md text-secondary ml-2 font-normal">+12.5%</span></div>
             </div>
             <div class="h-32 mt-6 relative flex items-end gap-2">
@@ -50,7 +50,7 @@
         <!-- Occupancy Rate -->
         <div class="metric-card rounded-2xl p-6 flex flex-col justify-between items-center text-center">
             <div class="w-full text-left">
-                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider">Current Occupancy</h3>
+                <h3 class="text-label-md text-on-surface-variant mb-1 font-semibold uppercase tracking-wider" data-translate-key="lbl_current_occupancy">Current Occupancy</h3>
                 <div class="text-headline-lg text-primary font-bold">@Model.OccupancyRate%</div>
             </div>
             <div class="relative w-24 h-24 mt-2">
@@ -65,11 +65,11 @@
         <!-- Reservations Count / Pending Invoices -->
         <div class="metric-card rounded-2xl p-6 flex flex-col justify-between bg-primary text-on-primary shadow-lg">
             <div>
-                <h3 class="text-label-md text-on-primary/80 mb-1 font-semibold uppercase tracking-wider">Active Bookings</h3>
+                <h3 class="text-label-md text-on-primary/80 mb-1 font-semibold uppercase tracking-wider" data-translate-key="lbl_active_bookings">Active Bookings</h3>
                 <div class="text-headline-lg font-bold">@Model.TotalReservations</div>
             </div>
             <div class="mt-4 text-label-sm text-on-primary/80 border-t border-white/10 pt-4">
-                <p class="mb-2">Pending Invoices: <span class="font-bold text-white">@Model.PendingRevenue.ToString("C")</span></p>
+                <p class="mb-2" data-translate-key="lbl_pending_invoices" data-param-amount="@Model.PendingRevenue.ToString("C")">Pending Invoices: <span class="font-bold text-white">@Model.PendingRevenue.ToString("C")</span></p>
                 <div class="w-full bg-white/20 rounded-full h-1.5 mb-1">
                     <div class="bg-secondary-container h-1.5 rounded-full" style="width: 75%"></div>
                 </div>
@@ -82,8 +82,8 @@
         <!-- Recent Stays & Bookings Table (Takes up 2 columns) -->
         <div class="lg:col-span-2 flex flex-col">
             <div class="flex justify-between items-end mb-6">
-                <h2 class="text-headline-md font-bold text-primary">Recent Stays & Bookings</h2>
-                <a class="text-label-md text-secondary hover:text-primary transition-colors font-semibold" href="/bookings">View All Stays</a>
+                <h2 class="text-headline-md font-bold text-primary" data-translate-key="lbl_recent_stays_bookings">Recent Stays & Bookings</h2>
+                <a class="text-label-md text-secondary hover:text-primary transition-colors font-semibold" data-translate-key="lbl_view_all_stays" href="/bookings">View All Stays</a>
             </div>
             
             <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden flex-1">
@@ -91,17 +91,17 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-surface border-b border-outline-variant/30">
-                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Reservation ID</th>
-                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Stay Period</th>
-                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Amount</th>
-                                <th class="p-4 text-label-sm font-bold text-primary uppercase">Status</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase" data-translate-key="lbl_table_res_id">Reservation ID</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase" data-translate-key="lbl_table_stay_period">Stay Period</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase" data-translate-key="lbl_table_amount">Amount</th>
+                                <th class="p-4 text-label-sm font-bold text-primary uppercase" data-translate-key="lbl_table_status">Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-outline-variant/20">
                             @if (recentReservations.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="4" class="p-8 text-center text-on-surface-variant font-medium">No recent stays or bookings found in database.</td>
+                                    <td colspan="4" class="p-8 text-center text-on-surface-variant font-medium" data-translate-key="lbl_no_recent_stays">No recent stays or bookings found in database.</td>
                                 </tr>
                             }
                             else
@@ -131,7 +131,7 @@
         
         <!-- Featured Resorts Sidebar -->
         <div class="lg:col-span-1">
-            <h2 class="text-headline-md font-bold text-primary mb-6">Top Properties</h2>
+            <h2 class="text-headline-md font-bold text-primary mb-6" data-translate-key="lbl_top_properties">Top Properties</h2>
             <div class="space-y-6">
                 @{
                     var topResorts = ViewBag.TopResorts as List<ResortManagement.Domain.Entities.Resorts.Resort> ?? new List<ResortManagement.Domain.Entities.Resorts.Resort>();
@@ -140,8 +140,8 @@
                 {
                     <div class="metric-card rounded-2xl p-6 text-center text-on-surface-variant font-medium">
                         <span class="material-symbols-outlined text-[32px] text-outline/40 mb-2">holiday_village</span>
-                        <p class="text-label-md">No properties registered yet.</p>
-                        <a href="/resorts" class="text-secondary hover:underline text-label-sm mt-2 block font-semibold">Add First Property</a>
+                        <p class="text-label-md" data-translate-key="lbl_no_properties_registered">No properties registered yet.</p>
+                        <a href="/resorts" class="text-secondary hover:underline text-label-sm mt-2 block font-semibold" data-translate-key="lbl_add_first_property">Add First Property</a>
                     </div>
                 }
                 else
@@ -151,7 +151,7 @@
                         <div class="metric-card rounded-2xl overflow-hidden flex flex-col group cursor-pointer" onclick="window.location.href='/resorts'">
                             <div class="h-32 relative overflow-hidden">
                                 <img alt="@resort.Name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop"/>
-                                <div class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-label-sm text-primary font-bold">
+                                <div class="absolute top-3 right-3 glass-panel px-3 py-1 rounded-full text-label-sm text-primary font-bold" data-translate-key="lbl_active">
                                     Active
                                 </div>
                             </div>

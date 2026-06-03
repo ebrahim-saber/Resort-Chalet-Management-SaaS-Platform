@@ -89,6 +89,9 @@ public class StorefrontController : Controller
             .Where(pr => (pr.RuleType == "Weekend" || (pr.SpecificDate >= start && pr.SpecificDate < end)) && !pr.IsDeleted)
             .ToListAsync();
 
+        var allSeasons = await _context.Seasons.Where(s => !s.IsDeleted).ToListAsync();
+        var allRules = await _context.PricingRules.Where(r => !r.IsDeleted).ToListAsync();
+
         var unitPricingPreviews = new Dictionary<Guid, decimal>();
         foreach (var unit in availableUnits)
         {
@@ -123,12 +126,17 @@ public class StorefrontController : Controller
             unitPricingPreviews[unit.Id] = totalPrice;
         }
 
+        var resorts = await _context.Resorts.Where(r => !r.IsDeleted).ToListAsync();
+
         ViewBag.CheckIn = start;
         ViewBag.CheckOut = end;
         ViewBag.Guests = guests;
         ViewBag.AvailableUnits = availableUnits;
         ViewBag.PricingPreviews = unitPricingPreviews;
         ViewBag.Tenant = tenant;
+        ViewBag.SeasonsList = allSeasons;
+        ViewBag.PricingRulesList = allRules;
+        ViewBag.Resorts = resorts;
 
         return View();
     }

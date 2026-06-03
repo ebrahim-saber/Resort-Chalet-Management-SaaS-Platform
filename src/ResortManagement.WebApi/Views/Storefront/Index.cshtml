@@ -11,94 +11,460 @@
     var guests = (int)ViewBag.Guests;
     var error = TempData["Error"] as string;
     var success = TempData["Success"] as string;
+    var resortsList = ViewBag.Resorts as List<Resort> ?? new List<Resort>();
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LuxeStay - Public Booking Catalog</title>
+    <title>@(tenant?.Name ?? "LuxeStay") - Luxury Stays & Chalets</title>
+    
+    <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    
+    <!-- Google Fonts: Outfit (English) & Cairo (Arabic) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- FontAwesome & Material Symbols -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <script src="/js/translation.js"></script>
+
     <style>
+        :root {
+            --bg-color: @(tenant?.DarkBgColor ?? "#030712");
+            --surface-color: @(tenant?.SurfaceColor ?? "#0b0f19");
+            --accent-primary: @(tenant?.PrimaryColor ?? "#cd9a5f");      /* Luxury Bronze Gold */
+            --accent-secondary: @(tenant?.SecondaryColor ?? "#0ea5e9");    /* Sky Blue */
+            --accent-emerald: #10b981;      /* Emerald Green */
+            --text-main: #f3f4f6;
+            --text-muted: #cbd5e1;
+            --border-glow: color-mix(in srgb, var(--accent-primary) 15%, transparent);
+            --transition-speed: 0.35s;
+        }
+
         body {
             font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #090d16 0%, #111827 100%);
-            color: #f3f4f6;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--accent-primary) 5%, transparent) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 40%);
         }
-        .text-primary-accent {
-            color: #6366f1 !important;
+
+        /* Sticky Glass Header */
+        .premium-nav {
+            background: rgba(3, 7, 18, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all var(--transition-speed) ease;
         }
-        .bg-primary-accent {
-            background-color: #6366f1 !important;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop');
+
+        /* Luxury Hero Banner */
+        .luxury-hero {
+            position: relative;
+            background: linear-gradient(rgba(3, 7, 18, 0.3), rgba(3, 7, 18, 0.85)), 
+                        url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
-            padding: 80px 0;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            height: 60vh;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: -60px;
         }
-        .room-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .hero-title {
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 70%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .room-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.25) !important;
-        }
-        .room-img-wrapper {
+
+        /* Floating Modern Search Widget */
+        .search-panel {
+            background: rgba(11, 15, 25, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 24px;
             position: relative;
-            height: 220px;
+            z-index: 100;
+        }
+
+        /* Input Controls Override */
+        .form-label, label {
+            color: var(--accent-primary) !important;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 12px 16px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 4px rgba(205, 154, 95, 0.15) !important;
+            color: #ffffff !important;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        /* Amenity Filters Row */
+        .amenity-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            padding: 6px 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .amenity-checkbox:checked + .amenity-pill {
+            background: rgba(205, 154, 95, 0.12);
+            border-color: var(--accent-primary);
+            color: var(--text-main);
+        }
+
+        /* High-End Room Card */
+        .premium-card {
+            background: rgba(11, 15, 25, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .premium-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(205, 154, 95, 0.15);
+        }
+
+        .card-img-container {
+            position: relative;
+            height: 240px;
             overflow: hidden;
         }
-        .room-img {
+
+        .card-img-premium {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.8s ease;
         }
-        .room-card:hover .room-img {
-            transform: scale(1.05);
+
+        .premium-card:hover .card-img-premium {
+            transform: scale(1.06);
+        }
+
+        .price-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Gold/Bronze luxury button */
+        .btn-luxury {
+            background: linear-gradient(135deg, #cd9a5f 0%, #b48146 100%);
+            border: none;
+            color: #030712;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-luxury:hover {
+            background: linear-gradient(135deg, #ddaa6f 0%, #c49156 100%);
+            box-shadow: 0 8px 24px rgba(205, 154, 95, 0.35);
+            color: #030712;
+        }
+
+        .btn-outline-luxury {
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-luxury:hover {
+            background: rgba(205, 154, 95, 0.08);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Services Grid Section */
+        .service-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .service-box:hover {
+            background: rgba(205, 154, 95, 0.04);
+            border-color: rgba(205, 154, 95, 0.2);
+        }
+
+        .service-icon {
+            font-size: 2.2rem;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+        }
+
+        /* Testimonials glass container */
+        .review-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            height: 100%;
+        }
+
+        /* Fully Overhauled Checkout Modal */
+        .modal-content.glass-card {
+            background: rgba(8, 12, 21, 0.96) !important;
+            border: 1px solid var(--accent-primary) !important;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8) !important;
+            border-radius: 28px !important;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px 32px;
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+        }
+
+        /* Interactive Credit Card Widget Styles */
+        .credit-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            height: 180px;
+            width: 100%;
+            max-width: 320px;
+            padding: 24px;
+            margin: 20px auto;
+            color: #ffffff;
+            transition: all 0.5s ease;
+        }
+
+        .card-glow-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(205, 154, 95, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Text Overrides for visibility */
+        .text-muted, .text-muted-light, .text-white-50, .text-slate-400, .form-text {
+            color: #cbd5e1 !important;
+        }
+        /* Desktop Sticky Sidebar styling */
+        @@media (min-width: 992px) {
+            #sidebarFilters {
+                position: sticky;
+                top: 100px;
+                height: fit-content;
+                background: rgba(11, 15, 25, 0.65) !important;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                border-radius: 20px;
+                padding: 24px;
+            }
+        }
+
+        /* Custom check styling for luxury theme */
+        .custom-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 0 !important;
+        }
+        .custom-check .form-check-input {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            float: none !important;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            width: 1.1em;
+            height: 1.1em;
+        }
+        .custom-check .form-check-input:checked {
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        .custom-check .form-check-input:focus {
+            box-shadow: 0 0 0 4px rgba(205, 154, 95, 0.15);
+            border-color: var(--accent-primary);
+        }
+        .custom-check .form-check-label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* RTL specific adjustments for custom checks */
+        html[dir="rtl"] .custom-check {
+            gap: 8px;
+        }
+
+        /* Price slider luxury style */
+        .form-range::-webkit-slider-thumb {
+            background: var(--accent-primary) !important;
+        }
+        .form-range::-moz-range-thumb {
+            background: var(--accent-primary) !important;
+        }
+        .form-range::-ms-thumb {
+            background: var(--accent-primary) !important;
+        }
+
+        /* Mobile Filters Drawer & Backdrop */
+        @@media (max-width: 991px) {
+            #sidebarFilters {
+                position: fixed;
+                top: 0;
+                left: -320px;
+                width: 300px;
+                height: 100vh;
+                z-index: 2000;
+                overflow-y: auto;
+                background: rgba(8, 12, 21, 0.98) !important;
+                backdrop-filter: blur(30px);
+                transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                margin-top: 0 !important;
+                border-right: 1px solid var(--accent-primary) !important;
+                box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8) !important;
+                padding: 24px;
+            }
+            html[dir="rtl"] #sidebarFilters {
+                left: auto;
+                right: -320px;
+                border-right: none !important;
+                border-left: 1px solid var(--accent-primary) !important;
+                transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            html[dir="rtl"] #sidebarFilters.show {
+                right: 0;
+                left: auto;
+            }
+            #sidebarFilters.show {
+                left: 0;
+            }
+            .filters-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(4px);
+                z-index: 1999;
+                display: none;
+            }
+            .filters-backdrop.show {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Storefront Header Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent border-bottom border-secondary border-opacity-25 py-3">
-        <div class="container px-4">
+    <!-- Sticky Luxury Header -->
+    <nav class="premium-nav py-3">
+        <div class="container px-4 d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <img src="@(tenant?.LogoPath ?? "https://lh3.googleusercontent.com/aida-public/AB6AXuATh4NCDpF7-t1YlTnFy2TF8frWnxjGPZ4tUgfbvb7ejk0YhJ86NeRYFDVX5vr7vQ-p7p6qL26OqZ2cofZQOAUr8XfkBiO3b9urRZYy-IwqcWTM4hxtw6XGDDcvYWTFabk3a9vpBpRG7c_MKkH1NM6fVRYIeTDsZ6A8Y6m40unqoXTtAMW0XlwhOYyl-Xq8nDNVMh_8i_V9SaB8ncgbp2Vw3Hdv1lHdoHg7vl26C8NREzdXke29miyRmTb1RuLrP9tPeB0MiDNne9K7")" 
-                     alt="Logo" style="height: 32px; border-radius: 4px;" />
-                <span class="font-weight-bold text-white tracking-wide">@(tenant?.Name ?? "LuxeStay")</span>
+                <img src="@(tenant?.LogoPath ?? "https://lh3.googleusercontent.com/aida-public/AB6AXuTh4NCDpF7-t1YlTnFy2TF8frWnxjGPZ4tUgfbvb7ejk0YhJ86NeRYFDVX5vr7vQ-p7p6qL26OqZ2cofZQOAUr8XfkBiO3b9urRZYy-IwqcWTM4hxtw6XGDDcvYWTFabk3a9vpBpRG7c_MKkH1NM6fVRYIeTDsZ6A8Y6m40unqoXTtAMW0XlwhOYyl-Xq8nDNVMh_8i_V9SaB8ncgbp2Vw3Hdv1lHdoHg7vl26C8NREzdXke29miyRmTb1RuLrP9tPeB0MiDNne9K7")" 
+                     alt="Logo" style="height: 34px; border-radius: 6px;" />
+                <span class="font-weight-bold text-white tracking-wide fs-4">@(tenant?.Name ?? "LuxeStay")</span>
             </a>
-            <div class="ms-auto">
-                <a href="/" class="btn btn-outline-light rounded-pill px-4 btn-sm">Staff Login</a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Language Toggle Selector -->
+                <button onclick="toggleLanguage()" class="btn btn-outline-luxury btn-sm d-flex align-items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">translate</span>
+                    <span id="lang-indicator">العربية</span>
+                </button>
+                <a href="/" data-translate-key="staff_login" class="btn btn-luxury btn-sm px-4">Staff Login</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Header -->
-    <header class="hero-section">
-        <div class="container px-4">
-            <span class="badge bg-primary-accent rounded-pill px-3 py-2 mb-3 tracking-wider uppercase small">Luxury Chalet Stays</span>
-            <h1 class="display-5 font-weight-bold text-white">Find Your Ultimate Mountain Hideaway</h1>
-            <p class="text-muted-light max-w-xl mx-auto mt-2 mb-0">Browse luxury spaces, review pricing, and book your stay instantly.</p>
+    <!-- Immersive Hero Section -->
+    <header class="luxury-hero">
+        <div class="container px-4 text-center">
+            <span class="badge rounded-pill bg-dark border border-warning text-warning px-3 py-2 mb-3 tracking-wider uppercase small" data-translate-key="luxury_chalet_stays">Luxury Chalet Stays</span>
+            <h1 class="display-3 hero-title" id="storefront-welcome-title" 
+                data-welcome-en="@(tenant?.WelcomeMessageEn ?? "Find Your Ultimate Mountain Hideaway")" 
+                data-welcome-ar="@(tenant?.WelcomeMessageAr ?? "ابحث عن ملاذك الجبلي المثالي")"
+                data-translate-key="find_mountain_hideaway">Find Your Ultimate Mountain Hideaway</h1>
+            <p class="max-w-xl mx-auto mt-3 fs-5" data-translate-key="browse_luxury_spaces" style="color: #cbd5e1;">Browse luxury spaces, review pricing, and book your stay instantly.</p>
         </div>
     </header>
 
-    <!-- Content Catalog Grid -->
-    <main class="container py-5 px-4">
+    <!-- Main Container -->
+    <main class="container py-5 px-4" style="margin-top: -60px;">
         
         <!-- Booking Alert status messages -->
         @if (!string.IsNullOrEmpty(error))
@@ -114,100 +480,437 @@
             </div>
         }
 
-        <!-- Live Search Widget -->
-        <section class="glass-card rounded-4 p-4 mb-5">
-            <h5 class="font-weight-bold text-white mb-3"><i class="fas fa-search me-2 text-primary-accent"></i>Check Room Availability</h5>
-            <form method="get" action="/storefront" class="row g-3 align-items-end">
-                <div class="col-12 col-md-4">
-                    <label class="form-label small text-muted">Arrival Date</label>
-                    <input type="date" name="checkIn" value="@checkIn.ToString("yyyy-MM-dd")" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label small text-muted">Departure Date</label>
-                    <input type="date" name="checkOut" value="@checkOut.ToString("yyyy-MM-dd")" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
-                </div>
-                <div class="col-12 col-md-2">
-                    <label class="form-label small text-muted">Guests</label>
-                    <select name="guestsCount" class="form-select bg-dark border-secondary text-white rounded-pill px-3">
-                        <!option value="1" @(guests == 1 ? "selected" : "")>1 Guest</!option>
-                        <!option value="2" @(guests == 2 ? "selected" : "")>2 Guests</!option>
-                        <!option value="4" @(guests == 4 ? "selected" : "")>4 Guests</!option>
-                        <!option value="6" @(guests == 6 ? "selected" : "")>6 Guests</!option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-primary-accent rounded-pill w-100 py-2 font-weight-semibold">Update Search</button>
-                </div>
-            </form>
-        </section>
+        <!-- Backdrop for Mobile Filters -->
+        <div class="filters-backdrop" id="filtersBackdrop"></div>
 
-        <!-- Rooms Catalog Grid -->
-        <h4 class="font-weight-bold text-white mb-4">Available Premium Properties (@availableUnits.Count)</h4>
-        <div class="row g-4">
-            @if (!availableUnits.Any())
-            {
-                <div class="col-12 text-center py-5">
-                    <div class="glass-card rounded-4 p-5 max-w-lg mx-auto">
-                        <i class="fas fa-bed fa-3x text-muted mb-3"></i>
-                        <h5 class="text-white font-weight-bold">No chalets available</h5>
-                        <p class="text-muted-light mb-0">Try expanding your check-in dates or choosing a smaller group configuration.</p>
+        <div class="row g-4 position-relative">
+            <!-- Mobile Toggle Button -->
+            <div class="col-12 d-lg-none mb-2">
+                <button class="btn btn-luxury w-100 py-3 d-flex align-items-center justify-content-center gap-2" onclick="toggleMobileFilters()">
+                    <span class="material-symbols-outlined">filter_list</span>
+                    <span data-translate-key="show_filters">Show Filters</span>
+                </button>
+            </div>
+
+            <!-- Left Column: Filters Sidebar -->
+            <aside class="col-lg-3 mb-4" id="sidebarFilters">
+                <!-- Sidebar Header with Close Button for Mobile -->
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                    <h5 class="font-weight-bold text-white mb-0 d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined text-warning">filter_list</span>
+                        <span data-translate-key="filters">Filters</span>
+                    </h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <button onclick="resetAllFilters()" class="btn btn-link text-warning text-decoration-none p-0 small" data-translate-key="reset_all" style="font-size: 0.85rem;">Reset All</button>
+                        <button class="btn-close btn-close-white d-lg-none" onclick="toggleMobileFilters()" aria-label="Close"></button>
                     </div>
                 </div>
-            }
-            else
-            {
-                @foreach (var unit in availableUnits)
+
+                <!-- Server Side Form for Dates & Guests -->
+                <form method="get" action="/storefront" class="d-flex flex-column gap-3 mb-4">
+                    <div>
+                        <label class="form-label" data-translate-key="arrival_date">Arrival Date</label>
+                        <input type="date" name="checkIn" value="@checkIn.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div>
+                        <label class="form-label" data-translate-key="departure_date">Departure Date</label>
+                        <input type="date" name="checkOut" value="@checkOut.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div>
+                        <label class="form-label" data-translate-key="guests">Guests</label>
+                        <select name="guestsCount" class="form-select">
+                            <!option value="1" @(guests == 1 ? "selected" : "")>1 Guest</!option>
+                            <!option value="2" @(guests == 2 ? "selected" : "")>2 Guests</!option>
+                            <!option value="4" @(guests == 4 ? "selected" : "")>4 Guests</!option>
+                            <!option value="6" @(guests == 6 ? "selected" : "")>6 Guests</!option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-luxury w-100 py-2.5 mt-2" data-translate-key="update_search">Update Search</button>
+                </form>
+
+                <!-- Location Filter (Client Side) -->
+                @if (resortsList.Any())
                 {
-                    var totalPrice = pricingPreviews[unit.Id];
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="card bg-transparent glass-card border-secondary border-opacity-25 h-100 overflow-hidden room-card d-flex flex-column justify-content-between">
-                            <div>
-                                <!-- Room Image Wrapper -->
-                                <div class="room-img-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000&auto=format&fit=crop" 
-                                         class="room-img" alt="Chalet Photo" />
-                                    <div class="position-absolute top-0 end-0 m-3 badge bg-dark bg-opacity-75 text-white py-2 px-3 border border-secondary border-opacity-25 rounded-pill">
-                                        <i class="fas fa-users me-1 text-primary-accent"></i>Max @unit.MaxCapacity Guests
-                                    </div>
+                    <div class="mb-4 pt-3 border-top border-secondary border-opacity-25">
+                        <label class="form-label" data-translate-key="resorts">Resorts</label>
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            @foreach (var resort in resortsList)
+                            {
+                                <div class="form-check custom-check">
+                                    <input class="form-check-input resort-checkbox" type="checkbox" id="resort-@resort.Id" value="@resort.Name" checked onchange="filterRooms()">
+                                    <label class="form-check-label text-white small" for="resort-@resort.Id">
+                                        @resort.Name
+                                    </label>
                                 </div>
-
-                                <!-- Room Content Details -->
-                                <div class="card-body p-4 text-white">
-                                    <span class="text-primary-accent font-weight-semibold small uppercase tracking-wider">@unit.ResortName</span>
-                                    <h4 class="card-title font-weight-bold mt-1 text-white">@unit.Name</h4>
-                                    <p class="text-muted-light small mb-3">Expansive suite located in the @unit.BuildingName Wing, complete with custom architectural trims, mountain view terrace, and custom linens.</p>
-                                    
-                                    <div class="d-flex flex-wrap gap-2 mb-3">
-                                        <span class="badge bg-dark bg-opacity-50 text-muted-light border border-secondary border-opacity-25 rounded-pill small"><i class="fas fa-wifi text-primary-accent me-1"></i>Free WiFi</span>
-                                        <span class="badge bg-dark bg-opacity-50 text-muted-light border border-secondary border-opacity-25 rounded-pill small"><i class="fas fa-snowflake text-primary-accent me-1"></i>Hot Tub</span>
-                                        <span class="badge bg-dark bg-opacity-50 text-muted-light border border-secondary border-opacity-25 rounded-pill small"><i class="fas fa-fireplace text-primary-accent me-1"></i>Fireplace</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Footer Section with checkout trigger -->
-                            <div class="card-footer bg-transparent border-top border-secondary border-opacity-25 p-4 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="small text-muted">Stay Value</div>
-                                    <div class="fs-4 font-weight-bold text-emerald text-white">@totalPrice.ToString("C")</div>
-                                    <div class="text-muted-light" style="font-size: 0.7rem;">For @((checkOut - checkIn).Days) nights stay</div>
-                                </div>
-                                <button class="btn btn-primary-accent rounded-pill px-4 font-weight-semibold" 
-                                        onclick="triggerCheckout('@unit.Id', '@unit.Name', '@totalPrice.ToString("C")')">Book Now</button>
-                            </div>
+                            }
                         </div>
                     </div>
                 }
-            }
+
+                <!-- Price Range Filter (Client Side) -->
+                <div class="mb-4 pt-3 border-top border-secondary border-opacity-25">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label mb-0" data-translate-key="max_nightly_price">Max Nightly Price</label>
+                        <span class="badge bg-dark border border-warning text-warning px-2 py-1 font-monospace" id="priceDisplay">$3,000</span>
+                    </div>
+                    <input type="range" class="form-range" id="priceRange" min="100" max="3000" step="50" value="3000" oninput="updatePriceFilter(this.value)">
+                    <div class="d-flex justify-content-between text-white-50 font-monospace" style="font-size: 0.75rem;">
+                        <span>$100</span>
+                        <span>$3,000</span>
+                    </div>
+                </div>
+
+                <!-- Amenities Filter (Client Side) -->
+                <div class="pt-3 border-top border-secondary border-opacity-25">
+                    <label class="form-label" data-translate-key="included_amenities">Included Amenities</label>
+                    <div class="d-flex flex-column gap-2 mt-2">
+                        <div class="form-check custom-check">
+                            <input class="form-check-input amenity-checkbox" type="checkbox" id="filter-wifi" value="wifi" onchange="filterRooms()">
+                            <label class="form-check-label text-white small" for="filter-wifi">
+                                WiFi
+                            </label>
+                        </div>
+                        <div class="form-check custom-check">
+                            <input class="form-check-input amenity-checkbox" type="checkbox" id="filter-hottub" value="hot-tub" onchange="filterRooms()">
+                            <label class="form-check-label text-white small" for="filter-hottub">
+                                Hot Tub
+                            </label>
+                        </div>
+                        <div class="form-check custom-check">
+                            <input class="form-check-input amenity-checkbox" type="checkbox" id="filter-fireplace" value="fireplace" onchange="filterRooms()">
+                            <label class="form-check-label text-white small" for="filter-fireplace">
+                                Fireplace
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Column: Room Catalog Grid -->
+            <div class="col-lg-9">
+                <h3 class="font-weight-bold text-white mb-4"><span data-translate-key="available_premium_properties">Available Premium Properties</span> (@availableUnits.Count)</h3>
+
+                <!-- Client-side filter Empty State (Hidden by default) -->
+                <div id="empty-state" style="display: none;" class="bg-dark bg-opacity-40 border border-secondary border-opacity-25 rounded-4 p-5 text-center text-muted flex-column align-items-center justify-content-center w-100 my-4">
+                    <span class="material-symbols-outlined text-[48px] text-warning mb-3">filter_list_off</span>
+                    <h4 class="text-white font-weight-bold" data-translate-key="no_chalets_available">No chalets available</h4>
+                    <p class="text-muted-light mb-0" data-translate-key="try_expanding_dates">Try expanding your check-in dates or choosing a smaller group configuration.</p>
+                </div>
+
+                <div class="row g-4 mb-5" id="roomsGrid">
+                    @if (!availableUnits.Any())
+                    {
+                        <div class="col-12 text-center py-5">
+                            <div class="glass-card rounded-4 p-5 max-w-lg mx-auto">
+                                <span class="material-symbols-outlined text-[48px] text-muted mb-3">hotel</span>
+                                <h5 class="text-white font-weight-bold" data-translate-key="no_chalets_available">No chalets available</h5>
+                                <p class="text-muted-light mb-0" data-translate-key="try_expanding_dates">Try expanding your check-in dates or choosing a smaller group configuration.</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var unit in availableUnits)
+                        {
+                            var totalPrice = pricingPreviews[unit.Id];
+                            var imgPath = "/images/luxury_mountain_chalet.png";
+                            var amenitiesList = "wifi,hot-tub,fireplace";
+                            var isWifi = true;
+                            var isHottub = true;
+                            var isFireplace = true;
+                            var desc = "Expansive pool chalet complete with custom architectural trims, private terrace, and premium finishes.";
+
+                            if (unit.Name.Contains("Suite", StringComparison.OrdinalIgnoreCase))
+                            {
+                                imgPath = "/images/boutique_suite.png";
+                                amenitiesList = "wifi,fireplace";
+                                isHottub = false;
+                                desc = "Cozy luxury boutique suite featuring a modern fireplace, elegant workspace, and premium linens.";
+                            }
+                            else if (unit.Name.Contains("Villa", StringComparison.OrdinalIgnoreCase) || unit.Name.Contains("104"))
+                            {
+                                imgPath = "/images/sea_villa.png";
+                                amenitiesList = "wifi,hot-tub";
+                                isFireplace = false;
+                                desc = "Stunning sea villa overlooking the coast, equipped with an infinity pool and private balcony.";
+                            }
+                            else
+                            {
+                                imgPath = "/images/chalet_pool.png";
+                            }
+
+                            <div class="col-12 col-md-6 room-card-container" data-resort="@unit.ResortName" data-amenities="@amenitiesList" data-price-per-night="@((totalPrice / (checkOut - checkIn).Days).ToString("F0"))">
+                                <div class="premium-card d-flex flex-column h-100">
+                                    <!-- Image wrapper with status dot & guest capacity -->
+                                    <div class="card-img-container">
+                                        <img src="@imgPath" class="card-img-premium" alt="Chalet Photo" />
+                                        
+                                        <!-- Top Right Available Status Badge -->
+                                        <div class="position-absolute top-0 end-0 m-3 badge text-white py-2 px-3 rounded-pill d-flex align-items-center gap-1 shadow-sm font-semibold" style="background-color: var(--accent-emerald) !important;">
+                                            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                            <span data-translate-key="available">Available</span>
+                                        </div>
+
+                                        <!-- Top Left Capacity Badge -->
+                                        <div class="position-absolute top-0 start-0 m-3 badge bg-dark bg-opacity-75 text-white py-2 px-3 border border-secondary border-opacity-25 rounded-pill">
+                                            <i class="fas fa-users me-1 text-warning"></i>
+                                            <span data-translate-key="max_capacity_guests" data-param-count="@unit.MaxCapacity">Max @unit.MaxCapacity Guests</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content details -->
+                                    <div class="p-4 d-flex flex-column flex-grow-1 justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <span class="text-warning font-weight-semibold small uppercase tracking-wider">@unit.ResortName</span>
+                                                    <h4 class="font-weight-bold mt-1 text-white">@unit.Name</h4>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="fs-4 font-weight-bold text-white">@((totalPrice / (checkOut - checkIn).Days).ToString("C"))</div>
+                                                    <div class="small text-white-50">/ Night</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <p class="small my-3 text-muted" style="min-height: 48px; line-height: 1.5;">@desc</p>
+                                            
+                                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                                @if (isWifi)
+                                                {
+                                                    <span class="badge bg-dark bg-opacity-50 text-muted border border-secondary border-opacity-25 rounded-pill py-1.5 px-3 small"><i class="fas fa-wifi text-warning me-1"></i><span data-translate-key="free_wifi">Free WiFi</span></span>
+                                                }
+                                                @if (isHottub)
+                                                {
+                                                    <span class="badge bg-dark bg-opacity-50 text-muted border border-secondary border-opacity-25 rounded-pill py-1.5 px-3 small"><i class="fas fa-snowflake text-warning me-1"></i><span data-translate-key="hot_tub">Hot Tub</span></span>
+                                                }
+                                                @if (isFireplace)
+                                                {
+                                                    <span class="badge bg-dark bg-opacity-50 text-muted border border-secondary border-opacity-25 rounded-pill py-1.5 px-3 small"><i class="fas fa-fireplace text-warning me-1"></i><span data-translate-key="fireplace">Fireplace</span></span>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- Card footer stay total with details trigger -->
+                                        <div class="pt-3 border-top border-secondary border-opacity-25 mt-auto">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div>
+                                                    <div class="small text-muted" data-translate-key="stay_value">Stay Value</div>
+                                                    <div class="fs-4 font-weight-bold text-warning">@totalPrice.ToString("C")</div>
+                                                </div>
+                                                <div class="text-end text-white-50" style="font-size: 0.75rem;" data-translate-key="for_nights_stay" data-param-count="@((checkOut - checkIn).Days)">For @((checkOut - checkIn).Days) nights stay</div>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-outline-luxury flex-fill py-2.5 text-sm" data-translate-key="view_details" 
+                                                        onclick="triggerDetails('@unit.Id', '@unit.Name', @unit.BasePrice, @unit.MaxCapacity, '@unit.ResortName', '@unit.BuildingName', `@desc`, '@amenitiesList', '@imgPath')">Details</button>
+                                                <button class="btn btn-luxury flex-fill py-2.5 text-sm" data-translate-key="book_now" 
+                                                        onclick="triggerCheckout('@unit.Id', '@unit.Name', '@totalPrice.ToString("C")')">Book Now</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
         </div>
+
+        <!-- Premium Why Stay With Us section -->
+        <section class="py-5 border-top border-secondary border-opacity-25">
+            <div class="text-center mb-5">
+                <span class="text-warning small uppercase tracking-wider fw-bold">Unparalleled Luxury</span>
+                <h2 class="display-6 font-weight-bold text-white mt-1">Exclusive Signature Services</h2>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="service-box">
+                        <span class="material-symbols-outlined service-icon">room_service</span>
+                        <h5 class="text-white font-weight-bold">24/7 Personal Butler</h5>
+                        <p class="text-muted small mb-0">Our dedicated concierge team is at your side to fulfill any request from morning cafe setups to private reservation arrangements.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-box">
+                        <span class="material-symbols-outlined service-icon">restaurant</span>
+                        <h5 class="text-white font-weight-bold">Private Dining & Chef</h5>
+                        <p class="text-muted small mb-0">Indulge in organic, personalized culinary dishes created directly in your chalet suite by certified regional private chefs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-box">
+                        <span class="material-symbols-outlined service-icon">explore</span>
+                        <h5 class="text-white font-weight-bold">VIP Ski & Yacht Charter</h5>
+                        <p class="text-muted small mb-0">Gain direct VIP access to premium mountain transfers, heli-skiing guides, and custom sailing excursions at any hour.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verified Guest Reviews Slider -->
+        <section class="py-5 border-top border-secondary border-opacity-25">
+            <div class="text-center mb-5">
+                <span class="text-warning small uppercase tracking-wider fw-bold">Guest Experiences</span>
+                <h2 class="display-6 font-weight-bold text-white mt-1">What Discerning Travelers Say</h2>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="d-flex text-warning mb-3">
+                            <i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-white-50 italic mb-4">"The mountain vistas from Chalet 101 were absolutely breathtaking. Having a private glowing pool surrounded by snow was a dream experience. Outstanding personal butler service."</p>
+                        <div class="fw-bold text-white small">Lord Al-Maktoum</div>
+                        <div class="text-warning" style="font-size: 0.75rem;">Stayed at Royal Pool Chalet</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="d-flex text-warning mb-3">
+                            <i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-white-50 italic mb-4">"The boutique suite fireplace created a remarkably cozy ambiance during our stay. Clean lines, premium linens, and a highly responsive support center. Will absolutely return."</p>
+                        <div class="fw-bold text-white small">Lady Varela</div>
+                        <div class="text-warning" style="font-size: 0.75rem;">Stayed at Boutique Suite</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-card">
+                        <div class="d-flex text-warning mb-3">
+                            <i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star me-1"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-white-50 italic mb-4">"Exceptional ocean view terrace! The infinity pool at sunset was a highlight. A truly premium booking engine that made securing the stay effortless. Stripe payment was smooth."</p>
+                        <div class="fw-bold text-white small">Marcus Rostova</div>
+                        <div class="text-warning" style="font-size: 0.75rem;">Stayed at Premium Sea Villa</div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Chalet Details Modal Dialog -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-card text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title font-weight-bold text-white d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined text-warning">holiday_village</span>
+                        <span id="detailChaletName">Chalet Details</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0 text-white">
+                        <!-- Image Gallery Column -->
+                        <div class="col-12 col-lg-6">
+                            <div class="position-relative h-100" style="min-height: 280px;">
+                                <img id="detailChaletImg" src="/images/luxury_mountain_chalet.png" class="w-100 h-100 object-cover" style="object-fit: cover;" alt="Chalet Gallery" />
+                                <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(to top, rgba(3,7,18,0.9), transparent);">
+                                    <span class="badge bg-dark border border-warning text-warning" id="detailResortName">Alpine Resort</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content Details Column -->
+                        <div class="col-12 col-lg-6 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="text-white-50 small uppercase tracking-wider font-semibold" id="detailBuildingName">Main Lodge</span>
+                                <span class="badge bg-dark border border-secondary border-opacity-50 text-white rounded-pill px-3" id="detailCapacity">Max Guests</span>
+                            </div>
+                            
+                            <h4 class="font-weight-bold text-white mb-2" id="detailRoomTitle">Premium Suite</h4>
+                            <p class="text-white-50 small mb-3" id="detailDescription" style="line-height: 1.5; min-height: 60px;"></p>
+                            
+                            <!-- Specifications Grid -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <div class="p-2 rounded-3 bg-dark bg-opacity-40 border border-secondary border-opacity-10 d-flex align-items-center gap-2">
+                                        <span class="material-symbols-outlined text-warning text-[18px]">aspect_ratio</span>
+                                        <div>
+                                            <div class="text-white-50" style="font-size: 0.6rem;">Size</div>
+                                            <div class="small font-semibold">120 sqm</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded-3 bg-dark bg-opacity-40 border border-secondary border-opacity-10 d-flex align-items-center gap-2">
+                                        <span class="material-symbols-outlined text-warning text-[18px]">bed</span>
+                                        <div>
+                                            <div class="text-white-50" style="font-size: 0.6rem;">Beds</div>
+                                            <div class="small font-semibold">King Luxury</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded-3 bg-dark bg-opacity-40 border border-secondary border-opacity-10 d-flex align-items-center gap-2">
+                                        <span class="material-symbols-outlined text-warning text-[18px]">explore</span>
+                                        <div>
+                                            <div class="text-white-50" style="font-size: 0.6rem;">View</div>
+                                            <div class="small font-semibold">Panoramic</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded-3 bg-dark bg-opacity-40 border border-secondary border-opacity-10 d-flex align-items-center gap-2">
+                                        <span class="material-symbols-outlined text-warning text-[18px]">verified</span>
+                                        <div>
+                                            <div class="text-white-50" style="font-size: 0.6rem;">Service</div>
+                                            <div class="small font-semibold">VIP Butler</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Included Amenities -->
+                            <h6 class="font-weight-bold text-white mb-2" data-translate-key="included_amenities">Included Amenities</h6>
+                            <div class="d-flex flex-wrap gap-2 mb-2" id="detailAmenitiesContainer">
+                                <!-- Dynamically filled with badges -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Live Cost Recalculator Row -->
+                    <div class="bg-dark bg-opacity-45 p-4 border-t border-secondary border-opacity-20 text-white">
+                        <h6 class="font-weight-bold text-white mb-3 d-flex align-items-center gap-2">
+                            <span class="material-symbols-outlined text-warning">calculate</span>
+                            <span data-translate-key="instant_stay_value_calculator">Instant Stay Value Calculator</span>
+                        </h6>
+                        <div class="row g-2 align-items-end">
+                            <div class="col-12 col-md-5">
+                                <label class="form-label" style="font-size: 0.75rem;" data-translate-key="arrival_date">Check-in</label>
+                                <input type="date" id="calcCheckIn" class="form-control py-2 text-sm" onchange="recalculateModalCost()" />
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <label class="form-label" style="font-size: 0.75rem;" data-translate-key="departure_date">Check-out</label>
+                                <input type="date" id="calcCheckOut" class="form-control py-2 text-sm" onchange="recalculateModalCost()" />
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="text-md-end pt-2">
+                                    <div class="text-white-50" style="font-size: 0.7rem;" data-translate-key="stay_value">Stay Value</div>
+                                    <div class="fs-4 font-weight-bold text-warning" id="calcTotalPrice">$0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-luxury" data-bs-dismiss="modal" data-translate-key="cancel">Close</button>
+                    <button type="button" class="btn btn-luxury px-4" data-translate-key="proceed_to_checkout" id="btnProceedToCheckout">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Checkout Modal Dialog -->
     <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card text-white border-secondary">
                 <div class="modal-header border-secondary">
-                    <h5 class="modal-title font-weight-bold"><i class="fas fa-credit-card me-2 text-primary-accent"></i>Guest Self Checkout</h5>
+                    <h5 class="modal-title font-weight-bold text-white d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined text-warning">shopping_bag</span>
+                        <span data-translate-key="guest_self_checkout">Guest Self Checkout</span>
+                    </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -217,58 +920,89 @@
                         <input type="hidden" name="checkOut" value="@checkOut.ToString("yyyy-MM-dd")" />
 
                         <div class="bg-dark bg-opacity-50 border border-secondary border-opacity-25 rounded-3 p-3 mb-4">
-                            <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>Selected Chalet:</span>
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span class="text-white-50" data-translate-key="selected_chalet">Selected Chalet:</span>
                                 <span class="text-white font-weight-bold" id="modalRoomName">Suite 101</span>
                             </div>
-                            <div class="d-flex justify-content-between small text-muted">
-                                <span>Est. Gross Total:</span>
-                                <span class="text-white font-weight-bold text-primary-accent" id="modalTotalPrice">$0.00</span>
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-white-50" data-translate-key="est_gross_total">Est. Gross Total:</span>
+                                <span class="text-warning font-weight-bold" id="modalTotalPrice">$0.00</span>
                             </div>
                         </div>
 
                         <!-- Guest Info -->
-                        <h6 class="font-weight-bold text-white mb-3">Guest Contact Details</h6>
+                        <h6 class="font-weight-bold text-white mb-3" data-translate-key="guest_contact_details">Guest Contact Details</h6>
                         <div class="row g-2 mb-3">
                             <div class="col">
-                                <label class="form-label small text-muted">First Name</label>
-                                <input type="text" name="firstName" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
+                                <label class="form-label" data-translate-key="first_name">First Name</label>
+                                <input type="text" name="firstName" class="form-control" required />
                             </div>
                             <div class="col">
-                                <label class="form-label small text-muted">Last Name</label>
-                                <input type="text" name="lastName" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
+                                <label class="form-label" data-translate-key="last_name">Last Name</label>
+                                <input type="text" name="lastName" class="form-control" required />
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Email Address</label>
-                            <input type="email" name="email" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
+                            <label class="form-label" data-translate-key="email_address">Email Address</label>
+                            <input type="email" name="email" class="form-control" required />
                         </div>
 
-                        <div class="row g-2 mb-3">
+                        <div class="row g-2 mb-4">
                             <div class="col">
-                                <label class="form-label small text-muted">Phone Number</label>
-                                <input type="text" name="phone" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
+                                <label class="form-label" data-translate-key="phone_number">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" required />
                             </div>
                             <div class="col">
-                                <label class="form-label small text-muted">Passport / ID Number</label>
-                                <input type="text" name="documentNumber" class="form-control bg-dark border-secondary text-white rounded-pill px-3" required />
+                                <label class="form-label" data-translate-key="passport_id_number">Passport / ID Number</label>
+                                <input type="text" name="documentNumber" class="form-control" required />
                             </div>
                         </div>
 
                         <!-- Payment Mock Detail -->
-                        <h6 class="font-weight-bold text-white mb-2 mt-4"><i class="fas fa-lock me-2 text-success"></i>Secure Mock Payments</h6>
-                        <p class="text-muted-light small mb-3">Resort reservation is automatically guaranteed by credit card. Card details will be verified at check-in.</p>
+                        <h6 class="font-weight-bold text-white mb-2 mt-4 d-flex align-items-center gap-2">
+                            <span class="material-symbols-outlined text-success">lock</span>
+                            <span data-translate-key="secure_mock_payments">Secure Mock Payments</span>
+                        </h6>
+                        <p class="text-white-50 small mb-3" data-translate-key="payment_mock_info">Resort reservation is automatically guaranteed by credit card. Card details will be verified at check-in.</p>
                         
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Credit Card Number</label>
-                            <input type="text" class="form-control bg-dark border-secondary text-white rounded-pill px-3" placeholder="4111 2222 3333 4444" required />
+                        <!-- Interactive Mini Credit Card Graphic -->
+                        <div class="card-wrapper my-3 mx-auto" style="perspective: 1000px; max-width: 320px; width: 100%;">
+                            <div class="credit-card rounded-4 p-4 text-white position-relative shadow">
+                                <div class="card-glow-effect"></div>
+                                <div class="d-flex justify-content-between align-items-start mb-4">
+                                    <div class="chip rounded-2" style="width: 45px; height: 32px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                                    <i class="fab fa-cc-visa fa-2x text-white" id="card-type-icon" style="opacity: 0.85;"></i>
+                                </div>
+                                <div class="card-number font-monospace fs-5 tracking-widest mb-3" id="display-card-number">•••• •••• •••• ••••</div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <div class="text-white-50" style="font-size: 0.65rem; text-transform: uppercase;">Card Holder</div>
+                                        <div class="small font-monospace text-white" id="display-card-name">GUEST CUSTOMER</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-white-50" style="font-size: 0.65rem; text-transform: uppercase;">Expires</div>
+                                        <div class="small font-monospace text-white" id="display-card-expiry">MM/YY</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-8">
+                                <label class="form-label" data-translate-key="credit_card_number">Credit Card Number</label>
+                                <input type="text" id="input-card-number" name="cardNumber" class="form-control" placeholder="4111 2222 3333 4444" maxlength="19" required />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Expiry</label>
+                                <input type="text" id="input-card-expiry" class="form-control" placeholder="MM/YY" maxlength="5" required />
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary-accent rounded-pill px-4" onclick="document.getElementById('checkoutForm').submit()">Complete Reservation</button>
+                    <button type="button" class="btn btn-outline-luxury" data-bs-dismiss="modal" data-translate-key="cancel">Cancel</button>
+                    <button type="button" class="btn btn-luxury px-4" data-translate-key="complete_reservation" onclick="document.getElementById('checkoutForm').submit()">Complete Reservation</button>
                 </div>
             </div>
         </div>
@@ -277,6 +1011,14 @@
     <!-- Bootstrap Script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Seasons & Rules Data dynamically serialized from database for real-time client-side calculation
+        const seasons = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.SeasonsList));
+        const pricingRules = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.PricingRulesList));
+
+        let activeUnitId = "";
+        let activeBasePrice = 0;
+        let activeUnitName = "";
+
         function triggerCheckout(unitId, unitName, price) {
             document.getElementById('modalUnitId').value = unitId;
             document.getElementById('modalRoomName').innerText = unitName;
@@ -285,6 +1027,254 @@
             var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
             checkoutModal.show();
         }
+
+        function triggerDetails(unitId, unitName, basePrice, capacity, resortName, buildingName, desc, amenitiesList, imgPath) {
+            activeUnitId = unitId;
+            activeBasePrice = basePrice;
+            activeUnitName = unitName;
+
+            document.getElementById('detailChaletName').innerText = unitName;
+            document.getElementById('detailRoomTitle').innerText = unitName;
+            document.getElementById('detailResortName').innerText = resortName;
+            document.getElementById('detailBuildingName').innerText = buildingName;
+            document.getElementById('detailCapacity').innerText = "Max " + capacity + " Guests";
+            document.getElementById('detailDescription').innerText = desc;
+            document.getElementById('detailChaletImg').src = imgPath;
+
+            // Pre-populate calculator with current search dates
+            const checkInVal = document.querySelector('input[name="checkIn"]').value;
+            const checkOutVal = document.querySelector('input[name="checkOut"]').value;
+            document.getElementById('calcCheckIn').value = checkInVal;
+            document.getElementById('calcCheckOut').value = checkOutVal;
+
+            // Generate amenities badges
+            const container = document.getElementById('detailAmenitiesContainer');
+            container.innerHTML = '';
+            amenitiesList.split(',').forEach(am => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-dark bg-opacity-50 text-white border border-secondary border-opacity-25 rounded-pill py-2 px-3 small';
+                
+                let iconClass = 'fa-wifi';
+                let label = am;
+                if (am === 'wifi') { iconClass = 'fa-wifi'; label = 'Free WiFi'; badge.setAttribute('data-translate-key', 'free_wifi'); }
+                else if (am === 'hot-tub') { iconClass = 'fa-snowflake'; label = 'Hot Tub'; badge.setAttribute('data-translate-key', 'hot_tub'); }
+                else if (am === 'fireplace') { iconClass = 'fa-fireplace'; label = 'Fireplace'; badge.setAttribute('data-translate-key', 'fireplace'); }
+                
+                badge.innerHTML = `<i class="fas ${iconClass} text-warning me-2"></i>${label}`;
+                container.appendChild(badge);
+            });
+
+            recalculateModalCost();
+
+            // Hook checkout transition
+            document.getElementById('btnProceedToCheckout').onclick = function() {
+                const finalCheckIn = document.getElementById('calcCheckIn').value;
+                const finalCheckOut = document.getElementById('calcCheckOut').value;
+                
+                document.querySelector('#checkoutForm input[name="checkIn"]').value = finalCheckIn;
+                document.querySelector('#checkoutForm input[name="checkOut"]').value = finalCheckOut;
+                
+                // Hide details modal and launch checkout
+                const dModal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
+                dModal.hide();
+                
+                const finalPrice = document.getElementById('calcTotalPrice').innerText;
+                triggerCheckout(activeUnitId, activeUnitName, finalPrice);
+            };
+
+            // Call client-side translation engine to translate modal
+            if (window.applyTranslation) window.applyTranslation();
+
+            var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+
+        function recalculateModalCost() {
+            const checkInStr = document.getElementById('calcCheckIn').value;
+            const checkOutStr = document.getElementById('calcCheckOut').value;
+            
+            if (!checkInStr || !checkOutStr) return;
+            
+            const start = new Date(checkInStr);
+            const end = new Date(checkOutStr);
+            
+            if (end <= start) {
+                document.getElementById('calcTotalPrice').innerText = "$0.00";
+                return;
+            }
+
+            let totalPrice = 0;
+            
+            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                let nightPrice = activeBasePrice;
+                
+                // 1. Season multiplier check
+                const activeSeason = seasons.find(s => {
+                    const sStart = new Date(s.StartDate || s.startDate);
+                    const sEnd = new Date(s.EndDate || s.endDate);
+                    return d >= sStart && d <= sEnd;
+                });
+                
+                if (activeSeason) {
+                    nightPrice *= (activeSeason.PriceMultiplier || activeSeason.priceMultiplier || 1);
+                }
+                
+                // 2. Weekend rules check
+                const isWeekend = d.getDay() === 5 || d.getDay() === 6; // Friday, Saturday
+                if (isWeekend) {
+                    const weekendRule = pricingRules.find(r => (r.RuleType || r.ruleType) === 'Weekend');
+                    if (weekendRule) {
+                        const mult = weekendRule.Multiplier !== undefined ? weekendRule.Multiplier : weekendRule.multiplier;
+                        const flat = weekendRule.FlatAmount !== undefined ? weekendRule.FlatAmount : weekendRule.flatAmount;
+                        if (mult) {
+                            nightPrice *= mult;
+                        } else if (flat) {
+                            nightPrice += flat;
+                        }
+                    }
+                }
+                
+                totalPrice += nightPrice;
+            }
+
+            document.getElementById('calcTotalPrice').innerText = totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+
+        function updatePriceFilter(val) {
+            document.getElementById('priceDisplay').innerText = '$' + parseInt(val).toLocaleString();
+            filterRooms();
+        }
+
+        // Real-time Credit Card synchronization
+        document.addEventListener("DOMContentLoaded", function() {
+            const numberInput = document.getElementById('input-card-number');
+            if (numberInput) {
+                numberInput.addEventListener('input', function(e) {
+                    let val = e.target.value.replace(/\D/g, '');
+                    let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+                    e.target.value = formatted;
+                    
+                    document.getElementById('display-card-number').innerText = formatted || '•••• •••• •••• ••••';
+                    
+                    const icon = document.getElementById('card-type-icon');
+                    if (val.startsWith('4')) {
+                        icon.className = 'fab fa-cc-visa fa-2x text-white';
+                    } else if (val.startsWith('5')) {
+                        icon.className = 'fab fa-cc-mastercard fa-2x text-white';
+                    } else {
+                        icon.className = 'fas fa-credit-card fa-2x text-white';
+                    }
+                });
+            }
+
+            const firstNameInput = document.querySelector('input[name="firstName"]');
+            const lastNameInput = document.querySelector('input[name="lastName"]');
+            function updateCardName() {
+                const first = firstNameInput?.value || '';
+                const last = lastNameInput?.value || '';
+                const fullName = (first + ' ' + last).trim().toUpperCase();
+                document.getElementById('display-card-name').innerText = fullName || 'GUEST CUSTOMER';
+            }
+            if (firstNameInput) firstNameInput.addEventListener('input', updateCardName);
+            if (lastNameInput) lastNameInput.addEventListener('input', updateCardName);
+
+            const expiryInput = document.getElementById('input-card-expiry');
+            if (expiryInput) {
+                expiryInput.addEventListener('input', function(e) {
+                    let val = e.target.value.replace(/\D/g, '');
+                    if (val.length > 2) {
+                        val = val.substring(0, 2) + '/' + val.substring(2, 4);
+                    }
+                    e.target.value = val;
+                    document.getElementById('display-card-expiry').innerText = val || 'MM/YY';
+                });
+            }
+        });
+
+        // Client-side mobile filters toggler
+        function toggleMobileFilters() {
+            const sidebar = document.getElementById('sidebarFilters');
+            const backdrop = document.getElementById('filtersBackdrop');
+            if (sidebar && backdrop) {
+                sidebar.classList.toggle('show');
+                backdrop.classList.toggle('show');
+            }
+        }
+
+        // Close mobile filters when clicking outside on the backdrop
+        document.addEventListener("DOMContentLoaded", function() {
+            const backdrop = document.getElementById('filtersBackdrop');
+            if (backdrop) {
+                backdrop.addEventListener('click', toggleMobileFilters);
+            }
+        });
+
+        // Reset all client-side filters
+        function resetAllFilters() {
+            // Reset amenities
+            document.getElementById('filter-wifi').checked = false;
+            document.getElementById('filter-hottub').checked = false;
+            document.getElementById('filter-fireplace').checked = false;
+
+            // Reset price
+            const priceSlider = document.getElementById('priceRange');
+            if (priceSlider) {
+                priceSlider.value = 3000;
+                updatePriceFilter(3000);
+            }
+
+            // Reset resorts checkboxes
+            document.querySelectorAll('.resort-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+
+            filterRooms();
+        }
+
+        // Client-side filter logic for amenities, resort & price slider
+        function filterRooms() {
+            const hasWifi = document.getElementById('filter-wifi').checked;
+            const hasHottub = document.getElementById('filter-hottub').checked;
+            const hasFireplace = document.getElementById('filter-fireplace').checked;
+            const maxPrice = parseFloat(document.getElementById('priceRange').value);
+
+            // Selected resorts list
+            const checkedResorts = [];
+            document.querySelectorAll('.resort-checkbox:checked').forEach(cb => {
+                checkedResorts.push(cb.value);
+            });
+
+            let visibleCount = 0;
+
+            document.querySelectorAll('.room-card-container').forEach(card => {
+                const cardAmenities = card.getAttribute('data-amenities').split(',');
+                const cardPrice = parseFloat(card.getAttribute('data-price-per-night'));
+                const cardResort = card.getAttribute('data-resort');
+                
+                let visible = true;
+                if (hasWifi && !cardAmenities.includes('wifi')) visible = false;
+                if (hasHottub && !cardAmenities.includes('hot-tub')) visible = false;
+                if (hasFireplace && !cardAmenities.includes('fireplace')) visible = false;
+                if (cardPrice > maxPrice) visible = false;
+                if (checkedResorts.length > 0 && !checkedResorts.includes(cardResort)) visible = false;
+
+                if (visible) {
+                    card.style.setProperty('display', 'block', 'important');
+                    visibleCount++;
+                } else {
+                    card.style.setProperty('display', 'none', 'important');
+                }
+            });
+
+            // Show or hide the empty state
+            const emptyState = document.getElementById('empty-state');
+            if (emptyState) {
+                emptyState.style.display = (visibleCount === 0) ? 'flex' : 'none';
+            }
+        }
     </script>
 </body>
 </html>
+
+
+

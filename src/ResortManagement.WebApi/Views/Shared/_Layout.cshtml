@@ -170,6 +170,7 @@
             border-radius: 20px;
         }
     </style>
+    <script src="/js/translation.js" asp-append-version="true"></script>
 </head>
 <body class="text-on-background font-body-md antialiased min-h-screen relative flex flex-col">
     <!-- TopNavBar (Shared Component) -->
@@ -180,65 +181,61 @@
                     ChaletElite
                 </a>
                 <div class="hidden xl:flex items-center gap-2 h-full">
-                    <a id="nav-dashboard" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1" href="/dashboard">Dashboard</a>
+                    <a id="nav-dashboard" data-translate-key="nav_dashboard" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md" href="/dashboard">Dashboard</a>
                     
                     <!-- Properties Dropdown -->
                     <div class="relative group h-full flex items-center">
-                        <button id="nav-properties-trigger" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1 flex items-center gap-0.5">
-                            Properties
-                            <span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span>
-                        </button>
-                        <div class="absolute top-[80%] left-0 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/40 py-2 mt-2 hidden group-hover:block transition-all duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 z-50">
-                            <a id="nav-resorts" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/resorts">Resorts</a>
-                            <a id="nav-units" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/resorts/units">Units</a>
+                        <button id="nav-properties-trigger" data-translate-key="nav_properties" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1">Properties<span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span></button>
+                        <div class="absolute top-[80%] left-0 w-44 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-black/5 dark:border-white/10 py-2 mt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                            <a id="nav-resorts" data-translate-key="nav_resorts" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/resorts">Resorts</a>
+                            <a id="nav-units" data-translate-key="nav_units" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/resorts/units">Units</a>
                         </div>
                     </div>
 
                     <!-- Operations Dropdown -->
                     <div class="relative group h-full flex items-center">
-                        <button id="nav-operations-trigger" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1 flex items-center gap-0.5">
-                            Operations
-                            <span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span>
-                        </button>
-                        <div class="absolute top-[80%] left-0 w-48 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/40 py-2 mt-2 hidden group-hover:block transition-all duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 z-50">
-                            <a id="nav-bookings" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/bookings">Reservations</a>
-                            <a id="nav-calendar" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/calendar">Calendar</a>
-                            <a id="nav-housekeeping" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/operations/housekeeping">Housekeeping</a>
-                            <a id="nav-maintenance" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/operations/maintenance">Maintenance</a>
+                        <button id="nav-operations-trigger" data-translate-key="nav_operations" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1">Operations<span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span></button>
+                        <div class="absolute top-[80%] left-0 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-black/5 dark:border-white/10 py-2 mt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                            <a id="nav-bookings" data-translate-key="nav_bookings" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/bookings">Reservations</a>
+                            <a id="nav-calendar" data-translate-key="nav_calendar" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/calendar">Calendar</a>
+                            <a id="nav-housekeeping" data-translate-key="nav_housekeeping" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/operations/housekeeping">Housekeeping</a>
+                            <a id="nav-maintenance" data-translate-key="nav_maintenance" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/operations/maintenance">Maintenance</a>
                         </div>
                     </div>
 
                     <!-- Financials Dropdown -->
                     <div class="relative group h-full flex items-center">
-                        <button id="nav-financials-trigger" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1 flex items-center gap-0.5">
-                            Financials
-                            <span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span>
-                        </button>
-                        <div class="absolute top-[80%] left-0 w-44 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/40 py-2 mt-2 hidden group-hover:block transition-all duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 z-50">
-                            <a id="nav-billing" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/billing">Billing</a>
-                            <a id="nav-analytics" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/analytics">Analytics</a>
-                            <a id="nav-owner" class="block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors" href="/owner">Owner Yields</a>
+                        <button id="nav-financials-trigger" data-translate-key="nav_financials" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1">Financials<span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:rotate-180">keyboard_arrow_down</span></button>
+                        <div class="absolute top-[80%] left-0 w-44 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-black/5 dark:border-white/10 py-2 mt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                            <a id="nav-billing" data-translate-key="nav_billing" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/billing">Billing</a>
+                            <a id="nav-analytics" data-translate-key="nav_analytics" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/analytics">Analytics</a>
+                            <a id="nav-owner" data-translate-key="nav_owner" class="block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200" href="/owner">Owner Yields</a>
                         </div>
                     </div>
 
-                    <a id="nav-guests" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1" href="/guests">Guests</a>
-                    <a id="nav-storefront" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1" href="/storefront" target="_blank">Storefront <span class="material-symbols-outlined text-[14px] align-middle">open_in_new</span></a>
+                    <a id="nav-guests" data-translate-key="nav_guests" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md" href="/guests">Guests</a>
+                    <a id="nav-storefront" data-translate-key="nav_storefront" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1" href="/storefront" target="_blank">Storefront<span class="material-symbols-outlined text-[14px] align-middle">open_in_new</span></a>
                 </div>
             </div>
             
             <div class="flex items-center space-x-4">
                 <div class="hidden md:flex items-center gap-2">
-                    <button onclick="window.location.href='/bookings'" class="bg-primary text-on-primary px-5 py-2 rounded-full text-label-sm font-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm font-semibold">
+                    <button onclick="window.location.href='/bookings'" data-translate-key="btn_new_booking" class="bg-primary text-on-primary px-5 py-2 rounded-full text-label-sm font-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm font-semibold">
                         New Booking
                     </button>
                 </div>
                 <div class="flex items-center space-x-2 border-l border-outline-variant/30 pl-4">
-                    <button id="notifications-btn" onclick="toggleNotificationsDrawer()" aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 rounded-full p-1.5 relative">
-                        <span id="notifications-badge" class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full hidden"></span>
-                        <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    <!-- Language Selector -->
+                    <button onclick="toggleLanguage()" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-[13px] font-semibold" title="Toggle Language / تغيير اللغة">
+                        <span class="material-symbols-outlined text-[18px] align-middle">translate</span>
+                        <span id="lang-indicator" class="align-middle uppercase">AR</span>
                     </button>
-                    <a href="/profile" aria-label="account_circle" class="text-on-surface-variant hover:text-primary transition-colors hover:bg-white/20 rounded-full p-1 block">
-                        <img alt="Manager Avatar" class="w-8 h-8 rounded-full border border-white/50" src="@layoutAvatarUrl" />
+                    <button id="notifications-btn" onclick="toggleNotificationsDrawer()" aria-label="notifications" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 rounded-full p-2 relative">
+                        <span id="notifications-badge" class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full hidden"></span>
+                        <span class="material-symbols-outlined text-[22px] align-middle">notifications</span>
+                    </button>
+                    <a href="/profile" aria-label="account_circle" class="text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 rounded-full p-1 block">
+                        <img alt="Manager Avatar" class="w-8 h-8 rounded-full border-2 border-primary/20 hover:border-primary transition-all duration-200" src="@layoutAvatarUrl" />
                     </a>
                 </div>
             </div>
@@ -283,9 +280,9 @@
                 if (element) {
                     const isActive = item.paths.some(p => currentPath === p || currentPath.startsWith(p + "/"));
                     if (isActive) {
-                        element.className = "text-secondary font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md px-3 py-1 scale-95 transition-transform duration-200";
+                        element.className = "text-secondary bg-secondary/10 font-bold rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md";
                     } else {
-                        element.className = "text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1";
+                        element.className = "text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md";
                     }
                 }
             });
@@ -334,20 +331,20 @@
                     if (isActive) {
                         isAnyChildActive = true;
                         if (itemEl) {
-                            itemEl.className = "block px-4 py-2 text-label-md text-secondary font-bold bg-surface-container transition-colors";
+                            itemEl.className = "block px-4 py-2.5 rounded-xl text-label-md text-secondary font-bold bg-secondary/10 transition-all duration-200";
                         }
                     } else {
                         if (itemEl) {
-                            itemEl.className = "block px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors";
+                            itemEl.className = "block px-4 py-2.5 rounded-xl text-label-md text-on-surface-variant hover:bg-secondary/5 hover:text-secondary transition-all duration-200";
                         }
                     }
                 });
 
                 if (triggerEl) {
                     if (isAnyChildActive) {
-                        triggerEl.className = "text-secondary font-bold border-b-2 border-secondary pb-1 text-label-md font-label-md px-3 py-1 scale-95 transition-transform duration-200 flex items-center gap-0.5";
+                        triggerEl.className = "text-secondary bg-secondary/10 font-bold rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1";
                     } else {
-                        triggerEl.className = "text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md rounded-full px-3 py-1 flex items-center gap-0.5";
+                        triggerEl.className = "text-on-surface-variant hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full px-4 py-2 transition-all duration-200 text-label-md font-label-md flex items-center gap-1";
                     }
                 }
             });
